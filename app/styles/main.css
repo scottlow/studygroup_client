@@ -1,8 +1,20 @@
 html { height: 100% }
 
-.fill {height: 100%; width:100%;}
+.fill {
+  height: 100%; 
+  width:100%;
+}
 
-.map-jumbo {padding-left:0px;padding-right:0px;padding-bottom:0px;}
+.navbar {
+  background-color: white;
+}
+
+.map-jumbo {
+  padding-left:0px;
+  padding-right:0px;
+  padding-bottom:0px;
+  margin: 0;
+}
 
 body {
   height: 100%;
@@ -11,6 +23,84 @@ body {
 }
 
 .google-map {
+  filter: blur(10px);
   width: 100%;
   height: 100%;
+}
+
+.signup-wrapper {
+  text-align: center;
+  position:absolute;
+  display: table;
+  width: 100%;
+  height: 100%;
+  min-height: 100%;
+  z-index:1;
+  background-color: rgba(100,100,100,0.7);
+}
+
+.signup-wrapper-inner {
+  padding-top:24px; /* TODO Maybe this should't be hardcoded */
+  display: table-cell;
+  vertical-align: top;
+}
+
+.cover-container {
+  margin-right: auto;
+  margin-left: auto;
+}
+
+/* Padding for spacing */
+.inner {
+  padding: 30px;
+}
+
+/*
+ * Cover
+ */
+
+.cover {
+  padding: 0 20px;
+}
+
+.home-dialog {
+  background-color: #EFEFEF;
+}
+
+.university-picker {
+  margin-bottom: 24px;
+}
+
+/*
+ * Affix and center
+ */
+
+@media (min-width: 768px) {
+  /* Start the vertical centering */
+  .signup-wrapper-inner {
+    vertical-align: middle;
+  }
+  /* Handle the widths */
+  .cover-container {
+    width: 100%; /* Must be percentage or pixels for horizontal alignment */
+  }
+}
+
+@media (min-width: 992px) {
+  .cover-container {
+    width: 700px;
+  }
+}
+
+#footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 60px;
+  background-color: white;
+  z-index: 3;
+}
+
+.container .text-muted {
+  margin: 20px 0;
 }

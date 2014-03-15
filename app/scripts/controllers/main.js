@@ -2,9 +2,9 @@
 
 angular.module('clientControllers', [])
   .controller('MainCtrl', function ($scope, $http, constants) {
-    $scope.awesomeThings = [];
-    $http.get(constants.serverName + 'users/').success(function(data) {
-      $scope.awesomeThings.push(data.results[0].username);
+    $scope.universities = [];
+    $http.get(constants.serverName + 'universities/list/').success(function(data) {
+      $scope.universities.push(data.results[0].name);
     });
   })
   .directive('helloMaps', function () {

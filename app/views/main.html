@@ -1,4 +1,4 @@
-<div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+<div class="navbar navbar-fixed-top" role="navigation">
   <div class="container">
     <div class="navbar-header">
       <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -24,39 +24,27 @@
   </div>
 </div>
 
+<div class="signup-wrapper">
+  <div class="container signup-wrapper-inner">
+    <div class="home-dialog jumbotron cover-container">
+      <div class="inner cover">
+        <h1>Study better.</h1>
+        <p class="lead">To find a group of students who are studying for the same courses as you right now, choose a university from the menu below.</p>
+        <select class="university-picker form-control">
+          <option ng-repeat="unversity in universities">{{unversity}}</option>
+        </select>
+        <button type="submit" class="btn btn-primary btn-lg">Get Started</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div class="jumbotron map-jumbo fill">
-  <div class="google-map" hello-maps="" latitude="48.4630959" longitude="-123.3121053" zoom="17"></div>  
+  <div class="google-map" hello-maps="" latitude="48.4428524" longitude="-123.3592758" zoom="13"></div>
 </div>
 
-<!-- <div class="jumbotron">
-  <h1>'Allo, 'Allo!</h1>
-  <p class="lead">
-    <img src="images/yeoman.png" alt="I'm Yeoman"><br>
-    Always a pleasure scaffolding your apps.
-  </p>
-  <p><a class="btn btn-lg btn-success" ng-href="#">Splendid!</a></p>
+<div id="footer">
+  <div class="container">
+    <p class="text-muted">Place sticky footer content here.</p>
+  </div>
 </div>
-
-<div class="row marketing">
-  <h4>HTML5 Boilerplate</h4>
-  <p>
-    HTML5 Boilerplate is a professional front-end template for building fast, robust, and adaptable web apps or sites.
-  </p>
-
-  <h4>Angular</h4>
-  <p>
-    AngularJS is a toolset for building the framework most suited to your application development.
-  </p>
-
-  <h4>Karma</h4>
-  <p>Spectacular Test Runner for JavaScript.</p>
-
-  <select class="form-control">
-    <option ng-repeat="thing in awesomeThings">{{thing}}</option>
-  </select>
-
-</div>
-
-<div class="footer">
-  <p>♥ from the Yeoman team</p>
-</div> -->
