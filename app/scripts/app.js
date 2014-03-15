@@ -4,7 +4,8 @@ angular.module('studygroupClientApp', [
   'ngCookies',
   'ngResource',
   'ngSanitize',
-  'ngRoute'
+  'ngRoute',
+  'clientControllers'
 ])
   .config(function ($routeProvider) {
     $routeProvider
