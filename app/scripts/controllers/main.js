@@ -13,7 +13,29 @@ angular.module('clientControllers', [])
       $scope.showWelcome = false;
     };
 
-    $scope.submitRegistration = function(user) {
+    $scope.login = function() {
+      if ($scope.loginForm.$valid) {
+        $http.post(constants.serverName + 'verify_credentials', {username: $scope.login.username, password: $scope.login.password})
+        .success(function (data, status, headers, config) {
+          alert(data);
+        })
+        .error(function (data, status, headers, config) {
+          // Eventually error here.
+        });
+      }
+    };    
+
+    $scope.submitRegistration = function() {
+      if ($scope.registerForm.$valid) {
+        $http.post(constants.serverName + 'register/', {username: $scope.user.username, password: $scope.user.password, name: $scope.user.name, email: $scope.user.email})
+        .success(function (data, status, headers, config) {
+          alert("You registered!");
+        })
+        .error(function (data, status, headers, config) {
+          // Eventually display errors on the client side here.
+          console.log(headers());
+        });
+      }     
       $scope.hasSubmitted = true;
     };
   })
