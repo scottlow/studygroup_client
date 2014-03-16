@@ -15,9 +15,10 @@ angular.module('clientControllers', [])
 
     $scope.login = function() {
       if ($scope.loginForm.$valid) {
-        $http.post(constants.serverName + 'verify_credentials', {username: $scope.login.username, password: $scope.login.password})
+        $http.post(constants.serverName + 'verify_credentials/', {username: $scope.login.username, password: $scope.login.password})
         .success(function (data, status, headers, config) {
-          alert(data);
+          alert("Logged in!");
+          console.log(data);
         })
         .error(function (data, status, headers, config) {
           // Eventually error here.
@@ -30,6 +31,7 @@ angular.module('clientControllers', [])
         $http.post(constants.serverName + 'register/', {username: $scope.user.username, password: $scope.user.password, name: $scope.user.name, email: $scope.user.email})
         .success(function (data, status, headers, config) {
           alert("You registered!");
+          console.log(data);          
         })
         .error(function (data, status, headers, config) {
           // Eventually display errors on the client side here.
