@@ -18,7 +18,7 @@
           <input type="password" placeholder="Password" class="form-control">
         </div>
         <button type="submit" class="btn btn-primary">Log In</button>        
-        <button type="submit" class="btn btn-primary">Sign Up</button>
+        <button type="submit" ng-click="showSignUp()" class="btn btn-primary">Sign Up</button>
       </form>
     </div>
   </div>
@@ -27,7 +27,8 @@
 <div class="signup-wrapper">
   <div class="container signup-wrapper-inner">
     <div class="home-dialog jumbotron cover-container">
-      <div class="inner cover">
+      
+      <div ng-show="showWelcome" id="welcome_content" class="inner cover">
         <h1>Study better.</h1>
         <p class="lead">To find a group of students who are studying for the same courses as you right now, choose a university from the menu below.</p>
         <select class="university-picker form-control">
@@ -35,12 +36,41 @@
         </select>
         <button type="submit" class="btn btn-primary btn-lg">Get Started</button>
       </div>
+
+      <div ng-hide="showWelcome" class="inner cover">
+        <h1>Join the Community.</h1>
+        <p class="lead">Please complete the fields below to register.</p>
+        <form name="registerForm" role="form" ng-submit="submitRegistration()" novalidate>
+          <!-- Name -->
+          <div class="form-group input-group-lg">
+              <input type="text" name="name" class="form-control" ng-model="user.name" placeholder="Full Name (Optional)">
+          </div>        
+          <!-- Username -->
+          <div class="form-group input-group-lg" ng-class="{ 'has-error' : registerForm.username.$invalid && hasSubmitted }">
+            <input type="text" name="username" class="form-control" ng-model="user.username" ng-minlength="4" ng-maxlength="14" required placeholder="Username">           
+            <p ng-show="registerForm.username.$error.required && hasSubmitted" class="help-block">Please enter a username greater than 3 characters.</p>            
+            <p ng-show="registerForm.username.$error.minlength && hasSubmitted" class="help-block">Please enter a username greater than 4 characters.</p>
+            <p ng-show="registerForm.username.$error.maxlength && hasSubmitted" class="help-block">Please enter a username less than 15 characters.</p>
+          </div>
+          <!-- Password  -->
+          <div class="form-group input-group-lg" ng-class="{ 'has-error' : registerForm.password.$invalid && hasSubmitted }">
+              <input type="password" name="password" class="form-control" ng-model="user.password" required placeholder="Password">
+              <p ng-show="registerForm.password.$invalid && hasSubmitted" class="help-block">Please enter a password.</p>
+          </div>   
+          <!-- Email  -->
+          <div class="form-group input-group-lg" ng-class="{ 'has-error' : registerForm.email.$invalid && hasSubmitted }">
+              <input type="email" name="email" class="form-control" ng-model="user.email" required placeholder="Email">
+              <p ng-show="registerForm.email.$invalid && hasSubmitted" class="help-block">Please enter a valid email.</p>
+          </div> 
+        <button type="submit" ng-click="showSignUp()" class="btn btn-primary btn-lg">Register</button>          
+        </form>
+      </div>      
     </div>
   </div>
 </div>
 
 <div class="jumbotron map-jumbo fill">
-  <div class="google-map" hello-maps="" latitude="48.4428524" longitude="-123.3592758" zoom="13"></div>
+  <div class="google-map" home-map="" latitude="48.4428524" longitude="-123.3592758" zoom="13"></div>
 </div>
 
 <div id="footer">

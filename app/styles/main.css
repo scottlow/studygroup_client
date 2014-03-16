@@ -63,6 +63,10 @@ body {
   padding: 0 20px;
 }
 
+#signup_content {
+  display: none;
+}
+
 .home-dialog {
   background-color: #EFEFEF;
 }

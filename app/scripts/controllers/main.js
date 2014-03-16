@@ -3,11 +3,21 @@
 angular.module('clientControllers', [])
   .controller('MainCtrl', function ($scope, $http, constants) {
     $scope.universities = [];
+    $scope.showWelcome = true;
+    $scope.hasSubmitted = false;
     $http.get(constants.serverName + 'universities/list/').success(function(data) {
       $scope.universities.push(data.results[0].name);
     });
+
+    $scope.showSignUp = function() {
+      $scope.showWelcome = false;
+    };
+
+    $scope.submitRegistration = function(user) {
+      $scope.hasSubmitted = true;
+    };
   })
-  .directive('helloMaps', function () {
+  .directive('homeMap', function () {
     return function (scope, elem, attrs) {
       var mapOptions,
         latitude = attrs.latitude,
