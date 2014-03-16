@@ -34,8 +34,8 @@ angular.module('clientControllers', [])
           console.log(data);          
         })
         .error(function (data, status, headers, config) {
-          // Eventually display errors on the client side here.
-          console.log(headers());
+          $scope.usernamePostError = true;
+          $scope.usernameErrorMessage = headers()['error-message']
         });
       }     
       $scope.hasSubmitted = true;

@@ -46,8 +46,9 @@
               <input type="text" name="name" class="form-control" ng-model="user.name" placeholder="Full Name (Optional)">
           </div>        
           <!-- Username -->
-          <div class="form-group input-group-lg" ng-class="{ 'has-error' : registerForm.username.$invalid && hasSubmitted }">
+          <div class="form-group input-group-lg" ng-class="{ 'has-error' : (registerForm.username.$invalid && hasSubmitted) || usernamePostError}">
             <input type="text" name="username" class="form-control" ng-model="user.username" ng-minlength="4" ng-maxlength="14" required placeholder="Username">           
+            <p ng-show="usernamePostError" class="help-block">{{usernameErrorMessage}}</p>             
             <p ng-show="registerForm.username.$error.required && hasSubmitted" class="help-block">Please enter a username greater than 3 characters.</p>            
             <p ng-show="registerForm.username.$error.minlength && hasSubmitted" class="help-block">Please enter a username greater than 4 characters.</p>
             <p ng-show="registerForm.username.$error.maxlength && hasSubmitted" class="help-block">Please enter a username less than 15 characters.</p>
