@@ -59,8 +59,9 @@
               <p ng-show="registerForm.password.$invalid && hasSubmitted" class="help-block">Please enter a password.</p>
           </div>   
           <!-- Email  -->
-          <div class="form-group input-group-lg" ng-class="{ 'has-error' : registerForm.email.$invalid && hasSubmitted }">
+          <div class="form-group input-group-lg" ng-class="{ 'has-error' : registerForm.email.$invalid && hasSubmitted || emailPostError }">
               <input type="email" name="email" class="form-control" ng-model="user.email" required placeholder="Email">
+              <p ng-show="emailPostError" class="help-block">{{emailErrorMessage}}</p>              
               <p ng-show="registerForm.email.$invalid && hasSubmitted" class="help-block">Please enter a valid email.</p>
           </div> 
         <button type="submit" ng-click="showSignUp()" class="btn btn-primary btn-lg">Register</button>          

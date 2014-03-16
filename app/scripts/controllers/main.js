@@ -34,8 +34,14 @@ angular.module('clientControllers', [])
           console.log(data);          
         })
         .error(function (data, status, headers, config) {
-          $scope.usernamePostError = true;
-          $scope.usernameErrorMessage = headers()['error-message']
+          var h = headers();
+          if(h['error-type'] == 'username') {
+            $scope.usernamePostError = true;
+            $scope.usernameErrorMessage = h['error-message'];
+          } else if(h['error-type'] == 'email') {
+            $scope.emailPostError = true;
+            $scope.emailErrorMessage = h['error-message'];
+          }
         });
       }     
       $scope.hasSubmitted = true;
