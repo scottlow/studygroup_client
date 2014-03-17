@@ -5,13 +5,25 @@ angular.module('clientControllers', [])
     $scope.universities = [];
     $scope.showWelcome = true;
     $scope.hasSubmitted = false;
+    $scope.dimMap = true;
+    $scope.cameFromMap = false;
     $http.get(constants.serverName + 'universities/list/').success(function(data) {
-      $scope.universities.push(data.results[0].name);
+      var count = 0;
+      angular.forEach(data.results, function(value) {
+        $scope.universities.push(value);
+      });
+      $scope.university = $scope.universities[0];
     });
 
     $scope.showSignUp = function() {
       $scope.showWelcome = false;
+      $scope.dimMap = true;
     };
+
+    $scope.hideSignup = function() {
+      $scope.showWelcome = true;
+      $scope.dimMap = $scope.cameFromMap ? false : true;
+    };    
 
     $scope.login = function() {
       AuthService.login($scope.loginForm.$valid, $scope.login.username, $scope.login.password).then(function(status) {
@@ -21,6 +33,15 @@ angular.module('clientControllers', [])
           $scope.loginError = false;
         }
       });
+    };
+
+    $scope.chooseUniversity = function() {
+      var map = angular.element(document.querySelector(".google-map"));
+      var center = new google.maps.LatLng($scope.university.latitude, $scope.university.longitude);
+      $scope.gmap.panTo(center);
+      $scope.gmap.setZoom(17);
+      $scope.dimMap = false;
+      $scope.cameFromMap = true;
     };
 
     $scope.submitRegistration = function() {
@@ -45,7 +66,7 @@ angular.module('clientControllers', [])
     };
   })
   .directive('homeMap', function () {
-    return function (scope, elem, attrs) {
+    return function ($scope, elem, attrs) {
       var mapOptions,
         latitude = attrs.latitude,
         longitude = attrs.longitude,
@@ -64,8 +85,8 @@ angular.module('clientControllers', [])
         zoom: zoom,
         center: new google.maps.LatLng(latitude, longitude)
       };
-
       map = new google.maps.Map(elem[0], mapOptions);
+      $scope.gmap = map;
     };
   })
   .constant('constants', {

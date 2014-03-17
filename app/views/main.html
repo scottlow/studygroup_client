@@ -24,17 +24,15 @@
   </div>
 </div>
 
-<div class="signup-wrapper">
+<div class="signup-wrapper" ng-show="dimMap">
   <div class="container signup-wrapper-inner">
     <div class="home-dialog jumbotron cover-container">
       
       <div ng-show="showWelcome" id="welcome_content" class="inner cover">
         <h1>Study better.</h1>
-        <p class="lead">To find a group of students who are studying for the same courses as you right now, choose a university from the menu below.</p>
-        <select class="university-picker form-control">
-          <option ng-repeat="unversity in universities">{{unversity}}</option>
-        </select>
-        <button type="submit" class="btn btn-primary btn-lg">Get Started</button>
+        <p class="lead">To find a group of students who are studying for the same courses as you right now, choose a university from the menu below and press Get Started.</p>
+        <select ng-model="university" class="university-picker form-control" ng-options="university.name for university in universities"></select>
+        <button type="submit" ng-click="chooseUniversity()" class="btn btn-primary btn-lg">Get Started</button>
       </div>
 
       <div ng-hide="showWelcome" class="inner cover">
@@ -64,7 +62,8 @@
               <p ng-show="emailPostError" class="help-block">{{emailErrorMessage}}</p>              
               <p ng-show="registerForm.email.$invalid && hasSubmitted" class="help-block">Please enter a valid email.</p>
           </div> 
-        <button type="submit" ng-click="showSignUp()" class="btn btn-primary btn-lg">Register</button>          
+        <button type="submit" ng-click="showSignUp()" class="btn btn-primary btn-lg">Register</button>
+        <button type="button" ng-click="hideSignup()" class="btn btn-default btn-lg">Cancel</button>                 
         </form>
       </div>      
     </div>
@@ -72,7 +71,7 @@
 </div>
 
 <div class="jumbotron map-jumbo fill">
-  <div class="google-map" home-map="" latitude="48.4428524" longitude="-123.3592758" zoom="13"></div>
+  <div ng-class="{'blur' : dimMap}" class="google-map" home-map="" latitude="48.4428524" longitude="-123.3592758" zoom="13"></div>
 </div>
 
 <div id="footer">
