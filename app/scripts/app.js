@@ -5,7 +5,8 @@ angular.module('studygroupClientApp', [
   'ngResource',
   'ngSanitize',
   'ngRoute',
-  'clientControllers'
+  'clientControllers',
+  'clientServices',
 ])
   .config(function ($routeProvider) {
     $routeProvider

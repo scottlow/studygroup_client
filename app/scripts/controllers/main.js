@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('clientControllers', [])
-  .controller('MainCtrl', function ($scope, $http, constants) {
+  .controller('MainCtrl', function ($scope, $http, AuthService, constants) {
     $scope.universities = [];
     $scope.showWelcome = true;
     $scope.hasSubmitted = false;
@@ -14,36 +14,33 @@ angular.module('clientControllers', [])
     };
 
     $scope.login = function() {
-      if ($scope.loginForm.$valid) {
-        $http.post(constants.serverName + 'verify_credentials/', {username: $scope.login.username, password: $scope.login.password})
-        .success(function (data, status, headers, config) {
-          alert("Logged in!");
-          console.log(data);
-        })
-        .error(function (data, status, headers, config) {
-          // Eventually error here.
-        });
-      }
-    };    
+      AuthService.login($scope.loginForm.$valid, $scope.login.username, $scope.login.password).then(function(status) {
+        if(status !== 200) {
+          $scope.loginError = true;
+        } else {
+          $scope.loginError = false;
+        }
+      });
+    };
 
     $scope.submitRegistration = function() {
       if ($scope.registerForm.$valid) {
         $http.post(constants.serverName + 'register/', {username: $scope.user.username, password: $scope.user.password, name: $scope.user.name, email: $scope.user.email})
         .success(function (data, status, headers, config) {
-          alert("You registered!");
-          console.log(data);          
+          alert('You registered!');
+          console.log(data);
         })
         .error(function (data, status, headers, config) {
           var h = headers();
-          if(h['error-type'] == 'username') {
+          if(h['error-type'] === 'username') {
             $scope.usernamePostError = true;
             $scope.usernameErrorMessage = h['error-message'];
-          } else if(h['error-type'] == 'email') {
+          } else if(h['error-type'] === 'email') {
             $scope.emailPostError = true;
             $scope.emailErrorMessage = h['error-message'];
           }
         });
-      }     
+      }
       $scope.hasSubmitted = true;
     };
   })

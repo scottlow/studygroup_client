@@ -10,7 +10,7 @@
       <a class="navbar-brand" href="#">Study Group</a>
     </div>
     <div class="navbar-collapse collapse">
-      <form name="loginForm" class="navbar-form navbar-right" role="form">
+      <form name="loginForm" class="navbar-form navbar-right" role="form" ng-class="{ 'has-error' : loginError}">
         <div class="form-group">
           <input type="text" name="username" ng-model="login.username" placeholder="Username" class="form-control">
         </div>
