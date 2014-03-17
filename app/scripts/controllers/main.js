@@ -45,6 +45,10 @@ angular.module('clientControllers', [])
     };
 
     $scope.submitRegistration = function() {
+      $scope.usernamePostError = false;
+      $scope.usernameErrorMessage = '';
+      $scope.emailPostError = false;
+      $scope.emailErrorMessage = '';
       if ($scope.registerForm.$valid) {
         $http.post(constants.serverName + 'register/', {username: $scope.user.username, password: $scope.user.password, name: $scope.user.name, email: $scope.user.email})
         .success(function (data, status, headers, config) {
