@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('clientControllers', [])
+angular.module('clientControllers', ['ngAnimate'])
   .controller('MainCtrl', function ($scope, $http, AuthService, constants) {
     $scope.universities = [];
     $scope.showWelcome = true;
@@ -21,7 +21,6 @@ angular.module('clientControllers', [])
     };
 
     $scope.hideSignup = function() {
-      $scope.showWelcome = true;
       $scope.dimMap = $scope.cameFromMap ? false : true;
     };    
 

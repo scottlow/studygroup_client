@@ -5,6 +5,7 @@ angular.module('studygroupClientApp', [
   'ngResource',
   'ngSanitize',
   'ngRoute',
+  'ngAnimate',
   'clientControllers',
   'clientServices',
 ])
