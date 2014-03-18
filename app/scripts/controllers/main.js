@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('clientControllers', ['ngAnimate'])
-  .controller('MainCtrl', function ($scope, $http, AuthService, constants) {
+  .controller('MainCtrl', function ($scope, $http, $location, AuthService, constants) {
     $scope.universities = [];
     $scope.showWelcome = true;
     $scope.hasSubmitted = false;
@@ -30,6 +30,7 @@ angular.module('clientControllers', ['ngAnimate'])
           $scope.loginError = true;
         } else {
           $scope.loginError = false;
+          $location.path('/dashboard');
         }
       });
     };
