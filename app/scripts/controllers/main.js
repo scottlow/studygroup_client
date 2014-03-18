@@ -35,7 +35,6 @@ angular.module('clientControllers', ['ngAnimate'])
     };
 
     $scope.chooseUniversity = function() {
-      var map = angular.element(document.querySelector(".google-map"));
       var center = new google.maps.LatLng($scope.university.latitude, $scope.university.longitude);
       $scope.gmap.panTo(center);
       $scope.gmap.setZoom(17);
