@@ -1,10 +1,8 @@
 'use strict';
 
 angular.module('dashboardControllers', [])
-  .controller('DashboardCtrl', function ($scope) {
-    $scope.awesomeThings = [
-      'HTML5 Boilerplate',
-      'AngularJS',
-      'Karma'
-    ];
+  .controller('DashboardCtrl', function ($scope, AuthService) {
+    $scope.logout = function() {
+      AuthService.logout();
+    };
   });

@@ -1,9 +1,8 @@
 'use strict';
 
 angular.module('clientServices', ['ivpusic.cookie'])
-  .service('AuthService',  ['$http', 'ipCookie', function ($http, ipCookie) {
+  .service('AuthService',  ['$http', 'ipCookie', '$location', function ($http, ipCookie, $location) {
     this.login = function(username, password) {
-      console.log(username + ' ' + password);
       var promise = $http.post('http://localhost:8000/' + 'verify_credentials/', {username: username, password: password})
       .then(function(response) {
         // This is a success, so we can set the cookie.
@@ -28,4 +27,9 @@ angular.module('clientServices', ['ivpusic.cookie'])
         return false;
       }
     };
+
+    this.logout = function() {
+      ipCookie.remove('studyToken');
+      $location.path('/');
+    }
   }]);
