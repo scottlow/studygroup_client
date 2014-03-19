@@ -25,14 +25,18 @@ angular.module('clientControllers', ['ngAnimate'])
     };    
 
     $scope.login = function() {
-      AuthService.login($scope.loginForm.$valid, $scope.login.username, $scope.login.password).then(function(status) {
-        if(status !== 200) {
-          $scope.loginError = true;
-        } else {
-          $scope.loginError = false;
-          $location.path('/dashboard');
-        }
-      });
+      if($scope.loginForm.$valid === true) {
+        AuthService.login($scope.login.username, $scope.login.password).then(function(status) {
+          if(status !== 200) {
+            $scope.loginError = true;
+          } else {
+            $scope.loginError = false;
+            $location.path('/dashboard');
+          }
+        });
+      } else {
+        $scope.loginError = true;
+      }
     };
 
     $scope.chooseUniversity = function() {
@@ -51,8 +55,7 @@ angular.module('clientControllers', ['ngAnimate'])
       if ($scope.registerForm.$valid) {
         $http.post(constants.serverName + 'register/', {username: $scope.user.username, password: $scope.user.password, name: $scope.user.name, email: $scope.user.email})
         .success(function (data, status, headers, config) {
-          alert('You registered!');
-          console.log(data);
+          AuthService.login($scope.user.username, $scope.user.password);
         })
         .error(function (data, status, headers, config) {
           var h = headers();
