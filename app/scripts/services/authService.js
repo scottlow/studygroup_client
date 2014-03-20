@@ -8,6 +8,7 @@ angular.module('clientServices', ['ivpusic.cookie'])
         // This is a success, so we can set the cookie.
         if(response.data.token) {
           ipCookie('studyToken', response.data.token, {expires: 14});
+          $http.defaults.headers.common.Authorization = 'Token ' + response.data.token;          
         } else {
           console.log('Invalid token format.');
           response.status = 400;
@@ -30,6 +31,7 @@ angular.module('clientServices', ['ivpusic.cookie'])
 
     this.logout = function() {
       ipCookie.remove('studyToken');
+      delete $http.defaults.headers.common.Authorization;      
       $location.path('/');
-    }
+    };
   }]);

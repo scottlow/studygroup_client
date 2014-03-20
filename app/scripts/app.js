@@ -37,13 +37,16 @@ angular.module('studygroupClientApp', [
         storageMode: 'localStorage' // This cache will sync itself with `localStorage`.
     });
 
-    $http.defaults.cache = $angularCacheFactory.get('defaultCache');    
+    // This is breaking headers right now. We'll fix it later.
+    //$http.defaults.cache = $angularCacheFactory.get('defaultCache');    
 
     $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams){
       if(toState.url === '/') {
         // We are hitting the root of the page. If this is happeneing, we should check to see if the user has the cookie set to login.
-        $state.transitionTo(AuthService.isAuthenticated() ? 'dashboard' : 'main', null, {location: 'replace'});
-        event.preventDefault();
+        if(AuthService.isAuthenticated === true) {
+          $state.transitionTo('dashboard', null, {location: 'replace'});
+          event.preventDefault();          
+        }
       }
       if (toState.authenticate && !AuthService.isAuthenticated()){
         // User isn’t authenticated

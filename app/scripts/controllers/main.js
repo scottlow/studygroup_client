@@ -55,7 +55,14 @@ angular.module('clientControllers', ['ngAnimate'])
       if ($scope.registerForm.$valid) {
         $http.post(constants.serverName + 'register/', {username: $scope.user.username, password: $scope.user.password, name: $scope.user.name, email: $scope.user.email})
         .success(function (data, status, headers, config) {
-          AuthService.login($scope.user.username, $scope.user.password);
+          AuthService.login($scope.user.username, $scope.user.password).then(function(status) {
+            if(status !== 200) {
+              $scope.loginError = true;
+            } else {
+              $scope.loginError = false;
+              $location.path('/dashboard');
+            }
+          });
         })
         .error(function (data, status, headers, config) {
           var h = headers();
