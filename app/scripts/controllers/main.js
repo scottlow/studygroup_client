@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('clientControllers', ['ngAnimate'])
-  .controller('MainCtrl', function ($scope, $http, $location, AuthService, constants) {
+  .controller('MainCtrl', function ($scope, $http, $location, AuthService, constants, $angularCacheFactory) {
     $scope.universities = [];
     $scope.showWelcome = true;
     $scope.hasSubmitted = false;
