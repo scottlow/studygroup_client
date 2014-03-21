@@ -10,8 +10,7 @@ angular.module('clientControllers', ['ngAnimate'])
 
     // Populate the universities drop down list
     $http.get(constants.serverName + 'universities/list/', {cache: $angularCacheFactory.get('defaultCache')}).success(function(data) {
-      var count = 0;
-      angular.forEach(data.results, function(value) {
+      angular.forEach(data, function(value) {
         $scope.universities.push(value);
       });
       $scope.university = $scope.universities[0];
