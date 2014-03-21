@@ -37,9 +37,6 @@ angular.module('studygroupClientApp', [
         storageMode: 'localStorage' // This cache will sync itself with `localStorage`.
     });
 
-    // This is breaking headers right now. We'll fix it later.
-    //$http.defaults.cache = $angularCacheFactory.get('defaultCache');    
-
     $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams){
       if(toState.url === '/') {
         // We are hitting the root of the page. If this is happeneing, we should check to see if the user has the cookie set to login.

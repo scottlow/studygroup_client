@@ -7,7 +7,7 @@ angular.module('clientControllers', ['ngAnimate'])
     $scope.hasSubmitted = false;
     $scope.dimMap = true;
     $scope.cameFromMap = false;
-    $http.get(constants.serverName + 'universities/list/').success(function(data) {
+    $http.get(constants.serverName + 'universities/list/', {cache: $angularCacheFactory.get('defaultCache')}).success(function(data) {
       var count = 0;
       angular.forEach(data.results, function(value) {
         $scope.universities.push(value);

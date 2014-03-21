@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('clientServices', ['ivpusic.cookie'])
-  .service('AuthService',  ['$http', 'ipCookie', '$location', function ($http, ipCookie, $location) {
+  .service('AuthService', function ($http, ipCookie, $location, $angularCacheFactory) {
     this.login = function(username, password) {
       var promise = $http.post('http://localhost:8000/' + 'verify_credentials/', {username: username, password: password})
       .then(function(response) {
@@ -22,7 +22,9 @@ angular.module('clientServices', ['ivpusic.cookie'])
     };
 
     this.isAuthenticated = function() {
-      if(ipCookie('studyToken') !== undefined) {
+      var authToken = ipCookie('studyToken');
+      if(authToken !== undefined) {
+        $http.defaults.headers.common.Authorization = 'Token ' + authToken;         
         return true;
       } else {
         return false;
@@ -31,7 +33,9 @@ angular.module('clientServices', ['ivpusic.cookie'])
 
     this.logout = function() {
       ipCookie.remove('studyToken');
-      delete $http.defaults.headers.common.Authorization;      
+      delete $http.defaults.headers.common.Authorization; 
+      console.log($angularCacheFactory.get('defaultCache'));
+      $angularCacheFactory.get('defaultCache').remove('http://localhost:8000/users/profile');           
       $location.path('/');
     };
-  }]);
+  });
