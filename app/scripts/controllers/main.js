@@ -2,11 +2,13 @@
 
 angular.module('clientControllers', ['ngAnimate'])
   .controller('MainCtrl', function ($scope, $http, $location, AuthService, constants, $angularCacheFactory) {
-    $scope.universities = [];
-    $scope.showWelcome = true;
-    $scope.hasSubmitted = false;
-    $scope.dimMap = true;
-    $scope.cameFromMap = false;
+    $scope.universities = []; // The drop down of universities to be displayed on the main page
+    $scope.showWelcome = true; // True if we're showing the welcome (Study better.) pane now? Or the sign up pane?
+    $scope.hasSubmitted = false; // True if the user has submitted the sign up form at least once.
+    $scope.dimMap = true; // True if the map is blurred and obscured by a dimmed background
+    $scope.cameFromMap = false; // True if the user was last viewing an undimmed map. (Boolean flag for UI purposes)
+
+    // Populate the universities drop down list
     $http.get(constants.serverName + 'universities/list/', {cache: $angularCacheFactory.get('defaultCache')}).success(function(data) {
       var count = 0;
       angular.forEach(data.results, function(value) {
@@ -15,15 +17,18 @@ angular.module('clientControllers', ['ngAnimate'])
       $scope.university = $scope.universities[0];
     });
 
+    // Show the sign up pane
     $scope.showSignUp = function() {
       $scope.showWelcome = false;
       $scope.dimMap = true;
     };
 
+    // Hide the sign up pane
     $scope.hideSignup = function() {
       $scope.dimMap = $scope.cameFromMap ? false : true;
     };    
 
+    // Attempt a login
     $scope.login = function() {
       if($scope.loginForm.$valid === true) {
         AuthService.login($scope.login.username, $scope.login.password).then(function(status) {
@@ -39,6 +44,7 @@ angular.module('clientControllers', ['ngAnimate'])
       }
     };
 
+    // When the user selects a university, move and zoom the map and undim it accordingly.
     $scope.chooseUniversity = function() {
       var center = new google.maps.LatLng($scope.university.latitude, $scope.university.longitude);
       $scope.gmap.panTo(center);
@@ -47,16 +53,20 @@ angular.module('clientControllers', ['ngAnimate'])
       $scope.cameFromMap = true;
     };
 
+    // Submit the registration form and perform validation on it.
     $scope.submitRegistration = function() {
       $scope.usernamePostError = false;
       $scope.usernameErrorMessage = '';
       $scope.emailPostError = false;
       $scope.emailErrorMessage = '';
+      // Attempt to submit registration information to the userver
       if ($scope.registerForm.$valid) {
         $http.post(constants.serverName + 'register/', {username: $scope.user.username, password: $scope.user.password, name: $scope.user.name, email: $scope.user.email})
         .success(function (data, status, headers, config) {
+          // Once registered, we should be able to log in
           AuthService.login($scope.user.username, $scope.user.password).then(function(status) {
             if(status !== 200) {
+              // We should never get here
               $scope.loginError = true;
             } else {
               $scope.loginError = false;
@@ -65,6 +75,7 @@ angular.module('clientControllers', ['ngAnimate'])
           });
         })
         .error(function (data, status, headers, config) {
+          // If there's been an error, time to display it back to the user on the form. (These are where server side errors are set)
           var h = headers();
           if(h['error-type'] === 'username') {
             $scope.usernamePostError = true;
@@ -79,6 +90,7 @@ angular.module('clientControllers', ['ngAnimate'])
     };
   })
   .directive('homeMap', function () {
+    // This directive is called only once when the initial app is loaded. It's what resets our map to good ol' #YYJ.
     return function ($scope, elem, attrs) {
       var mapOptions,
         latitude = attrs.latitude,
@@ -103,5 +115,6 @@ angular.module('clientControllers', ['ngAnimate'])
     };
   })
   .constant('constants', {
+    // Some constants in an attempt to reduce hardcoding. Turns out constants aren't global, so this doesn't do much. 
     serverName: 'http://localhost:8000/'
   });
