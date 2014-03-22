@@ -54,8 +54,7 @@ angular.module('clientControllers', ['ngAnimate'])
       $scope.zoom = 17;
       $scope.dimMap = false;
       $scope.cameFromMap = true;
-      $scope.displayUI = true;  
-      // $rootScope.boradcast    
+      $scope.displayUI = true;      
     };
 
     // Submit the registration form and perform validation on it.
