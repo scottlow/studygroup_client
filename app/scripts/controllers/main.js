@@ -7,6 +7,8 @@ angular.module('clientControllers', ['ngAnimate'])
     $scope.hasSubmitted = false; // True if the user has submitted the sign up form at least once.
     $scope.dimMap = true; // True if the map is blurred and obscured by a dimmed background
     $scope.cameFromMap = false; // True if the user was last viewing an undimmed map. (Boolean flag for UI purposes)
+    $scope.displayUI = false;
+    $scope.mapLat = "48.4428524";
 
     // Populate the universities drop down list
     $http.get(constants.serverName + 'universities/list/', {cache: $angularCacheFactory.get('defaultCache')}).success(function(data) {
@@ -46,10 +48,11 @@ angular.module('clientControllers', ['ngAnimate'])
     // When the user selects a university, move and zoom the map and undim it accordingly.
     $scope.chooseUniversity = function() {
       var center = new google.maps.LatLng($scope.university.latitude, $scope.university.longitude);
-      $scope.gmap.panTo(center);
-      $scope.gmap.setZoom(17);
+      // $scope.gmap.panTo(center);
+      // $scope.gmap.setZoom(17);
       $scope.dimMap = false;
       $scope.cameFromMap = true;
+      $scope.displayUI = true;      
     };
 
     // Submit the registration form and perform validation on it.
@@ -86,31 +89,6 @@ angular.module('clientControllers', ['ngAnimate'])
         });
       }
       $scope.hasSubmitted = true;
-    };
-  })
-  .directive('homeMap', function () {
-    // This directive is called only once when the initial app is loaded. It's what resets our map to good ol' #YYJ.
-    return function ($scope, elem, attrs) {
-      var mapOptions,
-        latitude = attrs.latitude,
-        longitude = attrs.longitude,
-        zoom = attrs.zoom,
-        map;
-
-      latitude = latitude && parseFloat(latitude, 10) || 48.4630959;
-      longitude = longitude && parseFloat(longitude, 10) || -123.3121053;
-      zoom = zoom && parseInt(zoom) || 10;
-
-      mapOptions = {
-        zoomControl: false,
-        panControl: false,
-        streetViewControl: false,
-        mapTypeControl: false,
-        zoom: zoom,
-        center: new google.maps.LatLng(latitude, longitude)
-      };
-      map = new google.maps.Map(elem[0], mapOptions);
-      $scope.gmap = map;
     };
   })
   .constant('constants', {

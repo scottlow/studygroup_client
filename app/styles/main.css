@@ -1,8 +1,11 @@
 html { height: 100% }
 
+.no-width {
+  width: 0px; !important;
+}
+
 .fill {
   height: 100%; 
-  width:100%;
 }
 
 .navbar {
@@ -19,16 +22,26 @@ html { height: 100% }
 body {
   height: 100%;
   margin: 0; 
-  padding: 0;
+  padding-top:50px;
 }
 
 .google-map {
-  width: 100%;
+  -webkit-transition:all linear 0.5s;
+  -moz-transition:all linear 0.5s;
+  -o-transition:all linear 0.5s;
+  transition:all linear 0.5s;  
   height: 100%;
 }
 
+.transition {
+  -webkit-transition:all linear 0.5s;
+  -moz-transition:all linear 0.5s;
+  -o-transition:all linear 0.5s;
+  transition:all linear 0.5s;  
+}
+
 .blur {
-  filter: blur(10px);
+  /*filter: blur(10px);*/
 }
 
 .signup-wrapper {
@@ -43,7 +56,6 @@ body {
 }
 
 .signup-wrapper-inner {
-  padding-top:24px; /* TODO Maybe this should't be hardcoded */
   display: table-cell;
   vertical-align: top;
 }
@@ -86,6 +98,7 @@ body {
   /* Start the vertical centering */
   .signup-wrapper-inner {
     vertical-align: middle;
+    padding-bottom:50px;
   }
   /* Handle the widths */
   .cover-container {
