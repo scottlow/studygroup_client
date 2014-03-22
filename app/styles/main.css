@@ -1,7 +1,11 @@
 html { height: 100% }
 
 .no-width {
-  width: 0px; !important;
+  width: 0px !important;
+}
+
+.no-height {
+  height: 0px !important;
 }
 
 .fill {
