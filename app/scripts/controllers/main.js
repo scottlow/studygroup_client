@@ -8,7 +8,9 @@ angular.module('clientControllers', ['ngAnimate'])
     $scope.dimMap = true; // True if the map is blurred and obscured by a dimmed background
     $scope.cameFromMap = false; // True if the user was last viewing an undimmed map. (Boolean flag for UI purposes)
     $scope.displayUI = false;
-    $scope.mapLat = "48.4428524";
+    $scope.lat = '48.4428524';
+    $scope.long  ='-123.3592758';
+    $scope.zoom = 13;
 
     // Populate the universities drop down list
     $http.get(constants.serverName + 'universities/list/', {cache: $angularCacheFactory.get('defaultCache')}).success(function(data) {
@@ -47,12 +49,13 @@ angular.module('clientControllers', ['ngAnimate'])
 
     // When the user selects a university, move and zoom the map and undim it accordingly.
     $scope.chooseUniversity = function() {
-      var center = new google.maps.LatLng($scope.university.latitude, $scope.university.longitude);
-      // $scope.gmap.panTo(center);
-      // $scope.gmap.setZoom(17);
+      $scope.lat = $scope.university.latitude;
+      $scope.long = $scope.university.longitude;
+      $scope.zoom = 17;
       $scope.dimMap = false;
       $scope.cameFromMap = true;
-      $scope.displayUI = true;      
+      $scope.displayUI = true;  
+      // $rootScope.boradcast    
     };
 
     // Submit the registration form and perform validation on it.

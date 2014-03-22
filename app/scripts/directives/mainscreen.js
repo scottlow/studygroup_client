@@ -8,7 +8,10 @@ angular.module('studygroupClientApp')
       transclude: true,
       scope: {
       	showInterface: '=',
-      	blurMap: '='
+      	blurMap: '=',
+      	mapLat: '=',
+      	mapLong: '=',
+      	zoom: '=',
       }, 
     };
   })
@@ -16,12 +19,10 @@ angular.module('studygroupClientApp')
     // This directive is called only once when the initial app is loaded. It's what resets our map to good ol' #YYJ.
     return function ($scope, elem, attrs) {
       var mapOptions,
-        latitude = attrs.latitude,
-        longitude = attrs.longitude,
-        zoom = attrs.zoom,
+        latitude = $scope.mapLat,
+        longitude = $scope.mapLong,
+        zoom = $scope.zoom,
         map;
-        
-      console.log(latitude);
 
       latitude = latitude && parseFloat(latitude, 10) || 48.4630959;
       longitude = longitude && parseFloat(longitude, 10) || -123.3121053;
@@ -36,6 +37,11 @@ angular.module('studygroupClientApp')
         center: new google.maps.LatLng(latitude, longitude)
       };
       map = new google.maps.Map(elem[0], mapOptions);
-      $scope.gmap = map;
+
+      $scope.$watchCollection('[mapLat, mapLong, zoom]', function(newValues, oldValues) {
+        var center = new google.maps.LatLng(newValues[0], newValues[1]);
+        map.panTo(center);
+        map.setZoom(newValues[2]);
+      })
     };
   });
