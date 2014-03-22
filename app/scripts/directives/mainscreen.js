@@ -7,15 +7,15 @@ angular.module('studygroupClientApp')
       restrict: 'E',
       transclude: true,
       scope: {
-      	showInterface: '=',
-      	blurMap: '=',
-      	mapLat: '=',
-      	mapLong: '=',
-      	zoom: '=',
-      }, 
+        showInterface: '=',
+        blurMap: '=',
+        mapLat: '=',
+        mapLong: '=',
+        zoom: '=',
+      },
     };
   })
-   .directive('homeMap', function () {
+   .directive('homeMap', function ($rootScope, $timeout) {
     // This directive is called only once when the initial app is loaded. It's what resets our map to good ol' #YYJ.
     return function ($scope, elem, attrs) {
       var mapOptions,
@@ -42,6 +42,13 @@ angular.module('studygroupClientApp')
         var center = new google.maps.LatLng(newValues[0], newValues[1]);
         map.panTo(center);
         map.setZoom(newValues[2]);
-      })
+      });
+
+      $timeout(function() {
+        google.maps.event.trigger(map, 'resize');
+        var center = new google.maps.LatLng($scope.mapLat, $scope.mapLong);
+        map.setCenter(center);
+      });
+
     };
   });

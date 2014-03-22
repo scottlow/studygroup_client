@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('clientControllers', ['ngAnimate'])
-  .controller('MainCtrl', function ($scope, $http, $location, AuthService, constants, $angularCacheFactory) {
+  .controller('MainCtrl', function ($rootScope, $scope, $http, $location, AuthService, constants, $angularCacheFactory) {
     $scope.universities = []; // The drop down of universities to be displayed on the main page
     $scope.showWelcome = true; // True if we're showing the welcome (Study better.) pane now? Or the sign up pane?
     $scope.hasSubmitted = false; // True if the user has submitted the sign up form at least once.
@@ -31,13 +31,13 @@ angular.module('clientControllers', ['ngAnimate'])
     $scope.hideSignup = function() {
       if($scope.cameFromMap) {
         $scope.dimMap = false;
-        $scope.displayUI = true;        
+        $scope.displayUI = true;
       } else {
         $scope.dimMap = true;
         $scope.displayUI = false;
         $scope.showWelcome = true;
       }
-    };    
+    };
 
     // Attempt a login
     $scope.login = function() {
@@ -62,7 +62,7 @@ angular.module('clientControllers', ['ngAnimate'])
       $scope.zoom = 17;
       $scope.dimMap = false;
       $scope.cameFromMap = true;
-      $scope.displayUI = true;      
+      $scope.displayUI = true;
     };
 
     // Submit the registration form and perform validation on it.
@@ -74,7 +74,7 @@ angular.module('clientControllers', ['ngAnimate'])
       // Attempt to submit registration information to the userver
       if ($scope.registerForm.$valid) {
         $http.post(constants.serverName + 'register/', {username: $scope.user.username, password: $scope.user.password, name: $scope.user.name, email: $scope.user.email})
-        .success(function (data, status, headers, config) {
+        .success(function (status) {
           // Once registered, we should be able to log in
           AuthService.login($scope.user.username, $scope.user.password).then(function(status) {
             if(status !== 200) {

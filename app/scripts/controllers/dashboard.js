@@ -8,9 +8,9 @@ angular.module('dashboardControllers', [])
     };
 
     // If the user has come from somewhere to here, get their username from the server and cache the result for use later.
-    $scope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams){
+    $scope.$on('$stateChangeSuccess', function(){
       $http.get('http://localhost:8000/' + 'users/profile', {cache: $angularCacheFactory.get('defaultCache')}).success(function(data) {
-        $scope.full_name = data[0].first_name === "" ? data[0].username : data[0].first_name;
+        $scope.full_name = data[0].first_name === '' ? data[0].username : data[0].first_name;
       });
     });
   });
