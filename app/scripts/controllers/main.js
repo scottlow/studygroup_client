@@ -24,11 +24,19 @@ angular.module('clientControllers', ['ngAnimate'])
     $scope.showSignUp = function() {
       $scope.showWelcome = false;
       $scope.dimMap = true;
+      $scope.displayUI = false;
     };
 
     // Hide the sign up pane
     $scope.hideSignup = function() {
-      $scope.dimMap = $scope.cameFromMap ? false : true;
+      if($scope.cameFromMap) {
+        $scope.dimMap = false;
+        $scope.displayUI = true;        
+      } else {
+        $scope.dimMap = true;
+        $scope.displayUI = false;
+        $scope.showWelcome = true;
+      }
     };    
 
     // Attempt a login

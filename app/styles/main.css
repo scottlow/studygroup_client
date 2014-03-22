@@ -31,9 +31,11 @@ body {
   -o-transition:all linear 0.5s;
   transition:all linear 0.5s;  
   height: 100%;
+  float:right;
 }
 
 .transition {
+  float:left;
   -webkit-transition:all linear 0.5s;
   -moz-transition:all linear 0.5s;
   -o-transition:all linear 0.5s;
