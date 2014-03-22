@@ -10,7 +10,7 @@ angular.module('clientServices', ['ivpusic.cookie'])
         // This is a success, so we can set the cookie.
         if(response.data.token) {
           ipCookie('studyToken', response.data.token, {expires: 14});
-          $http.defaults.headers.common.Authorization = 'Token ' + response.data.token;          
+          $http.defaults.headers.common.Authorization = 'Token ' + response.data.token;
         } else {
           // We should never get here
           console.log('Invalid token format.');
@@ -28,7 +28,7 @@ angular.module('clientServices', ['ivpusic.cookie'])
     this.isAuthenticated = function() {
       var authToken = ipCookie('studyToken');
       if(authToken !== undefined) {
-        $http.defaults.headers.common.Authorization = 'Token ' + authToken;         
+        $http.defaults.headers.common.Authorization = 'Token ' + authToken;
         return true;
       } else {
         return false;
@@ -38,8 +38,8 @@ angular.module('clientServices', ['ivpusic.cookie'])
     // Log the user out and clean up the session a bit by deleting the Authorization header, and clearing the cached profile data.
     this.logout = function() {
       ipCookie.remove('studyToken');
-      delete $http.defaults.headers.common.Authorization; 
-      $angularCacheFactory.get('defaultCache').remove('http://localhost:8000/users/profile');           
+      delete $http.defaults.headers.common.Authorization;
+      $angularCacheFactory.get('defaultCache').remove('http://localhost:8000/users/profile');
       $location.path('/');
     };
   });

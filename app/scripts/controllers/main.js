@@ -1,12 +1,16 @@
 'use strict';
 
 angular.module('clientControllers', ['ngAnimate'])
-  .controller('MainCtrl', function ($scope, $http, $location, AuthService, constants, $angularCacheFactory) {
+  .controller('MainCtrl', function ($rootScope, $scope, $http, $location, AuthService, constants, $angularCacheFactory) {
     $scope.universities = []; // The drop down of universities to be displayed on the main page
     $scope.showWelcome = true; // True if we're showing the welcome (Study better.) pane now? Or the sign up pane?
     $scope.hasSubmitted = false; // True if the user has submitted the sign up form at least once.
     $scope.dimMap = true; // True if the map is blurred and obscured by a dimmed background
     $scope.cameFromMap = false; // True if the user was last viewing an undimmed map. (Boolean flag for UI purposes)
+    $scope.displayUI = false;
+    $scope.lat = '48.4428524';
+    $scope.long  ='-123.3592758';
+    $scope.zoom = 13;
 
     // Populate the universities drop down list
     $http.get(constants.serverName + 'universities/list/', {cache: $angularCacheFactory.get('defaultCache')}).success(function(data) {
@@ -20,12 +24,20 @@ angular.module('clientControllers', ['ngAnimate'])
     $scope.showSignUp = function() {
       $scope.showWelcome = false;
       $scope.dimMap = true;
+      $scope.displayUI = false;
     };
 
     // Hide the sign up pane
     $scope.hideSignup = function() {
-      $scope.dimMap = $scope.cameFromMap ? false : true;
-    };    
+      if($scope.cameFromMap) {
+        $scope.dimMap = false;
+        $scope.displayUI = true;
+      } else {
+        $scope.dimMap = true;
+        $scope.displayUI = false;
+        $scope.showWelcome = true;
+      }
+    };
 
     // Attempt a login
     $scope.login = function() {
@@ -45,11 +57,12 @@ angular.module('clientControllers', ['ngAnimate'])
 
     // When the user selects a university, move and zoom the map and undim it accordingly.
     $scope.chooseUniversity = function() {
-      var center = new google.maps.LatLng($scope.university.latitude, $scope.university.longitude);
-      $scope.gmap.panTo(center);
-      $scope.gmap.setZoom(17);
+      $scope.lat = $scope.university.latitude;
+      $scope.long = $scope.university.longitude;
+      $scope.zoom = 17;
       $scope.dimMap = false;
       $scope.cameFromMap = true;
+      $scope.displayUI = true;
     };
 
     // Submit the registration form and perform validation on it.
@@ -61,7 +74,7 @@ angular.module('clientControllers', ['ngAnimate'])
       // Attempt to submit registration information to the userver
       if ($scope.registerForm.$valid) {
         $http.post(constants.serverName + 'register/', {username: $scope.user.username, password: $scope.user.password, name: $scope.user.name, email: $scope.user.email})
-        .success(function (data, status, headers, config) {
+        .success(function (status) {
           // Once registered, we should be able to log in
           AuthService.login($scope.user.username, $scope.user.password).then(function(status) {
             if(status !== 200) {
@@ -86,31 +99,6 @@ angular.module('clientControllers', ['ngAnimate'])
         });
       }
       $scope.hasSubmitted = true;
-    };
-  })
-  .directive('homeMap', function () {
-    // This directive is called only once when the initial app is loaded. It's what resets our map to good ol' #YYJ.
-    return function ($scope, elem, attrs) {
-      var mapOptions,
-        latitude = attrs.latitude,
-        longitude = attrs.longitude,
-        zoom = attrs.zoom,
-        map;
-
-      latitude = latitude && parseFloat(latitude, 10) || 48.4630959;
-      longitude = longitude && parseFloat(longitude, 10) || -123.3121053;
-      zoom = zoom && parseInt(zoom) || 10;
-
-      mapOptions = {
-        zoomControl: false,
-        panControl: false,
-        streetViewControl: false,
-        mapTypeControl: false,
-        zoom: zoom,
-        center: new google.maps.LatLng(latitude, longitude)
-      };
-      map = new google.maps.Map(elem[0], mapOptions);
-      $scope.gmap = map;
     };
   })
   .constant('constants', {
