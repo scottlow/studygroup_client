@@ -13,6 +13,12 @@ angular.module('studygroupClientApp')
         mapLong: '=',
         zoom: '=',
       },
+      controller: ['$scope', function($scope) {
+        console.log($scope);
+        $scope.searchForCourse = function() {
+          console.log('sesdf');
+        };
+      }],
     };
   })
    .directive('homeMap', function ($rootScope, $timeout) {
