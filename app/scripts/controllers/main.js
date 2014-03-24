@@ -55,6 +55,8 @@ angular.module('clientControllers', ['ngAnimate'])
 
     // When the user selects a university, move and zoom the map and undim it accordingly.
     $scope.chooseUniversity = function() {
+      StateService.setUniversity($scope.university);
+      StateService.getCourses();
       $scope.lat = $scope.university.latitude;
       $scope.long = $scope.university.longitude;
       $scope.zoom = 17;

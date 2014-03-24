@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('studygroupClientApp')
-  .directive('mainScreen', function () {
+  .directive('mainScreen', function (StateService) {
     return {
       templateUrl: 'scripts/directives/mainScreen.html',
       restrict: 'E',
@@ -14,9 +14,8 @@ angular.module('studygroupClientApp')
         zoom: '=',
       },
       controller: ['$scope', function($scope) {
-        $scope.searchForCourse = function() {
-          console.log('sesdf');
-        };
+        $scope.courseList = [];
+        $scope.courseList = StateService.getCourseList(); 
       }],
     };
   })
