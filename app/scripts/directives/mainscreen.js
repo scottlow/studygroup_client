@@ -14,7 +14,6 @@ angular.module('studygroupClientApp')
         zoom: '=',
       },
       controller: ['$scope', function($scope) {
-        console.log($scope);
         $scope.searchForCourse = function() {
           console.log('sesdf');
         };

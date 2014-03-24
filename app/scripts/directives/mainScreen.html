@@ -9,8 +9,8 @@
             <ul class="nav navbar-nav navbar-right">
               <li class="dropdown">
                 <a href="" class="dropdown-toggle" data-toggle="dropdown"><span class="h4 glyphicon glyphicon-plus"></span></a>
-                <ul class="class-search dropdown-menu" ng-model="classSearch" ng-change="searchForCourse()" ng-click="$event.stopPropagation();">
-                  <li><input type="text" class="form-control" placeholder="Search for a course"></li>             
+                <ul class="class-search dropdown-menu" ng-click="$event.stopPropagation();">
+                  <li><input type="text" class="form-control" ng-model="classSearch" ng-change="searchForCourse()" placeholder="Search for a course"></li>          
                   <li class="divider"></li>          
                 </ul>
               </li>

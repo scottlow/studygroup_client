@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('clientControllers', ['ngAnimate'])
-  .controller('MainCtrl', function ($rootScope, $scope, $http, $location, AuthService, constants, $angularCacheFactory) {
+  .controller('MainCtrl', function ($rootScope, $scope, $http, $location, AuthService, StateService, constants, $angularCacheFactory) {
     $scope.universities = []; // The drop down of universities to be displayed on the main page
     $scope.showWelcome = true; // True if we're showing the welcome (Study better.) pane now? Or the sign up pane?
     $scope.hasSubmitted = false; // True if the user has submitted the sign up form at least once.
@@ -13,11 +13,9 @@ angular.module('clientControllers', ['ngAnimate'])
     $scope.zoom = 13;
 
     // Populate the universities drop down list
-    $http.get(constants.serverName + 'universities/list/', {cache: $angularCacheFactory.get('defaultCache')}).success(function(data) {
-      angular.forEach(data, function(value) {
-        $scope.universities.push(value);
-      });
-      $scope.university = $scope.universities[0];
+    StateService.getUniversities().then(function() {
+      $scope.universities = StateService.getUniversityList();
+      $scope.university = $scope.universities[0];      
     });
 
     // Show the sign up pane
