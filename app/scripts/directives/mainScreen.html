@@ -6,14 +6,17 @@
       <div class="course-picker navbar navbar-default" ng-class="{'course-picker-show-animation' : showInterface}">
         <div class="container">
           <div class="navbar-collapse collapse">
+            <div class="course-btns btn-group btn-group-sm"> 
+              <course-button class="btn btn-default" ng-repeat="course in selectedCourses">{{course.name}}</course-button>
+            </div>       
             <ul class="nav navbar-nav navbar-right">
               <li class="dropdown">
-                <a href="" class="dropdown-toggle" data-toggle="dropdown"><span class="h4 glyphicon glyphicon-plus"></span></a>
+                <a href="" class="dropdown-toggle" data-toggle="dropdown"><span class="h5 glyphicon glyphicon-plus"></span></a>
                 <ul class="class-search dropdown-menu" role="menu" ng-click="$event.stopPropagation();">
                   <li><input type="text" class="form-control" ng-model="query" ng-change="searchForCourse()" placeholder="Search for a course"></li>          
                   <li ng-show="query.length > 0" class="divider"></li> 
                   <li ng-show="query.length > 0 && (courseList | filter:query).length === 0"><a href="">No Results</a></li>                  
-                  <li role="menuitem" ng-show="query.length > 0" ng-repeat="course in courseList | filter:query"><a href="">{{course.name}}</a></li>
+                  <li role="menuitem" ng-show="query.length > 0" ng-repeat="course in courseList | filter:query"><a ng-click="addCourse(course)" href="">{{course.name}}</a></li>
                 </ul>
               </li>
             </ul>

@@ -15,11 +15,17 @@ angular.module('studygroupClientApp')
       },
       controller: ['$scope', function($scope) {
         $scope.courseList = [];
-        $scope.courseList = StateService.getCourseList(); 
+        $scope.courseList = StateService.getCourseList();
+        $scope.selectedCourses = [];
+
+        $scope.addCourse = function(course) {
+          StateService.addCourse(course.id, course.name);
+          $scope.selectedCourses.push(course);
+        };
       }],
     };
   })
-   .directive('homeMap', function ($rootScope, $timeout) {
+  .directive('homeMap', function ($rootScope, $timeout) {
     // This directive is called only once when the initial app is loaded. It's what resets our map to good ol' #YYJ.
     return function ($scope, elem, attrs) {
       var mapOptions,
@@ -53,6 +59,14 @@ angular.module('studygroupClientApp')
         var center = new google.maps.LatLng($scope.mapLat, $scope.mapLong);
         map.setCenter(center);
       });
-
     };
+  })
+  .directive('course-button', function() {
+    return {
+      restrict: 'A',
+      template: '<button type="button" ng-transclude></button>',
+      link: function(scope, element, attrs) {
+        console.log(attrs.filtered);
+      }
+    }
   });

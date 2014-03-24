@@ -5,6 +5,7 @@ angular.module('studygroupClientApp')
     var universities = [];
     var selectedUniversity = {};
     var availableCourses = [];
+    var selectedCourses = [];
 
     this.getUniversities = function() {
       return $http.get('http://localhost:8000/' + 'universities/list/', {cache: $angularCacheFactory.get('defaultCache')}).success(function(data) {
@@ -32,6 +33,10 @@ angular.module('studygroupClientApp')
 
     this.setUniversity = function(university) {
       selectedUniversity = university;
-    }    
+    };
+
+    this.addCourse = function(courseID, courseName) {
+      selectedCourses.push({'id' : courseID, 'name' : courseName});
+    };  
 
   });
