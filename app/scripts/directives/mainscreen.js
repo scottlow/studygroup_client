@@ -61,12 +61,10 @@ angular.module('studygroupClientApp')
       });
     };
   })
-  .directive('course-button', function() {
+  .directive('courseButton', function() {
     return {
-      restrict: 'A',
-      template: '<button type="button" ng-transclude></button>',
-      link: function(scope, element, attrs) {
-        console.log(attrs.filtered);
-      }
+      restrict: 'E',
+      transclude: true,
+      template: '<button type="button" class="btn btn-default" ng-transclude></button>',
     }
   });
