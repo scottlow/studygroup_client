@@ -22,6 +22,25 @@ angular.module('studygroupClientApp')
           StateService.addCourse(course.id, course.name);
           $scope.selectedCourses.push(course);
         };
+
+        $scope.removeCourse = function(course) {
+          StateService.removeCourse(course.id);
+          for(var i = 0; i < $scope.selectedCourses.length; i++) {
+            if(course.id === $scope.selectedCourses[i].id) {
+              $scope.selectedCourses.splice(i, 1);
+            }
+          }
+        };
+
+        $scope.filterCourse = function(course) {
+          StateService.filterCourse(course.id);
+          for(var i = 0; i < $scope.selectedCourses.length; i++) {
+            if(course.id === $scope.selectedCourses[i].id) {
+              $scope.selectedCourses.splice(i, 1);
+            }
+          }
+        };
+
       }],
     };
   })
@@ -65,6 +84,6 @@ angular.module('studygroupClientApp')
     return {
       restrict: 'E',
       transclude: true,
-      template: '<button type="button" class="btn btn-default" ng-transclude></button>',
-    }
+      template: '<div class="course-btn btn btn-default" ng-click="filterCourse(course)" ng-transclude></div><div class="course-close-btn btn btn-primary" ng-click="removeCourse(course)"><span class="h6 glyphicon glyphicon-remove"></span></div>',
+    };
   });

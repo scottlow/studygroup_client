@@ -8,6 +8,21 @@ html { height: 100% }
   outline: none;
 }
 
+.course-close-btn {
+  border-top-left-radius: 0px;
+  border-bottom-left-radius: 0px;
+  margin-right: 25px;
+}
+
+.course-btn {
+  border-bottom-right-radius: 0px;
+  border-top-right-radius: 0px;  
+}
+
+.course-btn-group {
+  padding-top:8px;
+}
+
 .navbar {
   z-index: 3;
 }

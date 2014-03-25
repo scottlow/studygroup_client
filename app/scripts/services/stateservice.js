@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('studygroupClientApp')
-  .service('StateService', function ($http, $angularCacheFactory) {
+  .service('StateService', function ($http, $angularCacheFactory, AuthService) {
     var universities = [];
     var selectedUniversity = {};
     var availableCourses = [];
@@ -36,7 +36,15 @@ angular.module('studygroupClientApp')
     };
 
     this.addCourse = function(courseID, courseName) {
-      selectedCourses.push({'id' : courseID, 'name' : courseName});
-    };  
+      selectedCourses.push({'id' : courseID, 'name' : courseName, 'active' : true});
+    }; 
+
+    this.removeCourse = function(courseID) {
+      for(var i = 0; i < selectedCourses.length; i++) {
+        if(courseID === selectedCourses[i].id) {
+          selectedCourses.splice(i, 1);
+        }
+      }      
+    };       
 
   });
