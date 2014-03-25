@@ -16,7 +16,7 @@
                   <li><input type="text" class="form-control" ng-model="query" ng-change="searchForCourse()" placeholder="Search for a course"></li>          
                   <li ng-show="query.length > 0" class="divider"></li> 
                   <li ng-show="query.length > 0 && (courseList | filter:query).length === 0"><a href="">No Results</a></li>                  
-                  <li role="menuitem" ng-show="query.length > 0" ng-repeat="course in courseList | filter:query"><a ng-click="addCourse(course)" href="">{{course.name}}</a></li>
+                  <li role="menuitem" ng-show="query.length > 0" ng-repeat="course in courseList | filter:query" ng-class="{disabled : course.disabled}"><a ng-click="course.disabled || addCourse(course)" href="">{{course.name}}</a></li>
                 </ul>
               </li>
             </ul>

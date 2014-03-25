@@ -22,6 +22,7 @@ angular.module('studygroupClientApp')
     this.getCourses = function() {
       return $http.get('http://localhost:8000/' + 'courses/university/' + selectedUniversity.id, {cache: $angularCacheFactory.get('defaultCache')}).success(function(data) {
         angular.forEach(data, function(value) {
+          value.disabled = false;          
           availableCourses.push(value);
         });
       });

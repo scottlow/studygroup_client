@@ -21,6 +21,7 @@ angular.module('studygroupClientApp')
 
         $scope.addCourse = function(course) {
           StateService.addCourse(course.id, course.name);
+          course.disabled = true;          
           $scope.selectedCourses.push(course);
         };
 
@@ -29,6 +30,7 @@ angular.module('studygroupClientApp')
           for(var i = 0; i < $scope.selectedCourses.length; i++) {
             if(course.id === $scope.selectedCourses[i].id) {
               $scope.selectedCourses.splice(i, 1);
+              course.disabled = false;
             }
           }
         };
