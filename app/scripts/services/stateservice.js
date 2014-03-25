@@ -45,6 +45,14 @@ angular.module('studygroupClientApp')
           selectedCourses.splice(i, 1);
         }
       }      
-    };       
+    };  
+
+    this.filterCourse = function(courseID) {
+      for(var i = 0; i < selectedCourses.length; i++) {
+        if(courseID === selectedCourses[i].id) {
+          selectedCourses[i].active = !selectedCourses[i].active;
+        }
+      }      
+    };      
 
   });

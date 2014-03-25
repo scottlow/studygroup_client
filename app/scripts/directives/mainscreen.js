@@ -17,6 +17,7 @@ angular.module('studygroupClientApp')
         $scope.courseList = [];
         $scope.courseList = StateService.getCourseList();
         $scope.selectedCourses = [];
+        $scope.active = '';
 
         $scope.addCourse = function(course) {
           StateService.addCourse(course.id, course.name);
@@ -33,12 +34,7 @@ angular.module('studygroupClientApp')
         };
 
         $scope.filterCourse = function(course) {
-          StateService.filterCourse(course.id);
-          for(var i = 0; i < $scope.selectedCourses.length; i++) {
-            if(course.id === $scope.selectedCourses[i].id) {
-              $scope.selectedCourses.splice(i, 1);
-            }
-          }
+          StateService.filterCourse(course.id); 
         };
 
       }],
@@ -84,6 +80,23 @@ angular.module('studygroupClientApp')
     return {
       restrict: 'E',
       transclude: true,
-      template: '<div class="course-btn btn btn-default" ng-click="filterCourse(course)" ng-transclude></div><div class="course-close-btn btn btn-primary" ng-click="removeCourse(course)"><span class="h6 glyphicon glyphicon-remove"></span></div>',
+      require: '^mainScreen',
+      scope: {
+        active: '@active',
+      },
+      template: '<div ng-class="active" class="course-btn btn btn-default" ng-click="filterCourse()" ng-transclude></div><div class="course-close-btn btn btn-primary" ng-click="removeCourse()"><span class="h6 glyphicon glyphicon-remove"></span></div>',
+      link: function(scope, elements, attrs) {
+        scope.filterCourse = function() {
+          if(scope.active == 'active') {
+            scope.active = ''
+          } else {
+            scope.active = 'active';
+          }
+          scope.$parent.filterCourse(scope.$parent.course);
+        }
+        scope.removeCourse = function() {
+          scope.$parent.removeCourse(scope.$parent.course);
+        }
+      },
     };
   });
