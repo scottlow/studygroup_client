@@ -1,11 +1,34 @@
 'use strict';
 
 angular.module('studygroupClientApp')
-  .service('StateService', function ($http, $angularCacheFactory, AuthService) {
+  .service('StateService', function ($rootScope, $http, $angularCacheFactory, AuthService, $timeout) {
     var universities = [];
     var selectedUniversity = {};
     var availableCourses = [];
     var selectedCourses = [];
+
+    var currentUser = {};
+
+    this.processLogin = function() {
+      $http.get('http://localhost:8000/' + 'users/profile')
+      .success(function(data) {
+        currentUser = data[0];
+        $timeout(function() {
+          $rootScope.$broadcast('loginProcessed');
+        }, 0); // This is hacky and should probably be refactored. Making it higher than this causes notable delay on the UI
+      })
+      .error(function(error){
+        console.log('Error at StateService.processLogin');
+      });
+    };
+
+    this.getUsername = function() {
+      return currentUser.username;
+    };
+
+    this.getSelectedCourses = function() {
+      return currentUser.courses;
+    };
 
     this.getUniversities = function() {
       return $http.get('http://localhost:8000/' + 'universities/list/', {cache: $angularCacheFactory.get('defaultCache')}).success(function(data) {
@@ -22,6 +45,7 @@ angular.module('studygroupClientApp')
     this.getCourses = function() {
       return $http.get('http://localhost:8000/' + 'courses/university/' + selectedUniversity.id, {cache: $angularCacheFactory.get('defaultCache')}).success(function(data) {
         angular.forEach(data, function(value) {
+          console.log(value);
           value.disabled = false;          
           availableCourses.push(value);
         });
@@ -37,6 +61,15 @@ angular.module('studygroupClientApp')
     };
 
     this.addCourse = function(courseID, courseName) {
+      if(AuthService.isAuthenticated()) {       
+        $http.post('http://localhost:8000/' + 'courses/add/', {'course_id' : courseID})
+        .success(function(data) {
+          console.log('Added course');
+        })
+        .error(function(error) {
+          console.log('Error adding course');
+        });
+      }
       selectedCourses.push({'id' : courseID, 'name' : courseName, 'active' : true});
     }; 
 
@@ -54,6 +87,6 @@ angular.module('studygroupClientApp')
           selectedCourses[i].active = !selectedCourses[i].active;
         }
       }      
-    };      
+    };  
 
   });

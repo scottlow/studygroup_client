@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('studygroupClientApp')
-  .directive('mainScreen', function (StateService) {
+  .directive('mainScreen', function (StateService, $rootScope) {
     return {
       templateUrl: 'scripts/directives/mainScreen.html',
       restrict: 'E',
@@ -24,6 +24,10 @@ angular.module('studygroupClientApp')
           course.disabled = true;          
           $scope.selectedCourses.push(course);
         };
+
+        $scope.$on('loginProcessed', function(){
+          $scope.selectedCourses = StateService.getSelectedCourses();    
+        });         
 
         $scope.removeCourse = function(course) {
           StateService.removeCourse(course.id);
