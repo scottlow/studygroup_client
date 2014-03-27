@@ -19,16 +19,15 @@ angular.module('studygroupClientApp')
         $scope.active = '';
 
         $scope.addCourse = function(course) {
-          StateService.addCourse(course.id, course.name);
-          course.disabled = true;          
-          $scope.selectedCourses.push(course);
+          course.disabled = true;           
+          StateService.addCourse(course); 
         };
 
         $scope.$on('loginProcessed', function(){          
-          $scope.selectedCourses = StateService.getSelectedCourses();    
+          $scope.selectedCourses = StateService.getSelectedCourses(); 
           $scope.courseList = StateService.getCourseList();          
         });
-         
+
         $scope.$on('universitySelected', function() {
           // console.log('universitySelected');
           StateService.getCourses().then(function() {
@@ -37,13 +36,13 @@ angular.module('studygroupClientApp')
         });       
 
         $scope.removeCourse = function(course) {
+          course.disabled = false;          
           StateService.removeCourse(course.id);
           for(var i = 0; i < $scope.selectedCourses.length; i++) {
             if(course.id === $scope.selectedCourses[i].id) {
               $scope.selectedCourses.splice(i, 1);
-              course.disabled = false;
             }
-          }
+          }         
         };
 
         $scope.filterCourse = function(course) {
