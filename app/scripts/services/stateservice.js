@@ -78,6 +78,21 @@ angular.module('studygroupClientApp')
     }; 
 
     this.removeCourse = function(courseID) {
+      if(AuthService.isAuthenticated()) {       
+        $http.post('http://localhost:8000/' + 'courses/remove/', {'course_id' : courseID})
+        .success(function(data) {
+          self.removeClientCourse();
+          console.log('Removed course');
+        })
+        .error(function(error) {
+          console.log('Error adding course');
+        });
+      } else {
+        self.removeClientCourse();
+      }     
+    };
+
+    this.removeClientCourse = function(courseID) {
       for(var i = 0; i < selectedCourses.length; i++) {
         if(courseID === selectedCourses[i].id) {
           selectedCourses.splice(i, 1);

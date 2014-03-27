@@ -30,7 +30,7 @@ angular.module('studygroupClientApp')
         });
          
         $scope.$on('universitySelected', function() {
-          console.log('universitySelected');
+          // console.log('universitySelected');
           StateService.getCourses().then(function() {
             $scope.courseList = StateService.getCourseList();
           })
