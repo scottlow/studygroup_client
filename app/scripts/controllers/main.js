@@ -56,7 +56,7 @@ angular.module('clientControllers', ['ngAnimate'])
     // When the user selects a university, move and zoom the map and undim it accordingly.
     $scope.chooseUniversity = function() {
       StateService.setUniversity($scope.university);
-      StateService.getCourses();
+      $scope.$broadcast('universitySelected');
       $scope.lat = $scope.university.latitude;
       $scope.long = $scope.university.longitude;
       $scope.zoom = 17;
@@ -73,7 +73,7 @@ angular.module('clientControllers', ['ngAnimate'])
       $scope.emailErrorMessage = '';
       // Attempt to submit registration information to the userver
       if ($scope.registerForm.$valid) {
-        $http.post(constants.serverName + 'register/', {username: $scope.user.username, password: $scope.user.password, name: $scope.user.name, email: $scope.user.email})
+        $http.post(constants.serverName + 'register/', {username: $scope.user.username, password: $scope.user.password, name: $scope.user.name, email: $scope.user.email, university: $scope.university.id})
         .success(function (status) {
           // Once registered, we should be able to log in
           AuthService.login($scope.user.username, $scope.user.password).then(function(status) {

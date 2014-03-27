@@ -40,11 +40,11 @@
         <p class="lead">Please complete the fields below to register.</p>
         <form name="registerForm" role="form" ng-submit="submitRegistration()" novalidate>
           <!-- Name -->
-          <div class="form-group input-group-lg">
+          <div class="form-group">
               <input type="text" name="name" class="form-control" ng-model="user.name" placeholder="Full Name (Optional)">
           </div>        
           <!-- Username -->
-          <div class="form-group input-group-lg" ng-class="{ 'has-error' : (registerForm.username.$invalid && hasSubmitted) || usernamePostError}">
+          <div class="form-group" ng-class="{ 'has-error' : (registerForm.username.$invalid && hasSubmitted) || usernamePostError}">
             <input type="text" name="username" class="form-control" ng-model="user.username" ng-minlength="4" ng-maxlength="14" required placeholder="Username">           
             <p ng-show="usernamePostError" class="help-block">{{usernameErrorMessage}}</p>             
             <p ng-show="registerForm.username.$error.required && hasSubmitted" class="help-block">Please enter a username greater than 3 characters.</p>            
@@ -52,16 +52,19 @@
             <p ng-show="registerForm.username.$error.maxlength && hasSubmitted" class="help-block">Please enter a username less than 15 characters.</p>
           </div>
           <!-- Password  -->
-          <div class="form-group input-group-lg" ng-class="{ 'has-error' : registerForm.password.$invalid && hasSubmitted }">
+          <div class="form-group" ng-class="{ 'has-error' : registerForm.password.$invalid && hasSubmitted }">
               <input type="password" name="password" class="form-control" ng-model="user.password" required placeholder="Password">
               <p ng-show="registerForm.password.$invalid && hasSubmitted" class="help-block">Please enter a password.</p>
           </div>   
           <!-- Email  -->
-          <div class="form-group input-group-lg" ng-class="{ 'has-error' : registerForm.email.$invalid && hasSubmitted || emailPostError }">
+          <div class="form-group" ng-class="{ 'has-error' : registerForm.email.$invalid && hasSubmitted || emailPostError }">
               <input type="email" name="email" class="form-control" ng-model="user.email" required placeholder="Email">
               <p ng-show="emailPostError" class="help-block">{{emailErrorMessage}}</p>              
               <p ng-show="registerForm.email.$invalid && hasSubmitted" class="help-block">Please enter a valid email.</p>
-          </div> 
+          </div>
+        <div class="form-group">
+          <select ng-model="university" class="university-picker form-control" ng-options="university.name for university in universities"></select>          
+        </div>  
         <button type="submit" ng-click="showSignUp()" class="btn btn-primary btn-lg">Register</button>
         <button type="button" ng-click="hideSignup()" class="btn btn-default btn-lg">Cancel</button>                 
         </form>

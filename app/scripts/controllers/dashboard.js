@@ -13,6 +13,6 @@ angular.module('dashboardControllers', [])
     });
 
     $scope.$on('loginProcessed', function(){
-      $scope.full_name = StateService.getUsername();   
+      $scope.full_name = StateService.getUsername();  
     });    
   });

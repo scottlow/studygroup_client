@@ -6,21 +6,9 @@ angular.module('studygroupClientApp')
     var selectedUniversity = {};
     var availableCourses = [];
     var selectedCourses = [];
+    var self = this;
 
     var currentUser = {};
-
-    this.processLogin = function() {
-      $http.get('http://localhost:8000/' + 'users/profile')
-      .success(function(data) {
-        currentUser = data[0];
-        $timeout(function() {
-          $rootScope.$broadcast('loginProcessed');
-        }, 0); // This is hacky and should probably be refactored. Making it higher than this causes notable delay on the UI
-      })
-      .error(function(error){
-        console.log('Error at StateService.processLogin');
-      });
-    };
 
     this.getUsername = function() {
       return currentUser.username;
@@ -44,13 +32,29 @@ angular.module('studygroupClientApp')
 
     this.getCourses = function() {
       return $http.get('http://localhost:8000/' + 'courses/university/' + selectedUniversity.id, {cache: $angularCacheFactory.get('defaultCache')}).success(function(data) {
+      // console.log('Getting courses');
+      availableCourses = [];        
         angular.forEach(data, function(value) {
-          console.log(value);
           value.disabled = false;          
           availableCourses.push(value);
         });
       });
     };
+
+    this.processLogin = function() {
+      $http.get('http://localhost:8000/' + 'users/profile')
+      .success(function(data) {
+        currentUser = data[0];
+        selectedUniversity = currentUser.university;
+        self.getCourses();
+        $timeout(function() {
+          $rootScope.$broadcast('loginProcessed');
+        }, 0); // This is hacky and should probably be refactored. Making it higher than this causes notable delay on the UI
+      })
+      .error(function(error){
+        console.log('Error at StateService.processLogin');
+      });
+    };    
 
     this.getCourseList = function() {
       return availableCourses;

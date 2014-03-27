@@ -15,7 +15,6 @@ angular.module('studygroupClientApp')
       },
       controller: ['$scope', function($scope) {
         $scope.courseList = [];
-        $scope.courseList = StateService.getCourseList();
         $scope.selectedCourses = [];
         $scope.active = '';
 
@@ -25,9 +24,17 @@ angular.module('studygroupClientApp')
           $scope.selectedCourses.push(course);
         };
 
-        $scope.$on('loginProcessed', function(){
+        $scope.$on('loginProcessed', function(){          
           $scope.selectedCourses = StateService.getSelectedCourses();    
-        });         
+          $scope.courseList = StateService.getCourseList();          
+        });
+         
+        $scope.$on('universitySelected', function() {
+          console.log('universitySelected');
+          StateService.getCourses().then(function() {
+            $scope.courseList = StateService.getCourseList();
+          })
+        });       
 
         $scope.removeCourse = function(course) {
           StateService.removeCourse(course.id);
