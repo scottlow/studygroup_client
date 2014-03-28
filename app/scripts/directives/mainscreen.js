@@ -17,12 +17,7 @@ angular.module('studygroupClientApp')
         $scope.courseList = [];
         $scope.selectedCourses = [];
         $scope.active = '';
-
-        $scope.tabs = [
-          { title:"Dynamic Title 1", content:"Dynamic content 1" },
-          { title:"Dynamic Title 2", content:"Dynamic content 2" }
-        ];        
-
+        
         if(AuthService.isAuthenticated()) {
           $scope.showCreateNewSession = true;
         };
@@ -35,8 +30,7 @@ angular.module('studygroupClientApp')
         $scope.$on('loginProcessed', function(){          
           $scope.selectedCourses = StateService.getSelectedCourses(); 
           $scope.courseList = StateService.getCourseList();
-          $scope.newSessionsCourse = $scope.courseList[0];
-          console.log($scope.newSessionsCourse);
+          $scope.newSessionCourse = $scope.selectedCourses[0];
         });
 
         $scope.$on('universitySelected', function() {
@@ -44,7 +38,7 @@ angular.module('studygroupClientApp')
           StateService.getCourses().then(function() {
             $scope.courseList = StateService.getCourseList();
           })
-        });       
+        });     
 
         $scope.removeCourse = function(course) {
           course.disabled = false;          

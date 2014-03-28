@@ -47,13 +47,16 @@
         <form role="form">
           <div class="form-group">
             <label for="modalCoursePicker">Select a course</label>
-            <select ng-model="newSessionCourse" id="modalCoursePicker" class="form-control" ng-options="c.id as c.name for c in courseList"></select>
-          </div>      
-          <tabset>
-            <tab heading="Static title">Static content</tab>
-            <tab ng-repeat="tab in tabs" heading="{{tab.title}}" active="tab.active" disabled="tab.disabled">
-              {{tab.content}}
+            <select ng-model="newSessionCourse" id="modalCoursePicker" class="form-control" ng-options="c as c.name for c in selectedCourses"></select>
+          </div>
+          <p><strong>Are you studying on campus or off campus?</strong></p>
+          <tabset justified="true">
+            <tab heading="On Campus">
+              <div class="container"></div>
             </tab>
+            <tab heading="Off Campus">
+              <div class="container"></div>
+            </tab>            
           </tabset>
         </form>
       </div>
