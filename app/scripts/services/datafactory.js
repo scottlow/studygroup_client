@@ -1,12 +1,12 @@
 'use strict';
 //weblog.asp.net/dwahlin/archive/2013/08/16/using-an-angularjs-factory-to-interact-with-a-restful-service.aspx
 angular.module('studygroupClientApp')
-  .factory('dataFactory', ['$http', function ($http) {
+  .factory('DataFactory', ['$http', function ($http) {
     // Service logic
     // ...
 
     var urlbase = 'http://localhost:8000/';
-    var dataFactory = {};
+    var DataFactory = {};
 
     dataFactory.getUniversities() = function() {
         return $http.get(urlbase + 'universities/list');
@@ -21,7 +21,7 @@ angular.module('studygroupClientApp')
     };
 
     dataFactory.updateProfile = function(profile) {
-        return $http.post(urlbase + 'account/update_profile', profile)   ;
+        return $http.post(urlbase + 'account/update_profile', profile);
     };
 
     dataFactory.getCoursesByUniversity = function(uni_id, start_date, end_date) {
@@ -32,12 +32,12 @@ angular.module('studygroupClientApp')
         return $http.get(urlbase + 'courses/list');
     };
 
-    dataFactory.addCourse = function(course) {
-        return $http.post(urlbase + 'course/add');
+    dataFactory.addCourse = function(course_id) {
+        return $http.post(urlbase + 'course/add', course_id);
     };
 
-    dataFactory.removeCourse = function(course) {
-        return $http.post(urlbase + 'course/remove');
+    dataFactory.removeCourse = function(course_id) {
+        return $http.post(urlbase + 'course/remove', course_id);
     };
 
     dataFactory.createSession = function(session) {

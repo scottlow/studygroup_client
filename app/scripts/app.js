@@ -10,7 +10,8 @@ angular.module('studygroupClientApp', [
   'dashboardControllers',
   'clientServices',
   'ui.router',
-  'jmdobry.angular-cache'
+  'jmdobry.angular-cache',
+  'ui.bootstrap'
 ])
   .config(function ($stateProvider, $urlRouterProvider) {
     // Define the states of our application

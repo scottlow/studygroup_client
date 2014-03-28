@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('studygroupClientApp')
-  .directive('mainScreen', function (StateService, $rootScope) {
+  .directive('mainScreen', function (StateService, $rootScope, AuthService) {
     return {
       templateUrl: 'scripts/directives/mainScreen.html',
       restrict: 'E',
@@ -18,6 +18,15 @@ angular.module('studygroupClientApp')
         $scope.selectedCourses = [];
         $scope.active = '';
 
+        $scope.tabs = [
+          { title:"Dynamic Title 1", content:"Dynamic content 1" },
+          { title:"Dynamic Title 2", content:"Dynamic content 2" }
+        ];        
+
+        if(AuthService.isAuthenticated()) {
+          $scope.showCreateNewSession = true;
+        };
+
         $scope.addCourse = function(course) {
           course.disabled = true;           
           StateService.addCourse(course); 
@@ -25,7 +34,9 @@ angular.module('studygroupClientApp')
 
         $scope.$on('loginProcessed', function(){          
           $scope.selectedCourses = StateService.getSelectedCourses(); 
-          $scope.courseList = StateService.getCourseList();          
+          $scope.courseList = StateService.getCourseList();
+          $scope.newSessionsCourse = $scope.courseList[0];
+          console.log($scope.newSessionsCourse);
         });
 
         $scope.$on('universitySelected', function() {
