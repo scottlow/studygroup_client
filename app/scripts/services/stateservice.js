@@ -54,7 +54,7 @@ angular.module('studygroupClientApp')
            * to add the course to both the data model and MainScreen.selectedCourses (again due to the singleton
            * nature of services in Angular).
            * 
-           * By doing this, we're essentially GURANTEEING that the UI and the data model will be consistent with one
+           * By doing this, we're essentially GUARANTEEING that the UI and the data model will be consistent with one
            * another.
            */
           angular.forEach(data, function(value) {
@@ -64,7 +64,7 @@ angular.module('studygroupClientApp')
             } else {
               value.disabled = true;
               availableCourses.push(value);
-              self.addCourse(value);
+              selectedCourses.push(value);
             }          
           });
         } else {
@@ -110,24 +110,25 @@ angular.module('studygroupClientApp')
         })
         .error(function(error) {
           console.log('Error adding course');
+          self.removeCourseData(course.id);
         });
       }
+      // This will push to the UI prematurely (i.e. before the post request has gone through. The call to self.removeCourseData above will fix this if it errors out)
       selectedCourses.push(course);
     }; 
 
-    this.removeCourse = function(courseID) {
+    this.removeCourse = function(course) {
       if(AuthService.isAuthenticated()) {       
-        $http.post('http://localhost:8000/' + 'courses/remove/', {'course_id' : courseID})
+        $http.post('http://localhost:8000/' + 'courses/remove/', {'course_id' : course.id})
         .success(function(data) {
-          self.removeCourseData();
           console.log('Removed course');
         })
         .error(function(error) {
           console.log('Error adding course');
+          self.addCourse(course);
         });
-      } else {
-        self.removeCourseData();
-      }     
+      }
+      self.removeCourseData(course.id);      
     };
 
     this.removeCourseData = function(courseID) {
