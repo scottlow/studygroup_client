@@ -3,7 +3,7 @@
     <div class="float-left transition" ng-class="{'no-width' : !showInterface, 'col-xs-3 col-md-3 fill' : showInterface}"> 
       <div class="container-fluid" ng-show="showInterface">   
       <div class="sidebar">
-        <button ng-show="showCreateNewSession" class="btn btn-success btn-lg" data-toggle="modal" data-target="#newSessionModal">
+        <button ng-show="showCreateNewSession" ng-click="showNewSessionModal()" class="btn btn-success btn-lg" data-toggle="modal" data-target="#newSessionModal">
           New Session
         </button>        
       </div>
@@ -39,7 +39,7 @@
   </div>
 </div>
 
-<!-- Create Session Modal -->
+<!-- Create New Session Modal -->
 <div class="modal fade" id="newSessionModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -51,15 +51,29 @@
         <form role="form">
           <div class="form-group">
             <label for="modalCoursePicker">Select a course</label>
-            <select ng-model="newSessionCourse" id="modalCoursePicker" class="form-control" ng-options="c as c.name for c in selectedCourses"></select>
+            <select ng-model="newSessionCourse" id="modalCoursePicker" class="form-control" ng-options="c as c.full_name for c in selectedCourses"></select>
           </div>
           <p><strong>Are you studying on campus or off campus?</strong></p>
           <tabset justified="true">
             <tab heading="On Campus">
-              <div class="container"></div>
+              <div class="container-fluid container-modal">
+                <form role="form">
+                  <div class="form-group">
+                    <h4><small>Currently selected university: {{university.name}}</small></h4>
+                  </div>
+                  <div class="form-group">
+                    <label for="modalOnCampusPicker">Pick a building</label>
+                    <select ng-model="newSessionBuilding" id="modalOnCampusPicker" class="form-control" ng-options="b as b.name for b in buildingList"></select>
+                  </div>
+                  <div class="form-group">
+                    <label for="modalRoomNumber">Enter a room number:</label>
+                    <input ng-model="newSessionRoomNumber" id="modalRoomNumber" class="form-control"></input> 
+                  </div>
+                </form>
+              </div>
             </tab>
             <tab heading="Off Campus">
-              <div class="container"></div>
+              <div class="container-fluid container-modal"></div>
             </tab>            
           </tabset>
         </form>

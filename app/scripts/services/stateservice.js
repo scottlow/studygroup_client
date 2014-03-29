@@ -6,6 +6,7 @@ angular.module('studygroupClientApp')
     var selectedUniversity = {};
     var availableCourses = [];
     var selectedCourses = [];
+    var universityBuildings = [];
     var self = this;
 
     var currentUser = {};
@@ -24,10 +25,22 @@ angular.module('studygroupClientApp')
           universities.push(value);
         });
       });
-    };
+    };   
 
     this.getUniversityList = function() {
       return universities;
+    };
+
+    this.getUniversityBuildings = function() {
+      return $http.get('http://localhost:8000/' + 'locations/university/' + selectedUniversity.id, {cache: $angularCacheFactory.get('defaultCache')}).success(function(data) {
+        angular.forEach(data, function(value) {
+          universityBuildings.push(value);
+        });
+      });
+    };   
+
+    this.getBuildingList = function() {
+      return universityBuildings;
     };
 
     this.getCourses = function() {
@@ -51,7 +64,7 @@ angular.module('studygroupClientApp')
            * noting here that pushing to availableCourses actually pushes to MainScreen.courseList due
            * to the singleton nature of services in angular. It's confusing, I know.)
            *
-           * Otherwise, if the course has been selected by the user, disable it, and call StateService.addCourse()
+           * Otherwise, if the course has been selected by the user, disable it, and push it to selectedCourses
            * to add the course to both the data model and MainScreen.selectedCourses (again due to the singleton
            * nature of services in Angular).
            * 
@@ -61,6 +74,7 @@ angular.module('studygroupClientApp')
           angular.forEach(data, function(value) {
             var splitName = value.name.split(" - ");
             value.short_name = splitName[0];
+            value.full_name = value.name;            
             value.name = splitName[1];
             if(selectedCourseIds.indexOf(value.id) === -1){
               value.disabled = false;
@@ -90,7 +104,7 @@ angular.module('studygroupClientApp')
       $http.get('http://localhost:8000/' + 'users/profile')
       .success(function(data) {
         currentUser = data[0];
-        selectedUniversity = currentUser.university;
+        self.setUniversity(currentUser.university);
         self.getCourses().then(function() {
           //This gurantees that both the user and the list of available courses have been grabbed (and the latter filtered) before the loginProcessed event is broadcast.
           $rootScope.$broadcast('loginProcessed');         
@@ -108,6 +122,10 @@ angular.module('studygroupClientApp')
     this.setUniversity = function(university) {
       selectedUniversity = university;
     };
+
+    this.getUniversity = function() {
+      return selectedUniversity;
+    };    
 
     this.addCourse = function(course) {
       if(AuthService.isAuthenticated()) {       

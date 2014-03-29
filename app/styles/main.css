@@ -258,3 +258,11 @@ body {
 .main-screen-container {
   padding-top:50px;
 }
+
+/* Modal Styles */
+.container-modal {
+  padding: 10px 10px 10px 10px;
+  border-left: 1px solid #dddddd;
+  border-right: 1px solid #dddddd;
+  border-bottom: 1px solid #dddddd;    
+}
