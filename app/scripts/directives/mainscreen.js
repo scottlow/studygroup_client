@@ -17,7 +17,7 @@ angular.module('studygroupClientApp')
         $scope.courseList = [];
         $scope.selectedCourses = [];
         $scope.active = '';
-        
+
         if(AuthService.isAuthenticated()) {
           $scope.showCreateNewSession = true;
         };
@@ -36,6 +36,7 @@ angular.module('studygroupClientApp')
         $scope.$on('universitySelected', function() {
           // console.log('universitySelected');
           StateService.getCourses().then(function() {
+            $scope.selectedCourses = StateService.getSelectedCourses();             
             $scope.courseList = StateService.getCourseList();
           })
         });     
