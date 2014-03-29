@@ -19,6 +19,18 @@ html { height: 100% }
   text-align:center;
 }
 
+.scrollable-menu {
+  height:auto;
+  max-height: 400px;
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
+
+.course-item {
+  word-wrap: break-word; 
+  white-space: normal !important;
+}
+
 li.disabled > .course-item {
   cursor: default !important;
 }

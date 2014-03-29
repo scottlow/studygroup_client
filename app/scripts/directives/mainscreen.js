@@ -43,12 +43,7 @@ angular.module('studygroupClientApp')
 
         $scope.removeCourse = function(course) {
           course.disabled = false;          
-          StateService.removeCourse(course);
-          // for(var i = 0; i < $scope.selectedCourses.length; i++) {
-          //   if(course.id === $scope.selectedCourses[i].id) {
-          //     $scope.selectedCourses.splice(i, 1);
-          //   }
-          // }         
+          StateService.removeCourse(course);         
         };
 
         $scope.filterCourse = function(course) {

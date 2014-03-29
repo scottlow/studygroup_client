@@ -35,6 +35,7 @@ angular.module('studygroupClientApp')
       .success(function(data) {
         // console.log('Getting courses');
         availableCourses = []; 
+        selectedCourses = [];
         if(AuthService.isAuthenticated()) {
           var selectedCourseIds = [];
           angular.forEach(currentUser.courses, function(value) {
@@ -58,6 +59,9 @@ angular.module('studygroupClientApp')
            * another.
            */
           angular.forEach(data, function(value) {
+            var splitName = value.name.split(" - ");
+            value.short_name = splitName[0];
+            value.name = splitName[1];
             if(selectedCourseIds.indexOf(value.id) === -1){
               value.disabled = false;
               availableCourses.push(value);
@@ -69,6 +73,9 @@ angular.module('studygroupClientApp')
           });
         } else {
           angular.forEach(data, function(value) {
+            var splitName = value.name.split(" - ");
+            value.short_name = splitName[0];
+            value.name = splitName[1];            
             value.disabled = false;         
             availableCourses.push(value);
           });
