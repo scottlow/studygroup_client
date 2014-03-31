@@ -1,0 +1,12 @@
+<tabset justified="true">
+    <tab heading="Explore">
+        <ul class="media" style="margin:10px">
+            <sessioncard ng-repeat="session in sessions"
+                         course-name="session.course.name"
+                         start-time="session.start_time"
+                         end-time="session.end_time"
+                         coordinator-name="session.coordinator.username"/>
+        </ul>
+    </tab>
+    <tab heading="My Sessions">My Sessions</tab>
+</tabset>

@@ -36,7 +36,6 @@ angular.module('studygroupClientApp')
           $scope.selectedCourses = StateService.getSelectedCourses(); 
           $scope.courseList = StateService.getCourseList();
           $scope.newSessionsCourse = $scope.courseList[0];
-          console.log($scope.newSessionsCourse);
         });
 
         $scope.$on('universitySelected', function() {
