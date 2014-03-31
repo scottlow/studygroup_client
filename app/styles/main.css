@@ -260,9 +260,26 @@ body {
 }
 
 /* Modal Styles */
+.nav-tabs li > a {
+  user-select: none;  
+  cursor:default !important;
+}
+
 .container-modal {
   padding: 10px 10px 10px 10px;
   border-left: 1px solid #dddddd;
   border-right: 1px solid #dddddd;
   border-bottom: 1px solid #dddddd;    
+}
+
+.modal-footer {
+  margin-top: 0px !important;
+}
+
+.room-picker {
+  text-align: center;
+}
+
+.modal-headsup {
+  padding-top:23px;
 }

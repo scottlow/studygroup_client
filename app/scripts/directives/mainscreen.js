@@ -18,6 +18,33 @@ angular.module('studygroupClientApp')
         $scope.selectedCourses = [];
         $scope.active = '';
         $scope.buildingList = [];
+        $scope.minDate = new Date();
+        $scope.newSessionSubmitted = false;
+
+        $scope.newSessionSubmit = function() {
+          $scope.newSessionSubmitted = true;
+          console.log($scope);
+        };
+
+        $scope.roundTimeToNearestFive = function(date) {
+          var coeff = 1000 * 60 * 5;
+          return new Date(Math.round(date.getTime() / coeff) * coeff)
+        };
+
+        $scope.addHours = function(date, h) {
+          return new Date(date.setHours(date.getHours() + h))
+        };     
+
+        $scope.today = function() {
+          $scope.newSessionStartDate = new Date();
+        };
+
+        $scope.open = function($event) {
+          $event.preventDefault();
+          $event.stopPropagation();
+
+          $scope.opened = true;
+        };        
 
         if(AuthService.isAuthenticated()) {
           $scope.showCreateNewSession = true;
@@ -38,7 +65,8 @@ angular.module('studygroupClientApp')
         $scope.$on('universitySelected', function() {
           // console.log('universitySelected');
           StateService.getCourses().then(function() {
-            $scope.selectedCourses = StateService.getSelectedCourses();             
+            $scope.selectedCourses = StateService.getSelectedCourses();  
+            $scope.newSessionCourse = $scope.selectedCourses[0];
             $scope.courseList = StateService.getCourseList();
             $scope.university = StateService.getUniversity();            
           })
@@ -49,6 +77,9 @@ angular.module('studygroupClientApp')
           StateService.getUniversityBuildings().then(function() {
             $scope.buildingList = StateService.getBuildingList();
             $scope.newSessionBuilding = $scope.buildingList[0];
+            $scope.today();
+            $scope.newSessionStartTime = $scope.roundTimeToNearestFive(new Date());
+            $scope.newSessionEndTime = $scope.roundTimeToNearestFive($scope.addHours(new Date(), 1)); 
           })
         }    
 

@@ -11,7 +11,8 @@ angular.module('studygroupClientApp', [
   'clientServices',
   'ui.router',
   'jmdobry.angular-cache',
-  'ui.bootstrap'
+  'ui.bootstrap',
+  'mgcrea.ngStrap.timepicker',
 ])
   .config(function ($stateProvider, $urlRouterProvider) {
     // Define the states of our application
@@ -46,7 +47,7 @@ angular.module('studygroupClientApp', [
     $rootScope.$on('$stateChangeStart', function(event, toState){
       if(toState.url === '/') {
         // We are hitting the root of the page. If this is happeneing, we should check to see if the user has the cookie set to login.
-        if(AuthService.isAuthenticated === true) {
+        if(AuthService.isAuthenticated() === true) {
           // If so, then skip the main page and take them straight to the dashboard without adding '/' to history (see docs on 'replace').
           $state.transitionTo('dashboard', null, {location: 'replace'});
           event.preventDefault();

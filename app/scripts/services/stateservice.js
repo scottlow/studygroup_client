@@ -12,7 +12,7 @@ angular.module('studygroupClientApp')
     var currentUser = {};
 
     this.getUsername = function() {
-      return currentUser.username;
+      return currentUser.first_name === '' ? currentUser.username : currentUser.first_name;
     };
 
     this.getSelectedCourses = function() {
