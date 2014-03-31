@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('studygroupClientApp')
-  .directive('mainScreen', function (StateService, $rootScope, AuthService) {
+  .directive('mainScreen', function (StateService, $rootScope, AuthService, $timeout) {
     return {
       templateUrl: 'scripts/directives/mainScreen.html',
       restrict: 'E',
@@ -20,10 +20,17 @@ angular.module('studygroupClientApp')
         $scope.buildingList = [];
         $scope.minDate = new Date();
         $scope.newSessionSubmitted = false;
+        $scope.buildingLat = 48.4428524;
+        $scope.buildingLong = -123.3592758;
 
         $scope.newSessionSubmit = function() {
           $scope.newSessionSubmitted = true;
           console.log($scope);
+        };
+
+        $scope.buildingChange = function() {
+          $scope.buildingLat = $scope.newSessionBuilding.latitude;
+          $scope.buildingLong = $scope.newSessionBuilding.longitude;
         };
 
         $scope.roundTimeToNearestFive = function(date) {
@@ -79,8 +86,12 @@ angular.module('studygroupClientApp')
             $scope.newSessionBuilding = $scope.buildingList[0];
             $scope.today();
             $scope.newSessionStartTime = $scope.roundTimeToNearestFive(new Date());
-            $scope.newSessionEndTime = $scope.roundTimeToNearestFive($scope.addHours(new Date(), 1)); 
-          })
+            $scope.newSessionEndTime = $scope.roundTimeToNearestFive($scope.addHours(new Date(), 1));
+          });
+          $timeout(function() {
+            $scope.buildingLat = $scope.newSessionBuilding.latitude;
+            $scope.buildingLong = $scope.newSessionBuilding.longitude;
+          }, 500); // TODO: This is hacky, but I have no better way of determining when the modal has loaded rigt now.          
         }    
 
         $scope.removeCourse = function(course) {
@@ -97,38 +108,53 @@ angular.module('studygroupClientApp')
   })
   .directive('homeMap', function ($rootScope, $timeout) {
     // This directive is called only once when the initial app is loaded. It's what resets our map to good ol' #YYJ.
-    return function ($scope, elem, attrs) {
-      var mapOptions,
-        latitude = $scope.mapLat,
-        longitude = $scope.mapLong,
-        zoom = $scope.zoom,
-        map;
+    return {
+      scope: {
+        lat: '=',
+        long: '=',
+        zoom: '=',
+      },
+      link: function ($scope, elem, attrs) {
+        var mapOptions,
+          latitude = $scope.lat,
+          longitude = $scope.long,
+          zoom = $scope.zoom,
+          map;
 
-      latitude = latitude && parseFloat(latitude, 10) || 48.4630959;
-      longitude = longitude && parseFloat(longitude, 10) || -123.3121053;
-      zoom = zoom && parseInt(zoom) || 10;
+        latitude = latitude && parseFloat(latitude, 10) || 48.4630959;
+        longitude = longitude && parseFloat(longitude, 10) || -123.3121053;
+        zoom = zoom && parseInt(zoom) || 10;
 
-      mapOptions = {
-        zoomControl: false,
-        panControl: false,
-        streetViewControl: false,
-        mapTypeControl: false,
-        zoom: zoom,
-        center: new google.maps.LatLng(latitude, longitude)
-      };
-      map = new google.maps.Map(elem[0], mapOptions);
+        mapOptions = {
+          zoomControl: false,
+          panControl: false,
+          streetViewControl: false,
+          mapTypeControl: false,
+          zoom: zoom,
+          center: new google.maps.LatLng(latitude, longitude)
+        };
+        map = new google.maps.Map(elem[0], mapOptions);
 
-      $scope.$watchCollection('[mapLat, mapLong, zoom]', function(newValues, oldValues) {
-        var center = new google.maps.LatLng(newValues[0], newValues[1]);
-        map.panTo(center);
-        map.setZoom(newValues[2]);
-      });
+        $scope.$watchCollection('[lat, long, zoom]', function(newValues, oldValues) {
+          var center = new google.maps.LatLng(newValues[0], newValues[1]);
+          map.panTo(center);
+          map.setZoom(newValues[2]); 
 
-      $timeout(function() {
-        google.maps.event.trigger(map, 'resize');
-        var center = new google.maps.LatLng($scope.mapLat, $scope.mapLong);
-        map.setCenter(center);
-      });
+          console.log('omg');
+
+          $timeout(function() {
+            google.maps.event.trigger(map, 'resize');
+            var center = new google.maps.LatLng($scope.lat, $scope.long);
+            map.setCenter(center);
+          });          
+        });
+
+        $timeout(function() {
+          google.maps.event.trigger(map, 'resize');
+          var center = new google.maps.LatLng($scope.lat, $scope.long);
+          map.setCenter(center);
+        });
+      },
     };
   })
   .directive('courseButton', function() {

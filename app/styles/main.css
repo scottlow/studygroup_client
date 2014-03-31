@@ -283,3 +283,7 @@ body {
 .modal-headsup {
   padding-top:23px;
 }
+
+.modal-map {
+  height: 200px;
+}
