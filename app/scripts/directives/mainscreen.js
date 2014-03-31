@@ -23,6 +23,14 @@ angular.module('studygroupClientApp')
         $scope.buildingLat = 48.4428524;
         $scope.buildingLong = -123.3592758;
 
+        var modal = angular.element('#newSessionModal');
+        modal.on('shown.bs.modal', function(e) {
+          $timeout(function() {
+            $scope.buildingLat = $scope.newSessionBuilding.latitude;
+            $scope.buildingLong = $scope.newSessionBuilding.longitude; 
+          });         
+        });
+
         $scope.newSessionSubmit = function() {
           $scope.newSessionSubmitted = true;
           console.log($scope);
@@ -75,7 +83,7 @@ angular.module('studygroupClientApp')
             $scope.selectedCourses = StateService.getSelectedCourses();  
             $scope.newSessionCourse = $scope.selectedCourses[0];
             $scope.courseList = StateService.getCourseList();
-            $scope.university = StateService.getUniversity();            
+            $scope.university = StateService.getUniversity();
           })
         }); 
 
@@ -87,12 +95,8 @@ angular.module('studygroupClientApp')
             $scope.today();
             $scope.newSessionStartTime = $scope.roundTimeToNearestFive(new Date());
             $scope.newSessionEndTime = $scope.roundTimeToNearestFive($scope.addHours(new Date(), 1));
-          });
-          $timeout(function() {
-            $scope.buildingLat = $scope.newSessionBuilding.latitude;
-            $scope.buildingLong = $scope.newSessionBuilding.longitude;
-          }, 500); // TODO: This is hacky, but I have no better way of determining when the modal has loaded rigt now.          
-        }    
+          });       
+        };    
 
         $scope.removeCourse = function(course) {
           course.disabled = false;          
@@ -139,8 +143,6 @@ angular.module('studygroupClientApp')
           var center = new google.maps.LatLng(newValues[0], newValues[1]);
           map.panTo(center);
           map.setZoom(newValues[2]); 
-
-          console.log('omg');
 
           $timeout(function() {
             google.maps.event.trigger(map, 'resize');
