@@ -6,12 +6,13 @@ angular.module('studygroupClientApp')
     var selectedUniversity = {};
     var availableCourses = [];
     var selectedCourses = [];
+    var universityBuildings = [];
     var self = this;
 
     var currentUser = {};
 
     this.getUsername = function() {
-      return currentUser.username;
+      return currentUser.first_name === '' ? currentUser.username : currentUser.first_name;
     };
 
     this.getSelectedCourses = function() {
@@ -30,11 +31,25 @@ angular.module('studygroupClientApp')
       return universities;
     };
 
+    this.getUniversityBuildings = function() {
+      universityBuildings = [];
+      return $http.get('http://localhost:8000/' + 'locations/university/' + selectedUniversity.id, {cache: $angularCacheFactory.get('defaultCache')}).success(function(data) {
+        angular.forEach(data, function(value) {
+          universityBuildings.push(value);
+        });
+      });
+    };
+
+    this.getBuildingList = function() {
+      return universityBuildings;
+    };
+
     this.getCourses = function() {
       return $http.get('http://localhost:8000/' + 'courses/university/' + selectedUniversity.id, {cache: $angularCacheFactory.get('defaultCache')})
       .success(function(data) {
         // console.log('Getting courses');
-        availableCourses = []; 
+        availableCourses = [];
+        selectedCourses.length = 0; //If we have other references to this, setting it to a new [] array will lose the references
         if(AuthService.isAuthenticated()) {
           var selectedCourseIds = [];
           angular.forEach(currentUser.courses, function(value) {
@@ -50,7 +65,7 @@ angular.module('studygroupClientApp')
            * noting here that pushing to availableCourses actually pushes to MainScreen.courseList due
            * to the singleton nature of services in angular. It's confusing, I know.)
            *
-           * Otherwise, if the course has been selected by the user, disable it, and call StateService.addCourse()
+           * Otherwise, if the course has been selected by the user, disable it, and push it to selectedCourses
            * to add the course to both the data model and MainScreen.selectedCourses (again due to the singleton
            * nature of services in Angular).
            * 
@@ -58,6 +73,10 @@ angular.module('studygroupClientApp')
            * another.
            */
           angular.forEach(data, function(value) {
+            var splitName = value.name.split(' - ');
+            value.short_name = splitName[0];
+            value.full_name = value.name;
+            value.name = splitName[1];
             if(selectedCourseIds.indexOf(value.id) === -1){
               value.disabled = false;
               availableCourses.push(value);
@@ -65,11 +84,14 @@ angular.module('studygroupClientApp')
               value.disabled = true;
               availableCourses.push(value);
               selectedCourses.push(value);
-            }          
+            }
           });
         } else {
           angular.forEach(data, function(value) {
-            value.disabled = false;         
+            var splitName = value.name.split(" - ");
+            value.short_name = splitName[0];
+            value.name = splitName[1];
+            value.disabled = false;
             availableCourses.push(value);
           });
         }
@@ -83,16 +105,16 @@ angular.module('studygroupClientApp')
       $http.get('http://localhost:8000/' + 'users/profile')
       .success(function(data) {
         currentUser = data[0];
-        selectedUniversity = currentUser.university;
+        self.setUniversity(currentUser.university);
         self.getCourses().then(function() {
           //This gurantees that both the user and the list of available courses have been grabbed (and the latter filtered) before the loginProcessed event is broadcast.
-          $rootScope.$broadcast('loginProcessed');         
+          $rootScope.$broadcast('loginProcessed');
         });
       })
       .error(function(error){
         console.log('Error at StateService.processLogin');
       });
-    };    
+    };
 
     this.getCourseList = function() {
       return availableCourses;
@@ -102,8 +124,12 @@ angular.module('studygroupClientApp')
       selectedUniversity = university;
     };
 
+    this.getUniversity = function() {
+      return selectedUniversity;
+    };
+
     this.addCourse = function(course) {
-      if(AuthService.isAuthenticated()) {       
+      if(AuthService.isAuthenticated()) {
         $http.post('http://localhost:8000/' + 'courses/add/', {'course_id' : course.id})
         .success(function(data) {
           console.log('Added course');
@@ -115,10 +141,10 @@ angular.module('studygroupClientApp')
       }
       // This will push to the UI prematurely (i.e. before the post request has gone through. The call to self.removeCourseData above will fix this if it errors out)
       selectedCourses.push(course);
-    }; 
+    };
 
     this.removeCourse = function(course) {
-      if(AuthService.isAuthenticated()) {       
+      if(AuthService.isAuthenticated()) {
         $http.post('http://localhost:8000/' + 'courses/remove/', {'course_id' : course.id})
         .success(function(data) {
           console.log('Removed course');
@@ -128,7 +154,7 @@ angular.module('studygroupClientApp')
           self.addCourse(course);
         });
       }
-      self.removeCourseData(course.id);      
+      self.removeCourseData(course.id);
     };
 
     this.removeCourseData = function(courseID) {
@@ -136,15 +162,15 @@ angular.module('studygroupClientApp')
         if(courseID === selectedCourses[i].id) {
           selectedCourses.splice(i, 1);
         }
-      }      
-    };  
+      }
+    };
 
     this.filterCourse = function(courseID) {
       for(var i = 0; i < selectedCourses.length; i++) {
         if(courseID === selectedCourses[i].id) {
           selectedCourses[i].active = !selectedCourses[i].active;
         }
-      }      
-    };  
+      }
+    };
 
   });

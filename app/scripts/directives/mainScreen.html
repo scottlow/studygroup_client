@@ -17,28 +17,32 @@
         <div class="container">
           <div class="navbar-collapse collapse">
             <div class="course-btn-group btn-group">
-              <course-button active='active' ng-repeat="course in selectedCourses">{{course.name}}</course-button>
+              <course-button active='active' ng-repeat="course in selectedCourses">{{course.short_name}}</course-button>
             </div>       
             <ul class="nav navbar-nav navbar-right">
               <li class="dropdown">
                 <a href="" class="dropdown-toggle" data-toggle="dropdown"><span class="h5 glyphicon glyphicon-plus"></span></a>
-                <ul class="class-search dropdown-menu" role="menu" ng-click="$event.stopPropagation();">
+                <ul class="class-search dropdown-menu scrollable-menu" role="menu" ng-click="$event.stopPropagation();">
                   <li><input type="text" class="form-control" ng-model="query" ng-change="searchForCourse()" placeholder="Search for a course"></li>          
                   <li ng-show="query.length > 0" class="divider"></li> 
                   <li ng-show="query.length > 0 && (courseList | filter:query).length === 0"><a href="">No Results</a></li>                  
-                  <li  role="menuitem" ng-show="query.length > 0" ng-repeat="course in courseList | filter:query" ng-class="{disabled : course.disabled}"><a class="course-item" ng-click="course.disabled || addCourse(course)" href="">{{course.name}}</a></li>
+                  <li  role="menuitem" ng-show="query.length > 0" ng-repeat="course in courseList | filter:query" ng-class="{disabled : course.disabled}">
+                    <a class="course-item" ng-click="course.disabled || addCourse(course)" href="">
+                      <h5>{{course.short_name}}<br /><small>{{course.name}}</small></h5>
+                    </a>
+                  </li>
                 </ul>
               </li>
             </ul>
           </div>
         </div>     
       </div>
-      <div ng-class="{'blur' : blurMap}" class="fill" class="fill-width" home-map ></div>
+      <div ng-class="{'blur' : blurMap}" class="fill" class="fill-width" lat="mapLat" long="mapLong" zoom="zoom" home-map ></div>
     </div> 
   </div>
 </div>
 
-<!-- Create Session Modal -->
+<!-- Create New Session Modal -->
 <div class="modal fade" id="newSessionModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -46,23 +50,65 @@
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
         <h4 class="modal-title" id="myModalLabel">Create a New Session<br /><small>Please complete the following information to host your own study session.</small></h4>
       </div>
-      <div class="modal-body">
-        <form role="form">
-          <div class="form-group">
-            <label for="modalCoursePicker">Select a course</label>
-            <select ng-model="newSessionCourse" id="modalCoursePicker" class="form-control" ng-options="c.id as c.name for c in courseList"></select>
-          </div>      
-          <tabset>
-            <tab heading="Static title">Static content</tab>
-            <tab ng-repeat="tab in tabs" heading="{{tab.title}}" active="tab.active" disabled="tab.disabled">
-              {{tab.content}}
+      <div class="modal-body">      
+        <div class="form-group">
+          <label for="modalCoursePicker">Select a course</label>
+          <select ng-model="newSessionCourse" id="modalCoursePicker" class="form-control" ng-options="c as c.full_name for c in selectedCourses"></select>
+        </div>
+        <p><strong>Are you studying on campus or off campus?</strong></p>
+        <tabset justified="true">
+          <tab heading="On Campus">
+            <div class="container-fluid container-modal">
+              <form role="form" name="$parent.newSessionForm" novalidate ng-submit="newSessionSubmit()">
+                <div style="margin-bottom: 5px" class="modal-map" lat="buildingLat" long="buildingLong" zoom="17" home-map ></div>              
+                <div class="form-group">
+                  <label for="modalOnCampusPicker">Pick a building</label>
+                  <select ng-model="$parent.newSessionBuilding" id="modalOnCampusPicker" ng-change="buildingChange()" class="form-control" ng-options="b as b.name for b in buildingList"></select>
+                  <span class="help-block">Currently selected university: {{university.name}}</span>
+                </div>
+                <div class="row">
+                  <div class="col-xs-2 col-md-2">
+                    <div class="form-group room-picker" ng-class="{ 'has-error' : newSessionSubmitted && newSessionForm.roomNumber.$invalid }">
+                      <label for="modalRoomNumber">Room #:</label>
+                      <input name="roomNumber" required ng-model="newSessionRoomNumber" id="modalRoomNumber" maxlength="5" class="form-control" />                      
+                    </div>
+                  </div>
+                  <div class="col-xs-3 col-md-3">
+                    <div class="form-group" ng-class="{'has-error': newSessionSubmitted && newSessionForm.startTime.$invalid}">
+                      <label class="control-label"><i class="fa fa-clock-o"></i>Start time:</label>
+                      <input required type="text" class="form-control" size="8" ng-model="newSessionStartTime" name="startTime" bs-timepicker>
+                    </div>
+                  </div>  
+                  <div class="col-xs-3 col-md-3">
+                    <div class="form-group" ng-class="{'has-error': newSessionSubmitted && newSessionForm.endTime.$invalid}">
+                      <label class="control-label"><i class="fa fa-clock-o"></i>End time:</label>
+                      <input required type="text" class="form-control" size="8" ng-model="newSessionEndTime" name="endTime" bs-timepicker>
+                    </div>
+                  </div>                                       
+                  <div class="col-xs-4 col-md-4" ng-class="{'has-error': newSessionSubmitted && newSessionForm.room.$invalid}">
+                    <div class="form-group">
+                      <label>Date:</label>                      
+                      <p class="input-group">
+                        <input required type="text" name="room" class="form-control date-picker" show-weeks="false" show-button-bar="false" datepicker-popup="MM/dd/yyyy" ng-model="newSessionStartDate" is-open="$parent.opened" min="minDate" max="'2015-06-22'" datepicker-options="dateOptions" ng-required="true" close-text="Close" />
+                        <span class="input-group-btn">
+                          <button class="btn btn-default" ng-click="open($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+                        </span>
+                      </p>
+                    </div>
+                  </div>                    
+                </div>
+              </div>
             </tab>
-          </tabset>
+            <tab heading="Off Campus" disabled="true">
+              <div class="container-fluid container-modal"></div>
+            </tab>            
+          </tabset>        
         </form>
-      </div>
+        <span class="modal-headsup help-block"><strong>Note:</strong> Your full name as it appears on your profile ({{$parent.full_name}}) will be listed to identify you as this session's coordinator.</span>   
+      </div>    
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
+        <button type="button" ng-click="newSessionSubmit()" class="btn btn-primary">Create Session</button>
       </div>
     </div>
   </div>
