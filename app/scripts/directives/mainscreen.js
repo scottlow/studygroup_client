@@ -75,6 +75,7 @@ angular.module('studygroupClientApp')
           $scope.courseList = StateService.getCourseList();
           $scope.newSessionCourse = $scope.selectedCourses[0];
           $scope.university = StateService.getUniversity();
+          $scope.showNewSessionModal();
         });
 
         $scope.$on('universitySelected', function() {
@@ -142,7 +143,7 @@ angular.module('studygroupClientApp')
         $scope.$watchCollection('[lat, long, zoom]', function(newValues, oldValues) {
           var center = new google.maps.LatLng(newValues[0], newValues[1]);
           map.panTo(center);
-          map.setZoom(newValues[2]); 
+          map.setZoom(newValues[2]);
 
           $timeout(function() {
             google.maps.event.trigger(map, 'resize');
