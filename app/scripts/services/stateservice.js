@@ -25,20 +25,20 @@ angular.module('studygroupClientApp')
           universities.push(value);
         });
       });
-    };   
+    };
 
     this.getUniversityList = function() {
       return universities;
     };
 
     this.getUniversityBuildings = function() {
-      universityBuildings = [];      
+      universityBuildings = [];
       return $http.get('http://localhost:8000/' + 'locations/university/' + selectedUniversity.id, {cache: $angularCacheFactory.get('defaultCache')}).success(function(data) {
         angular.forEach(data, function(value) {
           universityBuildings.push(value);
         });
       });
-    };   
+    };
 
     this.getBuildingList = function() {
       return universityBuildings;
@@ -48,7 +48,7 @@ angular.module('studygroupClientApp')
       return $http.get('http://localhost:8000/' + 'courses/university/' + selectedUniversity.id, {cache: $angularCacheFactory.get('defaultCache')})
       .success(function(data) {
         // console.log('Getting courses');
-        availableCourses = []; 
+        availableCourses = [];
         selectedCourses = [];
         if(AuthService.isAuthenticated()) {
           var selectedCourseIds = [];
@@ -73,9 +73,9 @@ angular.module('studygroupClientApp')
            * another.
            */
           angular.forEach(data, function(value) {
-            var splitName = value.name.split(" - ");
+            var splitName = value.name.split(' - ');
             value.short_name = splitName[0];
-            value.full_name = value.name;            
+            value.full_name = value.name;
             value.name = splitName[1];
             if(selectedCourseIds.indexOf(value.id) === -1){
               value.disabled = false;
@@ -84,14 +84,14 @@ angular.module('studygroupClientApp')
               value.disabled = true;
               availableCourses.push(value);
               selectedCourses.push(value);
-            }          
+            }
           });
         } else {
           angular.forEach(data, function(value) {
             var splitName = value.name.split(" - ");
             value.short_name = splitName[0];
-            value.name = splitName[1];            
-            value.disabled = false;         
+            value.name = splitName[1];
+            value.disabled = false;
             availableCourses.push(value);
           });
         }
@@ -108,13 +108,13 @@ angular.module('studygroupClientApp')
         self.setUniversity(currentUser.university);
         self.getCourses().then(function() {
           //This gurantees that both the user and the list of available courses have been grabbed (and the latter filtered) before the loginProcessed event is broadcast.
-          $rootScope.$broadcast('loginProcessed');         
+          $rootScope.$broadcast('loginProcessed');
         });
       })
       .error(function(error){
         console.log('Error at StateService.processLogin');
       });
-    };    
+    };
 
     this.getCourseList = function() {
       return availableCourses;
@@ -126,10 +126,10 @@ angular.module('studygroupClientApp')
 
     this.getUniversity = function() {
       return selectedUniversity;
-    };    
+    };
 
     this.addCourse = function(course) {
-      if(AuthService.isAuthenticated()) {       
+      if(AuthService.isAuthenticated()) {
         $http.post('http://localhost:8000/' + 'courses/add/', {'course_id' : course.id})
         .success(function(data) {
           console.log('Added course');
@@ -141,10 +141,10 @@ angular.module('studygroupClientApp')
       }
       // This will push to the UI prematurely (i.e. before the post request has gone through. The call to self.removeCourseData above will fix this if it errors out)
       selectedCourses.push(course);
-    }; 
+    };
 
     this.removeCourse = function(course) {
-      if(AuthService.isAuthenticated()) {       
+      if(AuthService.isAuthenticated()) {
         $http.post('http://localhost:8000/' + 'courses/remove/', {'course_id' : course.id})
         .success(function(data) {
           console.log('Removed course');
@@ -154,7 +154,7 @@ angular.module('studygroupClientApp')
           self.addCourse(course);
         });
       }
-      self.removeCourseData(course.id);      
+      self.removeCourseData(course.id);
     };
 
     this.removeCourseData = function(courseID) {
@@ -162,15 +162,15 @@ angular.module('studygroupClientApp')
         if(courseID === selectedCourses[i].id) {
           selectedCourses.splice(i, 1);
         }
-      }      
-    };  
+      }
+    };
 
     this.filterCourse = function(courseID) {
       for(var i = 0; i < selectedCourses.length; i++) {
         if(courseID === selectedCourses[i].id) {
           selectedCourses[i].active = !selectedCourses[i].active;
         }
-      }      
-    };  
+      }
+    };
 
   });

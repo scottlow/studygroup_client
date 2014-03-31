@@ -27,8 +27,8 @@ angular.module('studygroupClientApp')
         modal.on('shown.bs.modal', function(e) {
           $timeout(function() {
             $scope.buildingLat = $scope.newSessionBuilding.latitude;
-            $scope.buildingLong = $scope.newSessionBuilding.longitude; 
-          });         
+            $scope.buildingLong = $scope.newSessionBuilding.longitude;
+          });
         });
 
         $scope.newSessionSubmit = function() {
@@ -43,12 +43,12 @@ angular.module('studygroupClientApp')
 
         $scope.roundTimeToNearestFive = function(date) {
           var coeff = 1000 * 60 * 5;
-          return new Date(Math.round(date.getTime() / coeff) * coeff)
+          return new Date(Math.round(date.getTime() / coeff) * coeff);
         };
 
         $scope.addHours = function(date, h) {
-          return new Date(date.setHours(date.getHours() + h))
-        };     
+          return new Date(date.setHours(date.getHours() + h));
+        };
 
         $scope.today = function() {
           $scope.newSessionStartDate = new Date();
@@ -59,19 +59,19 @@ angular.module('studygroupClientApp')
           $event.stopPropagation();
 
           $scope.opened = true;
-        };        
+        };
 
         if(AuthService.isAuthenticated()) {
           $scope.showCreateNewSession = true;
-        };
+        }
 
         $scope.addCourse = function(course) {
-          course.disabled = true;           
-          StateService.addCourse(course); 
+          course.disabled = true;
+          StateService.addCourse(course);
         };
 
-        $scope.$on('loginProcessed', function(){          
-          $scope.selectedCourses = StateService.getSelectedCourses(); 
+        $scope.$on('loginProcessed', function(){
+          $scope.selectedCourses = StateService.getSelectedCourses();
           $scope.courseList = StateService.getCourseList();
           $scope.newSessionCourse = $scope.selectedCourses[0];
           $scope.university = StateService.getUniversity();
@@ -81,12 +81,12 @@ angular.module('studygroupClientApp')
         $scope.$on('universitySelected', function() {
           // console.log('universitySelected');
           StateService.getCourses().then(function() {
-            $scope.selectedCourses = StateService.getSelectedCourses();  
+            $scope.selectedCourses = StateService.getSelectedCourses();
             $scope.newSessionCourse = $scope.selectedCourses[0];
             $scope.courseList = StateService.getCourseList();
             $scope.university = StateService.getUniversity();
-          })
-        }); 
+          });
+        });
 
         $scope.showNewSessionModal = function() {
           $scope.buildingList = [];
@@ -96,16 +96,16 @@ angular.module('studygroupClientApp')
             $scope.today();
             $scope.newSessionStartTime = $scope.roundTimeToNearestFive(new Date());
             $scope.newSessionEndTime = $scope.roundTimeToNearestFive($scope.addHours(new Date(), 1));
-          });       
-        };    
+          });
+        };
 
         $scope.removeCourse = function(course) {
-          course.disabled = false;          
-          StateService.removeCourse(course);         
+          course.disabled = false;
+          StateService.removeCourse(course);
         };
 
         $scope.filterCourse = function(course) {
-          StateService.filterCourse(course.id); 
+          StateService.filterCourse(course.id);
         };
 
       }],
@@ -149,7 +149,7 @@ angular.module('studygroupClientApp')
             google.maps.event.trigger(map, 'resize');
             var center = new google.maps.LatLng($scope.lat, $scope.long);
             map.setCenter(center);
-          });          
+          });
         });
 
         $timeout(function() {
@@ -171,16 +171,16 @@ angular.module('studygroupClientApp')
       template: '<div ng-class="active" class="course-btn btn btn-default" ng-click="filterCourse()" ng-transclude></div><div class="course-close-btn btn btn-primary" ng-click="removeCourse()"><span class="h6 glyphicon glyphicon-remove"></span></div>',
       link: function(scope, elements, attrs) {
         scope.filterCourse = function() {
-          if(scope.active == 'active') {
-            scope.active = ''
+          if(scope.active === 'active') {
+            scope.active = '';
           } else {
             scope.active = 'active';
           }
           scope.$parent.filterCourse(scope.$parent.course);
-        }
+        };
         scope.removeCourse = function() {
           scope.$parent.removeCourse(scope.$parent.course);
-        }
+        };
       },
     };
   });
