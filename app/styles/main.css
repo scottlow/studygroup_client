@@ -287,3 +287,36 @@ body {
 .modal-map {
   height: 200px;
 }
+
+.media-body {
+  text-align: left;
+}
+
+/*Session Styles*/
+.session-description h6 {
+  margin:0px;
+}
+
+.session-description {
+  margin-top: 8px;
+}
+
+.session-description-container {
+  margin-top: 5px;
+}
+
+.media-object {
+  height: 25px;
+}
+
+.session-entry {
+  margin:5px;
+  list-style-type: none;
+  cursor: pointer;
+  padding: 10px;
+  user-select: none;
+}
+
+.session-entry:hover {
+  background-color: #eeeeee;
+}

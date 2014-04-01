@@ -1,11 +1,13 @@
-<li class="media" style="margin:5px;">
+<li class="session-entry media" ng-click="selectSession()">
     <a class="pull-left" href="#">
         <img class="media-object" src="images/square.png">
     </a>
-    <div class="media-body">
-        <h4 class="media-heading">{{ courseName }}</h4>
-        <h5>{{ coordinatorName }}</h5>
-        <h5>{{ startTime }}</h5>
-        <h5>{{ endTime }}</h5>
+    <div class="media-body session-description-container">
+        <h5 class="media-heading">{{ courseName }}</h5>
+        <div class="session-description">
+	        <h6>Coordinator: <span class="h5"><small>{{ coordinatorName }}</small></span></h6>
+	        <h6>Start Time: <span class="h5"><small>{{ startTime }}</small></span></h6>
+	        <h6>End Time: <span class="h5"><small>{{ endTime }}</small></span></h6>
+        </div>
     </div>
 </li>
