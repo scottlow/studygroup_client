@@ -22,6 +22,7 @@ angular.module('studygroupClientApp')
         $scope.newSessionSubmitted = false;
         $scope.buildingLat = 48.4428524;
         $scope.buildingLong = -123.3592758;
+        $scope.newSessionStartTime = new Date();
 
         var modal = angular.element('#newSessionModal');
         modal.on('shown.bs.modal', function(e) {
@@ -48,9 +49,14 @@ angular.module('studygroupClientApp')
 
         $scope.computeEndTime = function() {
           $scope.newSessionEndTime = $scope.roundTimeToNearestFive($scope.newSessionStartTime);
+          console.log($scope.newSessionEndTime);
           $scope.newSessionEndTime.setMinutes($scope.newSessionEndTime.getMinutes() + parseInt($scope.newSessionDurationMins));
           $scope.newSessionEndTime.setHours($scope.newSessionEndTime.getHours() + parseInt($scope.newSessionDurationHours));
         };
+
+        $scope.$watch('newSessionStartTime', function() {
+          console.log('FixMe');
+        });
 
         $scope.today = function() {
           $scope.newSessionStartTime = $scope.roundTimeToNearestFive(new Date());      
