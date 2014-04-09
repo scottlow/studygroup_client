@@ -14,7 +14,7 @@
     </div> 
     <div class="google-map" ng-class="{'col-xs-9 col-md-9 fill' : showInterface, 'col-xs-12 col-md-12 fill' : !showInterface}">
       <div class="course-picker navbar navbar-default" ng-class="{'course-picker-show-animation' : showInterface}">
-        <div class="container">
+        <div class="container" style="width: 100%;">
           <div class="navbar-collapse collapse">
             <div class="course-btn-group btn-group">
               <course-button active='active' ng-repeat="course in selectedCourses">{{course.short_name}}</course-button>
