@@ -54,7 +54,6 @@ li.disabled > .course-item {
 
 .course-picker {
   position:fixed;
-  width:100%;
   z-index:1; 
   margin:0px;
   min-height:0;
