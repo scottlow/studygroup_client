@@ -8,5 +8,22 @@
                          coordinator-name="session.coordinator.username"/>
         </ul>
     </tab>
-    <tab heading="My Sessions">My Sessions</tab>
+    <tab heading="My Sessions">
+        <accordion close-others="false">
+            <accordion-group heading="Hosting">
+                <sessioncard ng-repeat="session in hostsessions"
+                             course-name="session.course.name"
+                             start-time="session.start_time"
+                             end-time="session.end_time"
+                             coordinator-name="session.coordinator.username"/>
+            </accordion-group>
+            <accordion-group heading="Attending">
+                <sessioncard ng-repeat="session in viewsessions"
+                             course-name="session.course.name"
+                             start-time="session.start_time"
+                             end-time="session.end_time"
+                             coordinator-name="session.coordinator.username"/>
+            </accordion-group>
+        </accordion>
+    </tab>
 </tabset>
