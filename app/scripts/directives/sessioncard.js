@@ -11,5 +11,10 @@ angular.module('studygroupClientApp')
         endTime: '=',
         coordinatorName: '=',
       },
+      controller: ['$scope', function($scope) {
+        $scope.selectSession = function() {
+          console.log('Selected');
+        }
+      }],
     };
   });

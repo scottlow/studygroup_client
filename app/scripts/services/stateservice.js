@@ -104,7 +104,7 @@ angular.module('studygroupClientApp')
     this.processLogin = function() {
       $http.get('http://localhost:8000/' + 'users/profile')
       .success(function(data) {
-        currentUser = data[0];
+        currentUser = data;
         self.setUniversity(currentUser.university);
         self.getCourses().then(function() {
           //This gurantees that both the user and the list of available courses have been grabbed (and the latter filtered) before the loginProcessed event is broadcast.

@@ -22,6 +22,7 @@ angular.module('studygroupClientApp')
         $scope.newSessionSubmitted = false;
         $scope.buildingLat = 48.4428524;
         $scope.buildingLong = -123.3592758;
+        $scope.newSessionStartTime = new Date();
 
         var modal = angular.element('#newSessionModal');
         modal.on('shown.bs.modal', function(e) {
@@ -46,13 +47,24 @@ angular.module('studygroupClientApp')
           return new Date(Math.round(date.getTime() / coeff) * coeff);
         };
 
-        $scope.addHours = function(date, h) {
-          return new Date(date.setHours(date.getHours() + h));
+        $scope.computeEndTime = function() {
+          $scope.newSessionEndTime = $scope.roundTimeToNearestFive($scope.newSessionStartTime);
+          console.log($scope.newSessionEndTime);
+          $scope.newSessionEndTime.setMinutes($scope.newSessionEndTime.getMinutes() + parseInt($scope.newSessionDurationMins));
+          $scope.newSessionEndTime.setHours($scope.newSessionEndTime.getHours() + parseInt($scope.newSessionDurationHours));
         };
 
+        $scope.$watch('newSessionStartTime', function() {
+          console.log('FixMe');
+        });
+
         $scope.today = function() {
+          $scope.newSessionStartTime = $scope.roundTimeToNearestFive(new Date());      
           $scope.newSessionStartDate = new Date();
-        };
+          $scope.newSessionDurationHours = '1';
+          $scope.newSessionDurationMins = '00';
+          $scope.computeEndTime();
+        };       
 
         $scope.open = function($event) {
           $event.preventDefault();
@@ -93,9 +105,7 @@ angular.module('studygroupClientApp')
           StateService.getUniversityBuildings().then(function() {
             $scope.buildingList = StateService.getBuildingList();
             $scope.newSessionBuilding = $scope.buildingList[0];
-            $scope.today();
-            $scope.newSessionStartTime = $scope.roundTimeToNearestFive(new Date());
-            $scope.newSessionEndTime = $scope.roundTimeToNearestFive($scope.addHours(new Date(), 1));
+            $scope.today();            
           });
         };
 
@@ -182,5 +192,24 @@ angular.module('studygroupClientApp')
           scope.$parent.removeCourse(scope.$parent.course);
         };
       },
+    };
+  })
+  .directive('integer', function() {
+    var INTEGER_REGEXP = /^\-?\d+$/;    
+    return {
+      require: 'ngModel',
+      link: function(scope, elm, attrs, ctrl) {
+        ctrl.$parsers.unshift(function(viewValue) {
+          if (INTEGER_REGEXP.test(viewValue)) {
+            // it is valid
+            ctrl.$setValidity('integer', true);
+            return viewValue;
+          } else {
+            // it is invalid, return undefined (no model update)
+            ctrl.$setValidity('integer', false);
+            return undefined;
+          }
+        });
+      }
     };
   });

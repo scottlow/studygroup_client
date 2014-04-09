@@ -54,7 +54,6 @@ li.disabled > .course-item {
 
 .course-picker {
   position:fixed;
-  width:100%;
   z-index:1; 
   margin:0px;
   min-height:0;
@@ -286,4 +285,37 @@ body {
 
 .modal-map {
   height: 200px;
+}
+
+.media-body {
+  text-align: left;
+}
+
+/*Session Styles*/
+.session-description h6 {
+  margin:0px;
+}
+
+.session-description {
+  margin-top: 8px;
+}
+
+.session-description-container {
+  margin-top: 5px;
+}
+
+.media-object {
+  height: 25px;
+}
+
+.session-entry {
+  margin:5px;
+  list-style-type: none;
+  cursor: pointer;
+  padding: 10px;
+  user-select: none;
+}
+
+.session-entry:hover {
+  background-color: #eeeeee;
 }
