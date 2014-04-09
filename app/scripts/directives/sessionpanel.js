@@ -12,29 +12,49 @@ angular.module('studygroupClientApp')
       controller: ['$scope', function($scope) {
         $scope.selectedCourses = StateService.getSelectedCourses();
         $scope.sessions = [];
+        $scope.sessionIds = [];
         $scope.hostSessions = [];
         $scope.viewSessions = [];
+
         $scope.getAvailableSessions = function(values) {
             var oldSessions = $scope.sessions.slice();
             var url = "id=";
-            angular.forEach(values, function(value) {
+            angular.forEach($scope.selectedCourses, function(value) {
                 url = url + value.id + "&id=";
             });
             url = url.substring(0, url.length - 4);
+            console.log("Making call using url " + url);
             return $http.get('http://localhost:8000/' + 'sessions/courses/?' + url).success(function(data) {
+                var dataIds = [];
+                data.forEach(function(element) {
+                    console.log(element.id);
+                    dataIds.push(element.id);
+                });
+                var sessionToSplice = [];
                 oldSessions.forEach(function(element, index) {
                     // If this no longer exists in the data
-                    var dataIndex = data.indexOf(element);
-                    if (dataIndex > -1) {
-                        $scope.sessions.splice(index, 1);
+                    var dataIndex = dataIds.indexOf(element.id);
+                    if (!(dataIndex > -1)) {
+                        console.log("Not in the data. Remove from sessions");
+                        sessionToSplice.push(element);
+                    } else {
+                        console.log("In the data. Remove from data");
                         data.splice(dataIndex, 1);
+                        dataIds.splice(dataIndex,1);
                     }
                 });
-                angular.forEach(data, function(value) {
+                sessionToSplice.forEach(function(element) {
+                    var index = $scope.sessions.indexOf(element);
+                    $scope.sessions.splice(index, 1);
+                    $scope.sessionIds.splice(index, 1);
+                });
+                data.forEach(function(value) {
                         $scope.sessions.push(value);
+                        $scope.sessionIds.push(value.id);
                 });
             });
         };
+                
         $scope.$watchCollection('selectedCourses', $scope.getAvailableSessions);
       }]
     };
