@@ -16,7 +16,7 @@
     "angular-ui-router": "~0.2.10",
     "angular-cookie": "*",
     "angular-cache": "~2.3.3",
-    "angular-strap": "~2.0.0"
+    "angular-strap": "~2.0.1"
   },
   "devDependencies": {
     "angular-mocks": "1.2.6",

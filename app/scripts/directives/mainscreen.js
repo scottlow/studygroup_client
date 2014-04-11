@@ -48,19 +48,21 @@ angular.module('studygroupClientApp')
         };
 
         $scope.computeEndTime = function() {
+          if($scope.newSessionStartTime ==   null) {
+            return;
+          }        
+
           $scope.newSessionEndTime = $scope.roundTimeToNearestFive($scope.newSessionStartTime);
-          console.log($scope.newSessionEndTime);
-          $scope.newSessionEndTime.setMinutes($scope.newSessionEndTime.getMinutes() + parseInt($scope.newSessionDurationMins));
-          $scope.newSessionEndTime.setHours($scope.newSessionEndTime.getHours() + parseInt($scope.newSessionDurationHours));
+          $scope.newSessionEndTime.setMinutes($scope.newSessionEndTime.getMinutes() + ($scope.newSessionDurationMins == null ? 0 : parseInt($scope.newSessionDurationMins)));
+          $scope.newSessionEndTime.setHours($scope.newSessionEndTime.getHours() + ($scope.newSessionDurationHours == null ? 0 : parseInt($scope.newSessionDurationHours)));
         };
 
-        $scope.$watch('newSessionStartTime', function() {
-          console.log('FixMe');
+        $scope.$watchCollection('[newSessionStartTime, newSessionDurationHours, newSessionDurationMins]', function() {
+          $scope.computeEndTime();
         });
 
-        $scope.today = function() {
+        $scope.initTimes = function() {
           $scope.newSessionStartTime = $scope.roundTimeToNearestFive(new Date());      
-          $scope.newSessionStartDate = new Date();
           $scope.newSessionDurationHours = '1';
           $scope.newSessionDurationMins = '00';
           $scope.computeEndTime();
@@ -105,7 +107,7 @@ angular.module('studygroupClientApp')
           StateService.getUniversityBuildings().then(function() {
             $scope.buildingList = StateService.getBuildingList();
             $scope.newSessionBuilding = $scope.buildingList[0];
-            $scope.today();            
+            $scope.initTimes();            
           });
         };
 

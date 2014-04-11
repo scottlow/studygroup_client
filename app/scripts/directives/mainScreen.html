@@ -77,7 +77,7 @@
                     <div class="form-group">
                       <label>Start date:</label>                      
                       <div class="input-group">
-                        <input required type="text" name="room" class="form-control date-picker" show-weeks="false" show-button-bar="false" datepicker-popup="MM/dd/yyyy" ng-model="$parent.newSessionStartDate" is-open="$parent.opened" min="minDate" max="'2015-06-22'" datepicker-options="dateOptions" ng-required="true" close-text="Close" />
+                        <input required type="text" name="room" class="form-control date-picker" show-weeks="false" show-button-bar="false" datepicker-popup="MM/dd/yyyy" ng-model="$parent.newSessionStartTime" is-open="$parent.opened" min="minDate" max="'2015-06-22'" datepicker-options="dateOptions" ng-required="true" close-text="Close" />
                         <span class="input-group-btn">
                           <button class="btn btn-default" ng-click="open($event)"><i class="glyphicon glyphicon-calendar"></i></button>
                         </span>                       
@@ -98,7 +98,7 @@
                     </div>
                   </div>                 
                 </div>
-                <h5><small>Your session will start on {{$parent.newSessionStartDate.toDateString()}} at {{$parent.newSessionStartTime.toTimeString()}} and will last until {{$parent.newSessionEndTime.toTimeString()}}.</small></h5>
+                <h5 ng-show="!$parent.newSessionForm.durationHours.$invalid && !$parent.newSessionForm.durationMins.$invalid && !$parent.newSessionForm.startTime.$invalid"><small>Your session will start on {{$parent.newSessionStartTime.toDateString()}} at {{$parent.newSessionStartTime.toTimeString()}} and will last until {{$parent.newSessionEndTime.toDateString()}} at {{$parent.newSessionEndTime.toTimeString()}}.</small></h5>
               </form>
             </div>
           </tab>
