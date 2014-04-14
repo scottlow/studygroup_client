@@ -49,6 +49,9 @@ angular.module('studygroupClientApp')
                     $scope.sessionIds.splice(index, 1);
                 });
                 data.forEach(function(value) {
+                        // Convert start and end times to their timezone specific versions.
+                        value.start_time = new Date(value.start_time);
+                        value.end_time = new Date(value.end_time);
                         $scope.sessions.push(value);
                         $scope.sessionIds.push(value.id);
                 });

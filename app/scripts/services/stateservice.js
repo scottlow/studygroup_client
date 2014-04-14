@@ -173,4 +173,17 @@ angular.module('studygroupClientApp')
       }
     };
 
+    this.createSession = function(courseID, startTime, endTime, location, roomNumber) {
+      if(AuthService.isAuthenticated()) {
+        return $http.post('http://localhost:8000/' + 'sessions/create/', {
+                'coordinator' : currentUser.id,
+                'course' : courseID,
+                'start_time' : startTime,
+                'end_time' : endTime,
+                'location' : location.id,
+                'room_number' : roomNumber
+        });
+      }
+    }
+
   });
