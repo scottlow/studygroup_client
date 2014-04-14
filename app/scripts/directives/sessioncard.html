@@ -6,8 +6,8 @@
         <h5 class="media-heading">{{ courseName }}</h5>
         <div class="session-description">
 	        <h6>Coordinator: <span class="h5"><small>{{ coordinatorName }}</small></span></h6>
-	        <h6>Start Time: <span class="h5"><small>{{ startTime }}</small></span></h6>
-	        <h6>End Time: <span class="h5"><small>{{ endTime }}</small></span></h6>
+	        <h6>Start Time: <span class="h5"><small>{{ startTime.toLocaleDateString() }} - {{ startTime.toLocaleTimeString() }}</small></span></h6>
+	        <h6>End Time: <span class="h5"><small>{{ endTime.toLocaleDateString() }} - {{ endTime.toLocaleTimeString() }}</small></span></h6>
         </div>
     </div>
 </li>

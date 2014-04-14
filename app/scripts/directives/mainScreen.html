@@ -70,7 +70,7 @@
                   <div class="col-xs-2 col-md-2">
                     <div class="form-group room-picker" ng-class="{ 'has-error' : newSessionSubmitted && newSessionForm.roomNumber.$invalid }">
                       <label for="modalRoomNumber">Room #:</label>
-                      <input name="roomNumber" required ng-model="newSessionRoomNumber" id="modalRoomNumber" maxlength="5" class="form-control" />                      
+                      <input name="roomNumber" required ng-model="$parent.newSessionRoomNumber" id="modalRoomNumber" maxlength="5" class="form-control" />                      
                     </div>
                   </div>
                   <div class="col-xs-4 col-md-4" ng-class="{'has-error': newSessionSubmitted && newSessionForm.room.$invalid}">
@@ -98,7 +98,7 @@
                     </div>
                   </div>                 
                 </div>
-                <h5 ng-show="!$parent.newSessionForm.durationHours.$invalid && !$parent.newSessionForm.durationMins.$invalid && !$parent.newSessionForm.startTime.$invalid"><small>Your session will start on {{$parent.newSessionStartTime.toDateString()}} at {{$parent.newSessionStartTime.toTimeString()}} and will last until {{$parent.newSessionEndTime.toDateString()}} at {{$parent.newSessionEndTime.toTimeString()}}.</small></h5>
+                <!-- <h5 ng-show="!$parent.newSessionForm.durationHours.$invalid && !$parent.newSessionForm.durationMins.$invalid && !$parent.newSessionForm.startTime.$invalid"><small>Your session will start on {{$parent.newSessionStartTime.toDateString()}} at {{$parent.newSessionStartTime.toTimeString()}} and will last until {{$parent.newSessionEndTime.toDateString()}} at {{$parent.newSessionEndTime.toTimeString()}}.</small></h5> -->
               </form>
             </div>
           </tab>

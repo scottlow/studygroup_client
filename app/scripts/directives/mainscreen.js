@@ -24,65 +24,9 @@ angular.module('studygroupClientApp')
         $scope.buildingLong = -123.3592758;
         $scope.newSessionStartTime = new Date();
 
-        var modal = angular.element('#newSessionModal');
-        modal.on('shown.bs.modal', function(e) {
-          $timeout(function() {
-            $scope.buildingLat = $scope.newSessionBuilding.latitude;
-            $scope.buildingLong = $scope.newSessionBuilding.longitude;
-          });
-        });
-
-        $scope.newSessionSubmit = function() {
-          $scope.newSessionSubmitted = true;
-          console.log($scope);
-        };
-
-        $scope.buildingChange = function() {
-          $scope.buildingLat = $scope.newSessionBuilding.latitude;
-          $scope.buildingLong = $scope.newSessionBuilding.longitude;
-        };
-
-        $scope.roundTimeToNearestFive = function(date) {
-          var coeff = 1000 * 60 * 5;
-          return new Date(Math.round(date.getTime() / coeff) * coeff);
-        };
-
-        $scope.computeEndTime = function() {
-          if($scope.newSessionStartTime ==   null) {
-            return;
-          }        
-
-          $scope.newSessionEndTime = $scope.roundTimeToNearestFive($scope.newSessionStartTime);
-          $scope.newSessionEndTime.setMinutes($scope.newSessionEndTime.getMinutes() + ($scope.newSessionDurationMins == null ? 0 : parseInt($scope.newSessionDurationMins)));
-          $scope.newSessionEndTime.setHours($scope.newSessionEndTime.getHours() + ($scope.newSessionDurationHours == null ? 0 : parseInt($scope.newSessionDurationHours)));
-        };
-
-        $scope.$watchCollection('[newSessionStartTime, newSessionDurationHours, newSessionDurationMins]', function() {
-          $scope.computeEndTime();
-        });
-
-        $scope.initTimes = function() {
-          $scope.newSessionStartTime = $scope.roundTimeToNearestFive(new Date());      
-          $scope.newSessionDurationHours = '1';
-          $scope.newSessionDurationMins = '00';
-          $scope.computeEndTime();
-        };       
-
-        $scope.open = function($event) {
-          $event.preventDefault();
-          $event.stopPropagation();
-
-          $scope.opened = true;
-        };
-
         if(AuthService.isAuthenticated()) {
           $scope.showCreateNewSession = true;
-        }
-
-        $scope.addCourse = function(course) {
-          course.disabled = true;
-          StateService.addCourse(course);
-        };
+        }     
 
         $scope.$on('loginProcessed', function(){
           $scope.selectedCourses = StateService.getSelectedCourses();
@@ -100,7 +44,78 @@ angular.module('studygroupClientApp')
             $scope.courseList = StateService.getCourseList();
             $scope.university = StateService.getUniversity();
           });
+        });        
+
+        $scope.$watchCollection('[newSessionStartTime, newSessionDurationHours, newSessionDurationMins]', function() {
+          $scope.computeEndTime();
         });
+
+        var modal = angular.element('#newSessionModal');
+        modal.on('shown.bs.modal', function(e) {
+          $timeout(function() {
+            $scope.buildingLat = $scope.newSessionBuilding.latitude;
+            $scope.buildingLong = $scope.newSessionBuilding.longitude;
+          });
+        });
+
+        $scope.newSessionSubmit = function() {
+          $scope.newSessionSubmitted = true;
+          angular.element('#newSessionModal').modal('hide');
+          if($scope.newSessionForm.$valid) {
+            StateService.createSession(
+                    $scope.newSessionCourse.id, 
+                    $scope.newSessionStartTime, 
+                    $scope.newSessionEndTime, 
+                    $scope.newSessionBuilding, 
+                    parseInt($scope.newSessionRoomNumber)
+            )
+            .success(function() {
+              console.log('Created session');
+              // TODO: Call getAvailableSessions here.
+            })
+            .error(function() {
+              console.log('Error creating session');
+            });
+          }
+        };
+
+        $scope.buildingChange = function() {
+          $scope.buildingLat = $scope.newSessionBuilding.latitude;
+          $scope.buildingLong = $scope.newSessionBuilding.longitude;
+        };
+
+        $scope.roundTimeToNearestFive = function(date) {
+          var coeff = 1000 * 60 * 5;
+          return new Date(Math.round(date.getTime() / coeff) * coeff);
+        };
+
+        $scope.computeEndTime = function() {
+          if($scope.newSessionStartTime ==   null) {
+            return;
+          }        
+          $scope.newSessionEndTime = $scope.roundTimeToNearestFive($scope.newSessionStartTime);
+          $scope.newSessionEndTime.setMinutes($scope.newSessionEndTime.getMinutes() + ($scope.newSessionDurationMins == null ? 0 : parseInt($scope.newSessionDurationMins)));
+          $scope.newSessionEndTime.setHours($scope.newSessionEndTime.getHours() + ($scope.newSessionDurationHours == null ? 0 : parseInt($scope.newSessionDurationHours)));
+        };
+
+        $scope.initTimes = function() {
+          $scope.newSessionStartTime = $scope.roundTimeToNearestFive(new Date());      
+          $scope.newSessionDurationHours = '1';
+          $scope.newSessionDurationMins = '00';
+          $scope.computeEndTime();
+        };       
+
+        $scope.open = function($event) {
+          $event.preventDefault();
+          $event.stopPropagation();
+
+          $scope.opened = true;
+        };
+
+        $scope.addCourse = function(course) {
+          course.disabled = true;
+          StateService.addCourse(course);
+        };
 
         $scope.showNewSessionModal = function() {
           $scope.buildingList = [];
