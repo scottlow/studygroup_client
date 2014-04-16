@@ -17,7 +17,7 @@
         <div class="container" style="width: 100%;">
           <div class="navbar-collapse collapse">
             <div class="course-btn-group btn-group">
-              <course-button active='active' ng-repeat="course in selectedCourses">{{course.short_name}}</course-button>
+              <course-button ng-repeat="course in selectedCourses" active="course.active">{{course.short_name}}</course-button>
             </div>       
             <ul class="nav navbar-nav navbar-right">
               <li class="dropdown">

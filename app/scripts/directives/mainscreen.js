@@ -132,7 +132,7 @@ angular.module('studygroupClientApp')
         };
 
         $scope.filterCourse = function(course) {
-          StateService.filterCourse(course.id);
+          StateService.filterCourse(course);
         };
 
       }],
@@ -193,17 +193,20 @@ angular.module('studygroupClientApp')
       transclude: true,
       require: '^mainScreen',
       scope: {
-        active: '@active',
+        active: '=active',
       },
-      template: '<div ng-class="active" class="course-btn btn btn-default" ng-click="filterCourse()" ng-transclude></div><div class="course-close-btn btn btn-primary" ng-click="removeCourse()"><span class="h6 glyphicon glyphicon-remove"></span></div>',
+      template: '<div ng-class="{active : active}" class="course-btn btn btn-default" ng-click="filterCourse()" ng-transclude></div><div class="course-close-btn btn btn-primary" ng-click="removeCourse()"><span ng-show="loading"><img style="width:18px" src="../img/spinner.gif" /></span><span ng-show="!loading"class="h6 glyphicon glyphicon-remove"></span></div>',
       link: function(scope, elements, attrs) {
+        console.log(scope.active);
         scope.filterCourse = function() {
-          if(scope.active === 'active') {
-            scope.active = '';
+          if(scope.active === true) {
+            scope.active = false;
           } else {
-            scope.active = 'active';
+            scope.active = true;
           }
           scope.$parent.filterCourse(scope.$parent.course);
+          scope.loading = true;
+          
         };
         scope.removeCourse = function() {
           scope.$parent.removeCourse(scope.$parent.course);

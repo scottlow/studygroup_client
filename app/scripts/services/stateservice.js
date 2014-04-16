@@ -52,6 +52,10 @@ angular.module('studygroupClientApp')
         selectedCourses.length = 0; //If we have other references to this, setting it to a new [] array will lose the references
         if(AuthService.isAuthenticated()) {
           var selectedCourseIds = [];
+          var activeCourseIds = [];
+          angular.forEach(currentUser.active_courses, function(value) {
+            activeCourseIds.push(value.id);
+          });
           angular.forEach(currentUser.courses, function(value) {
             selectedCourseIds.push(value.id);
           });
@@ -78,12 +82,17 @@ angular.module('studygroupClientApp')
             value.full_name = value.name;
             value.name = splitName[1];
             if(selectedCourseIds.indexOf(value.id) === -1){
+              // The course we're looking at is NOT part of this user's course list.
               value.disabled = false;
               availableCourses.push(value);
             } else {
+              // The course we're looking at is part of this user's course list.
               value.disabled = true;
               availableCourses.push(value);
-              selectedCourses.push(value);
+              if(activeCourseIds.indexOf(value.id) !== -1) {
+                value.active = true;
+              }
+              selectedCourses.push(value);              
             }
           });
         } else {
@@ -151,10 +160,10 @@ angular.module('studygroupClientApp')
         })
         .error(function(error) {
           console.log('Error adding course');
-          self.addCourse(course);
+          self.selectedCourses.push(course); // Re-add the course on the UI side in the case of an error since the data model hasn't been updated.
         });
       }
-      self.removeCourseData(course.id);
+      self.removeCourseData(course.id); // Due to the async nature of this call, this will run before the POST request comes back.
     };
 
     this.removeCourseData = function(courseID) {
@@ -165,13 +174,27 @@ angular.module('studygroupClientApp')
       }
     };
 
-    this.filterCourse = function(courseID) {
+    this.filterCourse = function(course) {
+      if(AuthService.isAuthenticated()) {
+        $http.post('http://localhost:8000/' + 'courses/filter/', {'course_id' : course.id})
+        .success(function(data) {
+          console.log('Filtered course');
+        })
+        .error(function(error) {
+          console.log('Error filtering course');
+          self.filterCourseData(course); // Re-filter the course on the UI side in the case of an error since the data model hasn't been updated.
+        });        
+      }
+      self.filterCourseData(course.id); // Due to the async nature of this call, this will run before the POST request comes back.
+    };
+
+    this.filterCourseData = function(courseID) {
       for(var i = 0; i < selectedCourses.length; i++) {
         if(courseID === selectedCourses[i].id) {
           selectedCourses[i].active = !selectedCourses[i].active;
         }
       }
-    };
+    }
 
     this.createSession = function(courseID, startTime, endTime, location, roomNumber) {
       if(AuthService.isAuthenticated()) {
