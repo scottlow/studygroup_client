@@ -40,6 +40,20 @@ li.disabled > .course-item {
   border-top-right-radius: 0px;  
 }
 
+.loading {
+  padding: 5px;
+}
+
+.notloading {
+  width:33px;
+  padding-left:6px;
+  padding-right:5px;
+}
+
+.spinner {
+  width: 21px;
+}
+
 .course-btn-group {
   padding-top:8px;
 }
