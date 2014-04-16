@@ -138,6 +138,7 @@ angular.module('studygroupClientApp')
     };
 
     this.addCourse = function(course) {
+      course.active = true; // Set the course to active since it is for sure being added to the user's list at this point.
       if(AuthService.isAuthenticated()) {
         $http.post('http://localhost:8000/' + 'courses/add/', {'course_id' : course.id})
         .success(function(data) {
@@ -176,7 +177,7 @@ angular.module('studygroupClientApp')
 
     this.filterCourse = function(course) {
       if(AuthService.isAuthenticated()) {
-        $http.post('http://localhost:8000/' + 'courses/filter/', {'course_id' : course.id})
+        return $http.post('http://localhost:8000/' + 'courses/filter/', {'course_id' : course.id})
         .success(function(data) {
           console.log('Filtered course');
         })

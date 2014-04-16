@@ -132,7 +132,7 @@ angular.module('studygroupClientApp')
         };
 
         $scope.filterCourse = function(course) {
-          StateService.filterCourse(course);
+          return StateService.filterCourse(course);
         };
 
       }],
@@ -199,14 +199,15 @@ angular.module('studygroupClientApp')
       link: function(scope, elements, attrs) {
         console.log(scope.active);
         scope.filterCourse = function() {
+          scope.loading = true;          
           if(scope.active === true) {
             scope.active = false;
           } else {
             scope.active = true;
           }
-          scope.$parent.filterCourse(scope.$parent.course);
-          scope.loading = true;
-          
+          scope.$parent.filterCourse(scope.$parent.course).then(function(){
+            scope.loading = false;
+          });
         };
         scope.removeCourse = function() {
           scope.$parent.removeCourse(scope.$parent.course);
