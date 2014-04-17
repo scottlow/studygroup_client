@@ -1,13 +1,11 @@
 <li class="session-entry media" ng-click="selectSession()">
-    <a class="pull-left" href="#">
-        <img class="media-object" src="images/square.png">
-    </a>
     <div class="media-body session-description-container">
         <h5 class="media-heading">{{ courseName }}</h5>
         <div class="session-description">
-	        <h6>Coordinator: <span class="h5"><small>{{ coordinatorName }}</small></span></h6>
-	        <h6>Start Time: <span class="h5"><small>{{ startTime.toLocaleDateString() }} - {{ startTime.toLocaleTimeString() }}</small></span></h6>
-	        <h6>End Time: <span class="h5"><small>{{ endTime.toLocaleDateString() }} - {{ endTime.toLocaleTimeString() }}</small></span></h6>
+            <span class="duration-label">{{ Math.floor(((endTime - startTime) % 86400000) / 3600000) }}h {{ (((endTime - startTime)  % 86400000) % 3600000) / 60000 }}m</span>
+	        <h6 class="glyphicon glyphicon-session glyphicon-map-marker"><span class="h5 session-detail"><small>{{ locationName }}<span class="divider">&#183;</span>Room: {{ roomNumber }}</small></span></h6>
+	        <h6 class="glyphicon glyphicon-session glyphicon-time"><span class="h5 session-detail"><small>{{ startTime.toLocaleDateString() }}<span class="divider">&#183;</span>{{ startTime.toLocaleTimeString() }}</small></span></h6>
+	        <h6 class="glyphicon glyphicon-session glyphicon-session-fade glyphicon-user"><span class="h5 session-detail"><small>{{ coordinatorName }}<span class="divider">&#183;</span>John Doe<span class="divider">&#183;</span>Jane Smith<span class="divider">&#183;</span>Billy Bob Billy<span class="divider">&#183;</span>Nick Cage</small></span></h6>
         </div>
     </div>
 </li>

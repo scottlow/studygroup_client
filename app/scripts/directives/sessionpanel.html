@@ -2,6 +2,8 @@
     <tab heading="Explore">
         <ul class="media" style="margin:10px; padding-left:0px;">
             <sessioncard ng-repeat="session in sessions"
+                         location-name="session.location.name"  
+                         room-number="session.room_number"          
                          course-name="session.course.name"
                          start-time="session.start_time"
                          end-time="session.end_time"
@@ -12,6 +14,8 @@
         <accordion close-others="false">
             <accordion-group heading="Hosting">
                 <sessioncard ng-repeat="session in hostsessions"
+                             location-name="session.location.name"
+                             room-number="session.room_number"                                 
                              course-name="session.course.name"
                              start-time="session.start_time"
                              end-time="session.end_time"
@@ -19,6 +23,8 @@
             </accordion-group>
             <accordion-group heading="Attending">
                 <sessioncard ng-repeat="session in viewsessions"
+                             location-name="session.location.name"  
+                             room-number="session.room_number"    
                              course-name="session.course.name"
                              start-time="session.start_time"
                              end-time="session.end_time"

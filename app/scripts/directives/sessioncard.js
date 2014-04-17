@@ -10,8 +10,11 @@ angular.module('studygroupClientApp')
         startTime: '=',
         endTime: '=',
         coordinatorName: '=',
+        locationName: '=',
+        roomNumber: '=',
       },
       controller: ['$scope', function($scope) {
+        $scope.Math = window.Math;
         $scope.selectSession = function() {
           console.log('Selected');
         }
