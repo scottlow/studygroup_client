@@ -158,7 +158,8 @@ angular.module('studygroupClientApp')
           longitude = $scope.long,
           zoom = $scope.zoom,
           map,
-          markers = [];
+          markers = [],
+          bubbles = [];
 
         latitude = latitude && parseFloat(latitude, 10) || 48.4630959;
         longitude = longitude && parseFloat(longitude, 10) || -123.3121053;
@@ -172,6 +173,7 @@ angular.module('studygroupClientApp')
           zoom: zoom,
           center: new google.maps.LatLng(latitude, longitude)
         };
+
         map = new google.maps.Map(elem[0], mapOptions);
 
         $scope.$watchCollection('selectedSessions', function(newVal, oldVal) {
@@ -179,22 +181,46 @@ angular.module('studygroupClientApp')
           if(newVal !== oldVal && $scope.selectedSessions.length !== 0) {
             console.log($scope.selectedSessions);          
             angular.forEach($scope.selectedSessions, function(session) {
+
+              var infoTemplate = '<div id="content"><p>' + session.coordinator.first_name + '\'s ' + session.course.name + ' Session</p></div>'
+
               var latLong = new google.maps.LatLng(session.location.latitude, session.location.longitude);
               var marker = new google.maps.Marker({
                 position: latLong,
                 map: map,
                 title: session.course.name
               });
+
+              var infowindow = new google.maps.InfoWindow({
+                  content: infoTemplate
+              });
+
+              google.maps.event.addListener(marker, 'click', function() {
+                $scope.closeAllBubbles();
+                infowindow.open(map,marker);
+              });
+
+              google.maps.event.addListener(map, 'click', function() {
+                $scope.closeAllBubbles();
+              });              
+              bubbles.push(infowindow);
               markers.push(marker);
             });
           }
         });
+
+        $scope.closeAllBubbles = function() {
+          for(var i = 0; i < bubbles.length; i++) {
+            bubbles[i].close(map, markers[i]);
+          }
+        }
 
         $scope.clearMarkers = function() {
           for(var i = 0; i < markers.length; i++) {
             markers[i].setMap(null);
           }
           markers = [];
+          bubbles = [];
         };
 
         $scope.$watchCollection('[lat, long, zoom]', function(newValues, oldValues) {
@@ -227,7 +253,6 @@ angular.module('studygroupClientApp')
       },
       template: '<div ng-class="{active : active}" class="course-btn btn btn-default" ng-click="filterCourse()" ng-transclude></div><div class="course-close-btn btn btn-primary" ng-click="removeCourse()" ng-class="{loading : loading, notloading : !loading}"><span ng-show="loading"><img class="spinner" src="../img/spinner.gif" /></span><span ng-show="!loading"class="h6 glyphicon glyphicon-remove"></span></div>',
       link: function(scope, elements, attrs) {
-        console.log(scope.active);
         scope.filterCourse = function() {
           scope.loading = true;          
           if(scope.active === true) {
