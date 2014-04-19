@@ -91,6 +91,8 @@ angular.module('studygroupClientApp')
               availableCourses.push(value);
               if(activeCourseIds.indexOf(value.id) !== -1) {
                 value.active = true;
+              } else {
+                value.active = false;
               }
               selectedCourses.push(value);              
             }
