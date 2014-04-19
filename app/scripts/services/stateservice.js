@@ -114,6 +114,7 @@ angular.module('studygroupClientApp')
     };
 
     this.processLogin = function() {
+      self.clearState();
       $http.get('http://localhost:8000/' + 'users/profile')
       .success(function(data) {
         currentUser = data;
@@ -206,7 +207,7 @@ angular.module('studygroupClientApp')
           selectedCourses[i].active = !selectedCourses[i].active;
         }
       }
-    }
+    };
 
     this.createSession = function(courseID, startTime, endTime, location, roomNumber) {
       if(AuthService.isAuthenticated()) {
@@ -219,6 +220,18 @@ angular.module('studygroupClientApp')
                 'room_number' : roomNumber
         });
       }
-    }
+    };
+
+    this.clearState = function() {
+      selectedUniversity = {};
+      availableCourses = []; 
+      universityBuildings = [];           
+      selectedCourses = [];
+      availableSessions = [];
+    };
+
+    this.logout = function()  {
+      self.clearState();
+    };
 
   });

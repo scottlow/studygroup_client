@@ -4,6 +4,7 @@ angular.module('dashboardControllers', [])
   .controller('DashboardCtrl', function ($scope, $http, AuthService, StateService, $angularCacheFactory) {
     // Log the user out
     $scope.logout = function() {
+      StateService.logout();
       AuthService.logout();
     };
 
