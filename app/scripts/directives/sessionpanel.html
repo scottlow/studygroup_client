@@ -7,7 +7,10 @@
                          course-name="session.course.name"
                          start-time="session.start_time"
                          end-time="session.end_time"
-                         coordinator-name="session.coordinator.username"/>
+                         coordinator-name="session.coordinator.username"
+                         ng-mouseenter="previewSession(session)"
+                         ng-mouseleave="dismissPreviewSession(session)"
+                         ng-click="selectSession(session)"/>
         </ul>
     </tab>
     <tab heading="My Sessions">
@@ -19,7 +22,10 @@
                              course-name="session.course.name"
                              start-time="session.start_time"
                              end-time="session.end_time"
-                             coordinator-name="session.coordinator.username"/>
+                             coordinator-name="session.coordinator.username"
+                             ng-mouseenter="previewSession(session)"
+                             ng-mouseleave="dismissPreviewSession(session)" 
+                             ng-click="selectSession(session)"/>                                                     
             </accordion-group>
             <accordion-group heading="Attending">
                 <sessioncard ng-repeat="session in viewsessions"
@@ -28,7 +34,10 @@
                              course-name="session.course.name"
                              start-time="session.start_time"
                              end-time="session.end_time"
-                             coordinator-name="session.coordinator.username"/>
+                             coordinator-name="session.coordinator.username"
+                             ng-mouseenter="previewSession(session)"
+                             ng-mouseleave="dismissPreviewSession(session)"
+                             ng-click="selectSession(session)"/>                                                       
             </accordion-group>
         </accordion>
     </tab>

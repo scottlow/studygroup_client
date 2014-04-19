@@ -15,9 +15,6 @@ angular.module('studygroupClientApp')
       },
       controller: ['$scope', function($scope) {
         $scope.Math = window.Math;
-        $scope.selectSession = function() {
-          console.log('Selected');
-        }
       }],
     };
   });

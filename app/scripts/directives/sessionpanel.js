@@ -18,6 +18,21 @@ angular.module('studygroupClientApp')
 
         StateService.setAvailableSessions($scope.sessions);
 
+        $scope.previewSession = function(session) {
+            session.bubble.open(session.marker.map, session.marker);
+        }
+
+        $scope.dismissPreviewSession = function(session) {
+            if(!session.stickyDisplay) {
+                session.bubble.close(session.marker.map, session.marker);
+            }
+        }
+
+        $scope.selectSession = function(session) {
+            google.maps.event.trigger(session.marker, 'click');
+            session.stickyDisplay = true;
+        }
+
         $scope.getAvailableSessions = function(values) {
             var oldSessions = $scope.sessions.slice();
             var url = "id=";

@@ -182,27 +182,40 @@ angular.module('studygroupClientApp')
             console.log($scope.selectedSessions);          
             angular.forEach($scope.selectedSessions, function(session) {
 
+              // Create template for bubble
               var infoTemplate = '<div id="content"><p>' + session.coordinator.first_name + '\'s ' + session.course.name + ' Session</p></div>'
 
+              // Get lat and long for the session marker
               var latLong = new google.maps.LatLng(session.location.latitude, session.location.longitude);
+              
+              // Create the marker for this session
               var marker = new google.maps.Marker({
                 position: latLong,
                 map: map,
                 title: session.course.name
               });
 
+              // Create the info window for this session
               var infowindow = new google.maps.InfoWindow({
-                  content: infoTemplate
+                  content: infoTemplate,
               });
 
+              // This listener will close all open info windows and open the clicked marker's info window
               google.maps.event.addListener(marker, 'click', function() {
                 $scope.closeAllBubbles();
                 infowindow.open(map,marker);
               });
 
+              // This listener will close all open info windows when the map is clicked
               google.maps.event.addListener(map, 'click', function() {
                 $scope.closeAllBubbles();
-              });              
+              });
+
+              // Push each infowindow and marker to their respective session objects so that they can be used in SessionPanel
+              session.marker = marker;
+              session.bubble = infowindow;
+
+              // Push each infowindow and marker to their respective list to keep track of them
               bubbles.push(infowindow);
               markers.push(marker);
             });
