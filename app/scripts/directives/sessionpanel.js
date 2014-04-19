@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('studygroupClientApp')
-  .directive('sessionpanel', function (StateService, $http) {
+  .directive('sessionpanel', function ($rootScope, StateService, $http) {
     return {
       templateUrl: 'scripts/directives/sessionpanel.html',
       restrict: 'E',
@@ -15,6 +15,8 @@ angular.module('studygroupClientApp')
         $scope.sessionIds = [];
         $scope.hostSessions = [];
         $scope.viewSessions = [];
+
+        StateService.setAvailableSessions($scope.sessions);
 
         $scope.getAvailableSessions = function(values) {
             var oldSessions = $scope.sessions.slice();
@@ -55,6 +57,7 @@ angular.module('studygroupClientApp')
                         $scope.sessions.push(value);
                         $scope.sessionIds.push(value.id);
                 });
+                $rootScope.$broadcast('sessionsChanged');
             });
         };
                 

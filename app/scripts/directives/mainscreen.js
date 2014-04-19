@@ -23,6 +23,7 @@ angular.module('studygroupClientApp')
         $scope.buildingLat = 48.4428524;
         $scope.buildingLong = -123.3592758;
         $scope.newSessionStartTime = new Date();
+        $scope.sessions = [];
 
         if(AuthService.isAuthenticated()) {
           $scope.showCreateNewSession = true;
@@ -44,7 +45,11 @@ angular.module('studygroupClientApp')
             $scope.courseList = StateService.getCourseList();
             $scope.university = StateService.getUniversity();
           });
-        });        
+        });
+
+        $scope.$on('sessionsChanged', function() {
+          $scope.sessions = StateService.getAvailableSessions();
+        });       
 
         $scope.$watchCollection('[newSessionStartTime, newSessionDurationHours, newSessionDurationMins]', function() {
           $scope.computeEndTime();
@@ -145,13 +150,15 @@ angular.module('studygroupClientApp')
         lat: '=',
         long: '=',
         zoom: '=',
+        selectedSessions: '='
       },
       link: function ($scope, elem, attrs) {
         var mapOptions,
           latitude = $scope.lat,
           longitude = $scope.long,
           zoom = $scope.zoom,
-          map;
+          map,
+          markers = [];
 
         latitude = latitude && parseFloat(latitude, 10) || 48.4630959;
         longitude = longitude && parseFloat(longitude, 10) || -123.3121053;
@@ -166,6 +173,29 @@ angular.module('studygroupClientApp')
           center: new google.maps.LatLng(latitude, longitude)
         };
         map = new google.maps.Map(elem[0], mapOptions);
+
+        $scope.$watchCollection('selectedSessions', function(newVal, oldVal) {
+          $scope.clearMarkers();     
+          if(newVal !== oldVal && $scope.selectedSessions.length !== 0) {
+            console.log($scope.selectedSessions);          
+            angular.forEach($scope.selectedSessions, function(session) {
+              var latLong = new google.maps.LatLng(session.location.latitude, session.location.longitude);
+              var marker = new google.maps.Marker({
+                position: latLong,
+                map: map,
+                title: session.course.name
+              });
+              markers.push(marker);
+            });
+          }
+        });
+
+        $scope.clearMarkers = function() {
+          for(var i = 0; i < markers.length; i++) {
+            markers[i].setMap(null);
+          }
+          markers = [];
+        };
 
         $scope.$watchCollection('[lat, long, zoom]', function(newValues, oldValues) {
           var center = new google.maps.LatLng(newValues[0], newValues[1]);

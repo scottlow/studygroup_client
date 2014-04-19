@@ -7,6 +7,7 @@ angular.module('studygroupClientApp')
     var availableCourses = [];
     var selectedCourses = [];
     var universityBuildings = [];
+    var availableSessions = [];
     var self = this;
 
     var currentUser = {};
@@ -137,6 +138,14 @@ angular.module('studygroupClientApp')
 
     this.getUniversity = function() {
       return selectedUniversity;
+    };
+
+    this.setAvailableSessions = function(sessions) {
+      availableSessions = sessions;
+    };
+
+    this.getAvailableSessions = function() {
+      return availableSessions;
     };
 
     this.addCourse = function(course) {
