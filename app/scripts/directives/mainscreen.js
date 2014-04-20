@@ -257,15 +257,12 @@ angular.module('studygroupClientApp')
         }
 
         $scope.closeAllBubblesExcept = function() {
-          var count = 0;
           for(var i = 0; i < bubbles.length; i++) {
             if(!bubbles[i].hovered) {
-              count ++;
               bubbles[i].stickyDisplay = false;
               bubbles[i].close(map, markers[i]);
             }
           }
-          console.log(count);
         }        
 
         $scope.clearMarkers = function() {
