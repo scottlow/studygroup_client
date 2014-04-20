@@ -23,14 +23,13 @@ angular.module('studygroupClientApp')
         }
 
         $scope.dismissPreviewSession = function(session) {
-            if(!session.stickyDisplay) {
+            if(!session.bubble.stickyDisplay) {
                 session.bubble.close(session.marker.map, session.marker);
             }
         }
 
         $scope.selectSession = function(session) {
             google.maps.event.trigger(session.marker, 'click');
-            session.stickyDisplay = true;
         }
 
         $scope.getAvailableSessions = function(values) {

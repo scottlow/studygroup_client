@@ -201,8 +201,9 @@ angular.module('studygroupClientApp')
               });
 
               // This listener will close all open info windows and open the clicked marker's info window
-              google.maps.event.addListener(marker, 'click', function() {
+              google.maps.event.addListener(marker, 'click', function() {                
                 $scope.closeAllBubbles();
+                infowindow.stickyDisplay = true;              
                 infowindow.open(map,marker);
               });
 
@@ -224,6 +225,7 @@ angular.module('studygroupClientApp')
 
         $scope.closeAllBubbles = function() {
           for(var i = 0; i < bubbles.length; i++) {
+            bubbles[i].stickyDisplay = false;
             bubbles[i].close(map, markers[i]);
           }
         }
