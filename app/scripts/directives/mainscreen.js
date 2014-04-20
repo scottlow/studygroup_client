@@ -183,8 +183,14 @@ angular.module('studygroupClientApp')
             angular.forEach($scope.selectedSessions, function(session) {
 
               // Create template for bubble
-              var infoTemplate = '<div id="content"><p>' + session.coordinator.first_name + '\'s ' + session.course.name + ' Session</p></div>'
-
+              var infoTemplate = '<div class="media-body session-description-container">' + 
+              '<h5 class="media-heading session-heading">' + session.course.name + '</h5><span class="badge duration bubble-duration">' + Math.floor(((session.end_time - session.start_time) % 86400000) / 3600000) + 'h ' + (((session.end_time - session.start_time)  % 86400000) % 3600000) / 60000 + ' m</span>' + 
+              '<div class="session-description">' + 
+              '<button type="button" class="btn btn-success btn-sm btn-join">Join</button>' + 
+              '<h6 style="pointer-events:none;" class="glyphicon glyphicon-session glyphicon-map-marker"><span class="h5 session-detail"><small>' + session.location.name + '<span class="divider">&#183;</span>Room: ' + session.room_number + '</small></span></h6>' + 
+              '<h6 style="pointer-events:none;" class="glyphicon glyphicon-session glyphicon-time"><span class="h5 session-detail"><small>' + session.start_time.toLocaleDateString() + '<span class="divider">&#183;</span>' + session.start_time.toLocaleTimeString() + '</small></span></h6>' + 
+              '</div>' +
+              '</div>';
               // Get lat and long for the session marker
               var latLong = new google.maps.LatLng(session.location.latitude, session.location.longitude);
               
