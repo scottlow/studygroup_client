@@ -206,8 +206,7 @@ angular.module('studygroupClientApp')
                 if(!infowindow.stickyDisplay) {
                   $scope.closeAllBubblesExcept();
                   infowindow.hovered = false;            
-                  infowindow.stickyDisplay = true;              
-                  infowindow.open(map,marker);
+                  infowindow.stickyDisplay = true;
                 }
               });
 
