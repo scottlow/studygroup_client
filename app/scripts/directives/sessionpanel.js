@@ -19,13 +19,11 @@ angular.module('studygroupClientApp')
         StateService.setAvailableSessions($scope.sessions);
 
         $scope.previewSession = function(session) {
-            session.bubble.open(session.marker.map, session.marker);
+            google.maps.event.trigger(session.marker, 'mouseover');
         }
 
         $scope.dismissPreviewSession = function(session) {
-            if(!session.bubble.stickyDisplay) {
-                session.bubble.close(session.marker.map, session.marker);
-            }
+            google.maps.event.trigger(session.marker, 'mouseout');
         }
 
         $scope.selectSession = function(session) {

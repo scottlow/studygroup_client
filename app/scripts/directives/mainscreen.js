@@ -201,16 +201,42 @@ angular.module('studygroupClientApp')
               });
 
               // This listener will close all open info windows and open the clicked marker's info window
-              google.maps.event.addListener(marker, 'click', function() {                
-                $scope.closeAllBubbles();
-                infowindow.stickyDisplay = true;              
-                infowindow.open(map,marker);
+              google.maps.event.addListener(marker, 'click', function() {
+                // This if prevents a flicker when clicking a marker whose bubble is already displayed
+                if(!infowindow.stickyDisplay) {
+                  $scope.closeAllBubblesExcept();
+                  infowindow.hovered = false;            
+                  infowindow.stickyDisplay = true;              
+                  infowindow.open(map,marker);
+                }
               });
+
+              google.maps.event.addListener(marker, 'mouseover', function() { 
+                // This if prevents a flicker when mousing over a marker whose bubble is already displayed 
+                if(!infowindow.stickyDisplay) {          
+                  infowindow.open(map,marker);
+                  infowindow.hovered = true;
+                }
+              });
+
+              google.maps.event.addListener(marker, 'mouseout', function() {
+                if(!infowindow.stickyDisplay) {
+                  infowindow.close(map,marker);
+                  infowindow.hovered = false;
+                }
+              });   
 
               // This listener will close all open info windows when the map is clicked
               google.maps.event.addListener(map, 'click', function() {
                 $scope.closeAllBubbles();
               });
+
+              // This listener will close all open info windows when the marker's close button is pressed.
+              // This is *technically* not the correct behaviour, but since we'll only ever have one
+              // marker open at any time, we can reset these.
+              google.maps.event.addListener(marker, 'closeclick', function() {
+                $scope.closeAllBubbles();
+              });              
 
               // Push each infowindow and marker to their respective session objects so that they can be used in SessionPanel
               session.marker = marker;
@@ -229,6 +255,18 @@ angular.module('studygroupClientApp')
             bubbles[i].close(map, markers[i]);
           }
         }
+
+        $scope.closeAllBubblesExcept = function() {
+          var count = 0;
+          for(var i = 0; i < bubbles.length; i++) {
+            if(!bubbles[i].hovered) {
+              count ++;
+              bubbles[i].stickyDisplay = false;
+              bubbles[i].close(map, markers[i]);
+            }
+          }
+          console.log(count);
+        }        
 
         $scope.clearMarkers = function() {
           for(var i = 0; i < markers.length; i++) {
