@@ -221,7 +221,12 @@ angular.module('studygroupClientApp')
                 if(!infowindow.stickyDisplay) {          
                   infowindow.open(map,marker);
                   infowindow.hovered = true;
-                }
+                } else {
+                  // This is a hacky workaround to display bubbles that are off the map, but already open.
+                  if(!(map.getBounds().contains(marker.getPosition()))) {
+                    infowindow.open(map, marker);
+                  }
+                }                  
               });
 
               google.maps.event.addListener(marker, 'mouseout', function() {
