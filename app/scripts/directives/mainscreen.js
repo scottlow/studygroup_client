@@ -225,6 +225,10 @@ angular.module('studygroupClientApp')
                 if(!infowindow.stickyDisplay) {          
                   infowindow.open(map,marker);
                   infowindow.hovered = true;
+
+                  $scope.safeApply(function() {
+                    session.hovered = true;
+                  });                  
                 } else {
                   // This is a hacky workaround to display bubbles that are off the map, but already open.
                   if(!(map.getBounds().contains(marker.getPosition()))) {
@@ -237,6 +241,10 @@ angular.module('studygroupClientApp')
                 if(!infowindow.stickyDisplay) {
                   infowindow.close(map,marker);
                   infowindow.hovered = false;
+
+                  $scope.safeApply(function() {
+                    session.hovered = false;
+                  });                  
                 }
               });   
 

@@ -67,6 +67,7 @@ angular.module('studygroupClientApp')
                         value.start_time = new Date(value.start_time);
                         value.end_time = new Date(value.end_time);
                         value.selected = false;
+                        value.hovered = false;
                         $scope.sessions.push(value);
                         $scope.sessionIds.push(value.id);
                 });
