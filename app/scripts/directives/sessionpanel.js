@@ -27,10 +27,11 @@ angular.module('studygroupClientApp')
         }
 
         $scope.selectSession = function(session) {
-            google.maps.event.trigger(session.marker, 'click');
+            google.maps.event.trigger(session.marker, 'click', true);
         }
 
         $scope.getAvailableSessions = function(values) {
+            var id = 1;
             var oldSessions = $scope.sessions.slice();
             var url = "id=";
             angular.forEach($scope.selectedCourses, function(value) {
@@ -68,6 +69,8 @@ angular.module('studygroupClientApp')
                         value.end_time = new Date(value.end_time);
                         value.selected = false;
                         value.hovered = false;
+                        value.id = id;
+                        id += 1;
                         $scope.sessions.push(value);
                         $scope.sessionIds.push(value.id);
                 });
@@ -76,6 +79,7 @@ angular.module('studygroupClientApp')
         };
                 
         $scope.$watchCollection('selectedCourses', $scope.getAvailableSessions);
+        $scope.$on('sessionCreated', $scope.getAvailableSessions);
       }]
     };
   });

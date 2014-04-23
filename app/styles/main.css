@@ -338,6 +338,8 @@ body {
   cursor: pointer;
   padding: 10px;
   user-select: none;
+  margin-top:25px;
+  margin-bottom:25px;
 }
 
 .session-hovered > li {
@@ -367,6 +369,12 @@ body {
 
 .session-heading {
   display:inline;
+}
+
+.session-panel .tab-content {
+  overflow-y: scroll;
+  max-height: 700px;
+  margin-top: 10px;
 }
 
 .btn-join {

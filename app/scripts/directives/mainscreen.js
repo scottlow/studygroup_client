@@ -76,7 +76,7 @@ angular.module('studygroupClientApp')
             )
             .success(function() {
               console.log('Created session');
-              // TODO: Call getAvailableSessions here.
+              $rootScope.$broadcast('sessionCreated');
             })
             .error(function() {
               console.log('Error creating session');
@@ -143,7 +143,7 @@ angular.module('studygroupClientApp')
       }],
     };
   })
-  .directive('homeMap', function ($rootScope, $timeout) {
+  .directive('homeMap', function ($rootScope, $timeout, $location, $anchorScroll) {
     // This directive is called only once when the initial app is loaded. It's what resets our map to good ol' #YYJ.
     return {
       scope: {
@@ -207,12 +207,17 @@ angular.module('studygroupClientApp')
               });
 
               // This listener will close all open info windows and open the clicked marker's info window
-              google.maps.event.addListener(marker, 'click', function() {
+              google.maps.event.addListener(marker, 'click', function(fromList) {
                 // This if prevents a flicker when clicking a marker whose bubble is already displayed
                 if(!infowindow.stickyDisplay) {
                   $scope.closeAllBubblesExcept();
                   infowindow.hovered = false;            
                   infowindow.stickyDisplay = true;
+
+                  if(!(fromList === true)) {
+                    $location.hash(session.id);
+                    $anchorScroll();
+                  }
 
                   $scope.safeApply(function() {
                     session.selected = true;
@@ -256,8 +261,8 @@ angular.module('studygroupClientApp')
               // This listener will close all open info windows when the marker's close button is pressed.
               // This is *technically* not the correct behaviour, but since we'll only ever have one
               // marker open at any time, we can reset these.
-              google.maps.event.addListener(marker, 'closeclick', function() {
-                $scope.closeAllBubbles();
+              google.maps.event.addListener(infowindow, 'closeclick', function() {
+                $scope.closeAllBubbles(); // For some reason, the safeApply is causing this to "lag". I'll look into it.
               });              
 
               // Push each infowindow and marker to their respective session objects so that they can be used in SessionPanel
@@ -277,7 +282,8 @@ angular.module('studygroupClientApp')
             bubbles[i].close(map, markers[i]);
             
             $scope.safeApply(function() {
-              $scope.selectedSessions[i].selected = false;              
+              $scope.selectedSessions[i].selected = false;  
+              $scope.selectedSessions[i].hovered = false;  
             });
           }
         }
@@ -287,7 +293,8 @@ angular.module('studygroupClientApp')
             if(!bubbles[i].hovered) {
               bubbles[i].stickyDisplay = false;
               bubbles[i].close(map, markers[i]);
-              $scope.selectedSessions[i].selected = false;              
+              $scope.selectedSessions[i].selected = false;
+              $scope.selectedSessions[i].hovered = false;              
             }
           }
         } 
