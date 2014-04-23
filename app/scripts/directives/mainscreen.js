@@ -267,7 +267,10 @@ angular.module('studygroupClientApp')
           for(var i = 0; i < bubbles.length; i++) {
             bubbles[i].stickyDisplay = false;
             bubbles[i].close(map, markers[i]);
-            $scope.selectedSessions[i].selected = false;
+            
+            $scope.safeApply(function() {
+              $scope.selectedSessions[i].selected = false;              
+            });
           }
         }
 
