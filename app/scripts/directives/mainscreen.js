@@ -254,15 +254,15 @@ angular.module('studygroupClientApp')
               });   
 
               // This listener will close all open info windows when the map is clicked
-              google.maps.event.addListener(map, 'click', function() {
-                $scope.closeAllBubbles();
-              });
+              // google.maps.event.addListener(map, 'click', function() {
+              //   $scope.closeAllBubbles(); // For some reason, the safeApply is causing this to "lag". I'll look into it.
+              // });
 
               // This listener will close all open info windows when the marker's close button is pressed.
               // This is *technically* not the correct behaviour, but since we'll only ever have one
               // marker open at any time, we can reset these.
               google.maps.event.addListener(infowindow, 'closeclick', function() {
-                $scope.closeAllBubbles(); // For some reason, the safeApply is causing this to "lag". I'll look into it.
+                $scope.closeAllBubbles();
               });              
 
               // Push each infowindow and marker to their respective session objects so that they can be used in SessionPanel
