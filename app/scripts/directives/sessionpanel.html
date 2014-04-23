@@ -10,6 +10,7 @@
                          coordinator-name="session.coordinator.username"
                          ng-mouseenter="previewSession(session)"
                          ng-mouseleave="dismissPreviewSession(session)"
+                         ng-class="{'session-selected' : session.selected, 'session-not-selected' : !session.selected}"
                          ng-click="selectSession(session)"/>
         </ul>
     </tab>
@@ -25,6 +26,7 @@
                              coordinator-name="session.coordinator.username"
                              ng-mouseenter="previewSession(session)"
                              ng-mouseleave="dismissPreviewSession(session)" 
+                             ng-class="{'session-selected' : session.selected, 'session-not-selected' : !session.selected}"                             
                              ng-click="selectSession(session)"/>                                                     
             </accordion-group>
             <accordion-group heading="Attending">
@@ -37,6 +39,7 @@
                              coordinator-name="session.coordinator.username"
                              ng-mouseenter="previewSession(session)"
                              ng-mouseleave="dismissPreviewSession(session)"
+                             ng-class="{'session-selected' : session.selected, 'session-not-selected' : !session.selected}"                             
                              ng-click="selectSession(session)"/>                                                       
             </accordion-group>
         </accordion>

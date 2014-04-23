@@ -340,7 +340,11 @@ body {
   user-select: none;
 }
 
-.session-entry:hover {
+.session-not-selected > li:hover {
+  background-color: #FAFAFA;
+}
+
+.session-selected > li {
   background-color: #eeeeee;
 }
 

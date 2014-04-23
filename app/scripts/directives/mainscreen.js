@@ -159,7 +159,7 @@ angular.module('studygroupClientApp')
           zoom = $scope.zoom,
           map,
           markers = [],
-          bubbles = [];
+          bubbles = [],
 
         latitude = latitude && parseFloat(latitude, 10) || 48.4630959;
         longitude = longitude && parseFloat(longitude, 10) || -123.3121053;
@@ -213,6 +213,10 @@ angular.module('studygroupClientApp')
                   $scope.closeAllBubblesExcept();
                   infowindow.hovered = false;            
                   infowindow.stickyDisplay = true;
+
+                  $scope.safeApply(function() {
+                    session.selected = true;
+                  });
                 }
               });
 
@@ -263,6 +267,7 @@ angular.module('studygroupClientApp')
           for(var i = 0; i < bubbles.length; i++) {
             bubbles[i].stickyDisplay = false;
             bubbles[i].close(map, markers[i]);
+            $scope.selectedSessions[i].selected = false;
           }
         }
 
@@ -271,9 +276,21 @@ angular.module('studygroupClientApp')
             if(!bubbles[i].hovered) {
               bubbles[i].stickyDisplay = false;
               bubbles[i].close(map, markers[i]);
+              $scope.selectedSessions[i].selected = false;              
             }
           }
-        }        
+        } 
+
+        $scope.safeApply = function(fn) {
+          var phase = this.$root.$$phase;
+          if(phase == '$apply' || phase == '$digest') {
+            if(fn && (typeof(fn) === 'function')) {
+              fn();
+            }
+          } else {
+            this.$apply(fn);
+          }
+        };               
 
         $scope.clearMarkers = function() {
           for(var i = 0; i < markers.length; i++) {
