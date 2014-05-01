@@ -17,20 +17,27 @@ angular.module('studygroupClientApp')
         $scope.viewSessions = [];
 
         $scope.getAvailableSessions = function(values) {
-            var oldSessions = $scope.sessions.slice();
+            var oldSessions = $scope.sessions.slice(); //make a copy of the session list
             var url = "id=";
-            angular.forEach($scope.selectedCourses, function(value) {
-                url = url + value.id + "&id=";
+            // Create the url to call, with ids
+            angular.forEach(values, function(value) {
+                if (value.active) {
+                    url = url + value.id + "&id=";
+                }
             });
-            url = url.substring(0, url.length - 4);
+            url = url.substring(0, url.length - 4); // remove the trailing '&id='
             console.log("Making call using url " + url);
             return $http.get('http://localhost:8000/' + 'sessions/courses/?' + url).success(function(data) {
-                var dataIds = [];
+                var dataIds = []; //make an array of ids from the results of the REST call
                 data.forEach(function(element) {
                     console.log(element.id);
                     dataIds.push(element.id);
                 });
                 var sessionToSplice = [];
+                // Go through each element in the old sessions, and if that old
+                // session no longer exists in the REST call, we will remove it from the session list
+                // by adding it's id to the 'sessionToSplice' array. Else, if the old session is in the data
+                // , remove it from the data because we do not want a second remove.
                 oldSessions.forEach(function(element, index) {
                     // If this no longer exists in the data
                     var dataIndex = dataIds.indexOf(element.id);
@@ -43,11 +50,13 @@ angular.module('studygroupClientApp')
                         dataIds.splice(dataIndex,1);
                     }
                 });
+                // Remove sessions that did not come back in the new REST call
                 sessionToSplice.forEach(function(element) {
                     var index = $scope.sessions.indexOf(element);
                     $scope.sessions.splice(index, 1);
                     $scope.sessionIds.splice(index, 1);
                 });
+                // Push all other sessions from the call into the scoped sessions
                 data.forEach(function(value) {
                         // Convert start and end times to their timezone specific versions.
                         value.start_time = new Date(value.start_time);
