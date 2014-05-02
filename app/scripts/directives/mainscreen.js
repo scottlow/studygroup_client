@@ -179,7 +179,13 @@ angular.module('studygroupClientApp')
         $scope.$watchCollection('selectedSessions', function(newVal, oldVal) {
           $scope.clearMarkers();     
           if(newVal !== oldVal && $scope.selectedSessions.length !== 0) {
-            console.log($scope.selectedSessions);          
+            console.log($scope.selectedSessions);
+
+            // This listener will close all open info windows when the map is clicked
+            google.maps.event.addListener(map, 'click', function() {
+              $scope.closeAllBubbles();
+            });
+
             angular.forEach($scope.selectedSessions, function(session) {
 
               // Create template for bubble
@@ -252,11 +258,6 @@ angular.module('studygroupClientApp')
                   });                  
                 }
               });   
-
-              // This listener will close all open info windows when the map is clicked
-              // google.maps.event.addListener(map, 'click', function() {
-              //   $scope.closeAllBubbles(); // For some reason, the safeApply is causing this to "lag". I'll look into it.
-              // });
 
               // This listener will close all open info windows when the marker's close button is pressed.
               // This is *technically* not the correct behaviour, but since we'll only ever have one
