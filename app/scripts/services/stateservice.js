@@ -7,6 +7,7 @@ angular.module('studygroupClientApp')
     var availableCourses = [];
     var selectedCourses = [];
     var universityBuildings = [];
+    var availableSessions = [];
     var self = this;
 
     var currentUser = {};
@@ -91,6 +92,8 @@ angular.module('studygroupClientApp')
               availableCourses.push(value);
               if(activeCourseIds.indexOf(value.id) !== -1) {
                 value.active = true;
+              } else {
+                value.active = false;
               }
               selectedCourses.push(value);              
             }
@@ -111,6 +114,7 @@ angular.module('studygroupClientApp')
     };
 
     this.processLogin = function() {
+      self.clearState();
       $http.get('http://localhost:8000/' + 'users/profile')
       .success(function(data) {
         currentUser = data;
@@ -135,6 +139,14 @@ angular.module('studygroupClientApp')
 
     this.getUniversity = function() {
       return selectedUniversity;
+    };
+
+    this.setAvailableSessions = function(sessions) {
+      availableSessions = sessions;
+    };
+
+    this.getAvailableSessions = function() {
+      return availableSessions;
     };
 
     this.addCourse = function(course) {
@@ -195,7 +207,7 @@ angular.module('studygroupClientApp')
           selectedCourses[i].active = !selectedCourses[i].active;
         }
       }
-    }
+    };
 
     this.createSession = function(courseID, startTime, endTime, location, roomNumber) {
       if(AuthService.isAuthenticated()) {
@@ -208,6 +220,18 @@ angular.module('studygroupClientApp')
                 'room_number' : roomNumber
         });
       }
-    }
+    };
+
+    this.clearState = function() {
+      selectedUniversity = {};
+      availableCourses = []; 
+      universityBuildings = [];           
+      selectedCourses = [];
+      availableSessions = [];
+    };
+
+    this.logout = function()  {
+      self.clearState();
+    };
 
   });

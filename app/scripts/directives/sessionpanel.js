@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('studygroupClientApp')
-  .directive('sessionpanel', function (StateService, $http) {
+  .directive('sessionpanel', function ($rootScope, StateService, $http) {
     return {
       templateUrl: 'scripts/directives/sessionpanel.html',
       restrict: 'E',
@@ -16,8 +16,23 @@ angular.module('studygroupClientApp')
         $scope.hostSessions = [];
         $scope.viewSessions = [];
 
+        StateService.setAvailableSessions($scope.sessions);
+
+        $scope.previewSession = function(session) {
+            google.maps.event.trigger(session.marker, 'mouseover');
+        }
+
+        $scope.dismissPreviewSession = function(session) {
+            google.maps.event.trigger(session.marker, 'mouseout');
+        }
+
+        $scope.selectSession = function(session) {
+            google.maps.event.trigger(session.marker, 'click', true);
+        }
+
         $scope.getAvailableSessions = function(values) {
             var oldSessions = $scope.sessions.slice(); //make a copy of the session list
+            var id = 1;
             var url = "id=";
             // Create the url to call, with ids
             angular.forEach(values, function(value) {
@@ -61,13 +76,19 @@ angular.module('studygroupClientApp')
                         // Convert start and end times to their timezone specific versions.
                         value.start_time = new Date(value.start_time);
                         value.end_time = new Date(value.end_time);
+                        value.selected = false;
+                        value.hovered = false;
+                        value.id = id;
+                        id += 1;
                         $scope.sessions.push(value);
                         $scope.sessionIds.push(value.id);
                 });
+                $rootScope.$broadcast('sessionsChanged');
             });
         };
                 
         $scope.$watchCollection('selectedCourses', $scope.getAvailableSessions);
+        $scope.$on('sessionCreated', $scope.getAvailableSessions);
       }]
     };
   });

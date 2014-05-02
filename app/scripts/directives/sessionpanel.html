@@ -2,12 +2,17 @@
     <tab heading="Explore">
         <ul class="media" style="margin:10px; padding-left:0px;">
             <sessioncard ng-repeat="session in sessions"
+                         id="{{session.id}}"
                          location-name="session.location.name"  
                          room-number="session.room_number"          
                          course-name="session.course.name"
                          start-time="session.start_time"
                          end-time="session.end_time"
-                         coordinator-name="session.coordinator.username"/>
+                         coordinator-name="session.coordinator.username"
+                         ng-mouseenter="previewSession(session)"
+                         ng-mouseleave="dismissPreviewSession(session)"
+                         ng-class="{'session-selected' : session.selected, 'session-not-selected' : !session.selected, 'session-hovered' : session.hovered}"
+                         ng-click="selectSession(session)"/>
         </ul>
     </tab>
     <tab heading="My Sessions">
@@ -19,7 +24,11 @@
                              course-name="session.course.name"
                              start-time="session.start_time"
                              end-time="session.end_time"
-                             coordinator-name="session.coordinator.username"/>
+                             coordinator-name="session.coordinator.username"
+                             ng-mouseenter="previewSession(session)"
+                             ng-mouseleave="dismissPreviewSession(session)" 
+                             ng-class="{'session-selected' : session.selected, 'session-not-selected' : !session.selected}"                             
+                             ng-click="selectSession(session)"/>                                                     
             </accordion-group>
             <accordion-group heading="Attending">
                 <sessioncard ng-repeat="session in viewsessions"
@@ -28,7 +37,11 @@
                              course-name="session.course.name"
                              start-time="session.start_time"
                              end-time="session.end_time"
-                             coordinator-name="session.coordinator.username"/>
+                             coordinator-name="session.coordinator.username"
+                             ng-mouseenter="previewSession(session)"
+                             ng-mouseleave="dismissPreviewSession(session)"
+                             ng-class="{'session-selected' : session.selected, 'session-not-selected' : !session.selected}"                             
+                             ng-click="selectSession(session)"/>                                                       
             </accordion-group>
         </accordion>
     </tab>

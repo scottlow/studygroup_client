@@ -71,7 +71,8 @@ li.disabled > .course-item {
   z-index:1; 
   margin:0px;
   min-height:0;
-  top: -10px;
+  /*top: -10px;*/
+  top: 50px;
   width: inherit;
 
   background-color: #f5f5f5 !important;
@@ -85,6 +86,8 @@ li.disabled > .course-item {
   padding: 7px 7px 10px 7px;
   width: 200px;
 }
+
+/*Deprecated to remove animation for now.*/
 
 .course-picker-show-animation { 
   -webkit-animation: myfirst 0.5s 1s forwards; /* Chrome, Safari, Opera */
@@ -147,6 +150,7 @@ body {
   margin: 0px;
   padding: 0px;
   float:right;
+  padding-top:50px;
 }
 
 .transition {
@@ -334,9 +338,15 @@ body {
   cursor: pointer;
   padding: 10px;
   user-select: none;
+  margin-top:25px;
+  margin-bottom:25px;
 }
 
-.session-entry:hover {
+.session-hovered > li {
+  background-color: #FAFAFA;
+}
+
+.session-selected > li {
   background-color: #eeeeee;
 }
 
@@ -346,25 +356,31 @@ body {
 }
 
 .session-detail {
-  vrtical-align: middle;
   padding-left: 6px;
 }
 
-.duration-label {
-  display: inline-block;
-  width: 56px;
-  padding: 10px 7px;
-  font-size: 12px;
-  font-weight: bold;
-  line-height: 1;
-  color: #ffffff;
-  text-align: center;
-  white-space: nowrap;
-  vertical-align: baseline;
-  background-color: #5bc0de;
-  border-radius: 16px;
-  height: 32px;
+.duration {  
+  float:right;
+}
+
+.bubble-duration {
+  margin-left: 15px;
+}
+
+.session-heading {
+  display:inline;
+}
+
+.session-panel .tab-content {
+  overflow-y: scroll;
+  max-height: 700px;
+  margin-top: 10px;
+}
+
+.btn-join {
   float: left;
+  height:33px;
+  width:64px;
   margin-right:7px;
-  margin-bottom:2px;
+  margin-bottom:2px;  
 }
