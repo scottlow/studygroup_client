@@ -87,7 +87,7 @@ angular.module('studygroupClientApp')
             });
         };
                 
-        $scope.$watchCollection('selectedCourses', $scope.getAvailableSessions);
+        $scope.$watch('selectedCourses', $scope.getAvailableSessions, true);
         $scope.$on('sessionCreated', $scope.getAvailableSessions);
       }]
     };
