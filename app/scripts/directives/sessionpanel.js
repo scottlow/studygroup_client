@@ -25,7 +25,7 @@ angular.module('studygroupClientApp')
         }
 
         $scope.dismissPreviewSession = function(session) {
-            google.maps.event.trigger(session.marker, 'mouseout');
+            google.maps.event.trigger(session.marker, 'mouseout', 0);
         }
 
         $scope.selectSession = function(session) {

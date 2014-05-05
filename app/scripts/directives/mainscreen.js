@@ -251,7 +251,13 @@ angular.module('studygroupClientApp')
                 }                  
               });
 
-              google.maps.event.addListener(marker, 'mouseout', function() {
+              google.maps.event.addListener(marker, 'mouseout', function(e) {
+                var param;
+                if(typeof(e) !== 'number') {
+                  param = 100;
+                } else {
+                  param = e;
+                }
                 $timeout(function(){
                   if(!infowindow.stickyDisplay && !infowindow.hovered) {
                     infowindow.close(map,marker);
@@ -261,12 +267,12 @@ angular.module('studygroupClientApp')
                       session.hovered = false;
                     });                  
                   }
-                }, 150);
+                }, param);
               });
 
               google.maps.event.addListener(infowindow, 'domready', function() {
                 var content = angular.element('.search_root');
-                content.parent().parent().parent().mouseover(function() { // Don't look at me.
+                content.parent().parent().parent().mouseover(function() { // This is nasty, but necessary due to the fact that Google Maps doesn't let
                   if(!infowindow.hovered) {
                     infowindow.hovered = true;
                   }
