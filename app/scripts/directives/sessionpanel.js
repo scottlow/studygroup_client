@@ -16,6 +16,8 @@ angular.module('studygroupClientApp')
         $scope.hostSessions = [];
         $scope.viewSessions = [];
 
+        var id;
+
         StateService.setAvailableSessions($scope.sessions);
 
         $scope.previewSession = function(session) {
@@ -32,7 +34,7 @@ angular.module('studygroupClientApp')
 
         $scope.getAvailableSessions = function(values) {
             var oldSessions = $scope.sessions.slice(); //make a copy of the session list
-            var id = 1;
+            id = 1;
             var url = "id=";
             // Create the url to call, with ids
             angular.forEach(values, function(value) {
@@ -86,9 +88,25 @@ angular.module('studygroupClientApp')
                 $rootScope.$broadcast('sessionsChanged');
             });
         };
+
+        $scope.addNewSession = function(event, session) {
+            id += 1;
+            var session = {
+                'id' : id,
+                'coordinator' : session.coordinator,
+                'course' : session.course,
+                'location' : session.location,
+                'start_time' : session.start_time,
+                'end_time' : session.end_time,
+                'room_number' : session.room_number
+            };
+            $scope.sessions.push(session);
+            $scope.sessionIds.push(id);
+            // $rootScope.$broadcast('sessionsChanged');
+        };
                 
         $scope.$watch('selectedCourses', $scope.getAvailableSessions, true);
-        $scope.$on('sessionCreated', $scope.getAvailableSessions);
+        $scope.$on('sessionCreated', $scope.addNewSession); // Refactor this to call a different function that simply creates a client side session card.
       }]
     };
   });

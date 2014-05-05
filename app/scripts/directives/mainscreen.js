@@ -67,6 +67,7 @@ angular.module('studygroupClientApp')
           $scope.newSessionSubmitted = true;
           angular.element('#newSessionModal').modal('hide');
           if($scope.newSessionForm.$valid) {
+            $rootScope.$broadcast('sessionCreated', {'coordinator' : {'username' : StateService.getUsername()}, 'course' : {'name' : $scope.newSessionCourse.full_name}, 'start_time' : $scope.newSessionStartTime, 'end_time' : $scope.newSessionEndTime, 'location' : $scope.newSessionBuilding, 'room_number' : $scope.newSessionRoomNumber}); // Refactor this to pass in the correct information to create a client side session card.            
             StateService.createSession(
                     $scope.newSessionCourse.id, 
                     $scope.newSessionStartTime, 
@@ -75,8 +76,8 @@ angular.module('studygroupClientApp')
                     parseInt($scope.newSessionRoomNumber)
             )
             .success(function() {
+              console.log($scope); // Remove this before committing. This is just here to show what data we have in the current scope that could be useful for creating a client side session card.
               console.log('Created session');
-              $rootScope.$broadcast('sessionCreated');
             })
             .error(function() {
               console.log('Error creating session');
