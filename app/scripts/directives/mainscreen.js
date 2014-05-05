@@ -318,7 +318,8 @@ angular.module('studygroupClientApp')
             
             $scope.safeApply(function() {
               $scope.selectedSessions[i].selected = false;  
-              $scope.selectedSessions[i].hovered = false;  
+              $scope.selectedSessions[i].hovered = false; 
+              bubbles[i].hovered = false; 
             });
           }
         }
@@ -326,6 +327,7 @@ angular.module('studygroupClientApp')
         $scope.closeAllBubblesExcept = function() {
           for(var i = 0; i < bubbles.length; i++) {
             if(!bubbles[i].opened) {
+              bubbles[i].hovered = false;              
               bubbles[i].stickyDisplay = false;
               bubbles[i].close(map, markers[i]);
               $scope.selectedSessions[i].selected = false;
