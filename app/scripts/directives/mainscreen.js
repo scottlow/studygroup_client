@@ -190,7 +190,7 @@ angular.module('studygroupClientApp')
             angular.forEach($scope.selectedSessions, function(session) {
 
               // Create template for bubble
-              var infoTemplate = '<div class="media-body session-description-container">' + 
+              var infoTemplate = '<div class="search_root media-body session-description-container">' + 
               '<h5 class="media-heading session-heading">' + session.course.name + '</h5><span class="badge duration bubble-duration">' + Math.floor(((session.end_time - session.start_time) % 86400000) / 3600000) + 'h ' + (((session.end_time - session.start_time)  % 86400000) % 3600000) / 60000 + ' m</span>' + 
               '<div class="session-description">' + 
               '<button type="button" class="btn btn-success btn-sm btn-join">Join</button>' + 
@@ -213,12 +213,14 @@ angular.module('studygroupClientApp')
                   content: infoTemplate,
               });
 
+              infowindow.hovered = false;
+
               // This listener will close all open info windows and open the clicked marker's info window
               google.maps.event.addListener(marker, 'click', function(fromList) {
                 // This if prevents a flicker when clicking a marker whose bubble is already displayed
                 if(!infowindow.stickyDisplay) {
                   $scope.closeAllBubblesExcept();
-                  infowindow.hovered = false;            
+                  infowindow.opened = false;            
                   infowindow.stickyDisplay = true;
 
                   if(!(fromList === true)) {
@@ -236,7 +238,7 @@ angular.module('studygroupClientApp')
                 // This if prevents a flicker when mousing over a marker whose bubble is already displayed 
                 if(!infowindow.stickyDisplay) {          
                   infowindow.open(map,marker);
-                  infowindow.hovered = true;
+                  infowindow.opened = true;
 
                   $scope.safeApply(function() {
                     session.hovered = true;
@@ -250,15 +252,40 @@ angular.module('studygroupClientApp')
               });
 
               google.maps.event.addListener(marker, 'mouseout', function() {
-                if(!infowindow.stickyDisplay) {
-                  infowindow.close(map,marker);
-                  infowindow.hovered = false;
+                $timeout(function(){
+                  if(!infowindow.stickyDisplay && !infowindow.hovered) {
+                    infowindow.close(map,marker);
+                    infowindow.opened = false;
 
-                  $scope.safeApply(function() {
-                    session.hovered = false;
-                  });                  
-                }
-              });   
+                    $scope.safeApply(function() {
+                      session.hovered = false;
+                    });                  
+                  }
+                }, 150);
+              });
+
+              google.maps.event.addListener(infowindow, 'domready', function() {
+                var content = angular.element('.search_root');
+                content.parent().parent().parent().mouseover(function() { // Don't look at me.
+                  if(!infowindow.hovered) {
+                    infowindow.hovered = true;
+                  }
+                });
+              });
+
+              google.maps.event.addListener(infowindow, 'domready', function() {
+                var content = angular.element('.search_root');
+                content.parent().parent().parent().mouseout(function() {
+                  if(infowindow.hovered) {
+                    infowindow.hovered = false;
+                    google.maps.event.trigger(marker, 'mouseout');
+                  }
+                });
+              });
+
+              google.maps.event.addListener(infowindow, 'mouseout', function() {
+                infowindow.hovered = false;
+              });              
 
               // This listener will close all open info windows when the marker's close button is pressed.
               // This is *technically* not the correct behaviour, but since we'll only ever have one
@@ -292,7 +319,7 @@ angular.module('studygroupClientApp')
 
         $scope.closeAllBubblesExcept = function() {
           for(var i = 0; i < bubbles.length; i++) {
-            if(!bubbles[i].hovered) {
+            if(!bubbles[i].opened) {
               bubbles[i].stickyDisplay = false;
               bubbles[i].close(map, markers[i]);
               $scope.selectedSessions[i].selected = false;
