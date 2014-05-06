@@ -17,6 +17,7 @@ angular.module('studygroupClientApp')
         $scope.viewSessions = [];
 
         var id;
+        var previousIDs = [];
 
         StateService.setAvailableSessions($scope.sessions);
 
@@ -36,9 +37,48 @@ angular.module('studygroupClientApp')
             var oldSessions = $scope.sessions.slice(); //make a copy of the session list
             id = 1;
             var url = "id=";
+            var idToRemove;
+            var valueIDs = [];
+            var tempSessions = [];
+
+            // Get an updated list of the new courseIDs coming in.
+            for(var i = 0; i < values.length; i++) {
+                valueIDs.push(values[i].id);
+            }
+
+            if(previousIDs.length > values.length) {
+                // We have gotten here because a class was removed. We should delete it from previousIDs
+                for(var i = 0; i < previousIDs.length; i++) {
+                    if(valueIDs.indexOf(previousIDs[i]) == -1) {
+                        // At the same time, we should also delete all client side sessions associated with this course.
+                        for(var j = 0; j < $scope.sessions.length; j++) {
+                            if($scope.sessions[j].course.id !== previousIDs[i]) {
+                                tempSessions.push($scope.sessions[j]);
+                            }
+                        }
+                        previousIDs.splice(i, 1); // Remove this course from previousIDs for the next call that's made
+                    }
+                }
+
+                // Remove all sessions in $scope.sessions and replace them with the ones that should be there.
+                // This is messy, but necessary so as to not break the object reference that StateService has on $scope.sessions.
+                $scope.sessions.splice(0, $scope.sessions.length);
+                for(var i = 0; i < tempSessions.length; i++) {
+                    $scope.sessions.push(tempSessions[i]);
+                }
+
+                // Broadcast so that the pins are updated accordingly.
+                $rootScope.$broadcast('sessionsChanged');                
+                return; // At this point, we can return since there's no need to make a database call if we're removing.
+            }
+
             // Create the url to call, with ids
             angular.forEach(values, function(value) {
-                url = url + value.id + "&id=";
+                if(previousIDs.indexOf(value.id) === -1) {
+                    // There has been a course added or we are on our initialization pass
+                    url = url + value.id + "&id=";
+                    previousIDs.push(value.id);
+                }
             });
             url = url.substring(0, url.length - 4); // remove the trailing '&id='
             console.log("Making call using url " + url);
