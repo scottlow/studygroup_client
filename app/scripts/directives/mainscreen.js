@@ -48,7 +48,8 @@ angular.module('studygroupClientApp')
         });
 
         $scope.$on('sessionsChanged', function() {
-          $scope.sessions = StateService.getAvailableSessions();          
+          $scope.sessions = StateService.getAvailableSessions();
+          $scope.$broadcast('refreshPins');      
         });       
 
         $scope.$watchCollection('[newSessionStartTime, newSessionDurationHours, newSessionDurationMins]', function() {
@@ -182,10 +183,13 @@ angular.module('studygroupClientApp')
           $scope.closeAllBubbles();
         });
 
-        $scope.$watch('selectedSessions', function(newVal, oldVal) {
-          $scope.clearMarkers();     
-          if(newVal !== oldVal && $scope.selectedSessions.length !== 0) {
-            $scope.refreshPins();
+        $scope.$on('refreshPins', function() {
+          $scope.clearMarkers();    
+          if($scope.selectedSessions !== undefined && $scope.selectedSessions.length === 0) {
+            $scope.selectedSessions = $scope.$parent.sessions;          
+          }
+          if($scope.selectedSessions !== undefined && $scope.selectedSessions.length !== 0) {
+            $scope.refreshPins();  
           }
         });   
 
