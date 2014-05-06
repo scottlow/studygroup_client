@@ -97,10 +97,14 @@ angular.module('studygroupClientApp')
                 'location' : session.location,
                 'start_time' : session.start_time,
                 'end_time' : session.end_time,
-                'room_number' : session.room_number
+                'room_number' : session.room_number,
+                'selected': false,
+                'hovered': false,
+                'filterDisplay': StateService.getActiveCourseIDs().indexOf(session.course.id) !== -1 ? true : false,
             };
             $scope.sessions.push(session);
             $scope.sessionIds.push(id);
+            $rootScope.$broadcast('sessionsChanged');            
         };
 
         $scope.filteredCourse = function() {

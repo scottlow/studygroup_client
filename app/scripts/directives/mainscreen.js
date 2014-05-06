@@ -68,7 +68,7 @@ angular.module('studygroupClientApp')
           $scope.newSessionSubmitted = true;
           angular.element('#newSessionModal').modal('hide');
           if($scope.newSessionForm.$valid) {
-            $rootScope.$broadcast('sessionCreated', {'coordinator' : {'username' : StateService.getUsername()}, 'course' : {'name' : $scope.newSessionCourse.full_name}, 'start_time' : $scope.newSessionStartTime, 'end_time' : $scope.newSessionEndTime, 'location' : $scope.newSessionBuilding, 'room_number' : $scope.newSessionRoomNumber}); // Refactor this to pass in the correct information to create a client side session card.            
+            $rootScope.$broadcast('sessionCreated', {'coordinator' : {'username' : StateService.getUsername()}, 'course' : {'name' : $scope.newSessionCourse.full_name, 'id': $scope.newSessionCourse.id}, 'start_time' : $scope.newSessionStartTime, 'end_time' : $scope.newSessionEndTime, 'location' : $scope.newSessionBuilding, 'room_number' : $scope.newSessionRoomNumber}); // Refactor this to pass in the correct information to create a client side session card.            
             StateService.createSession(
                     $scope.newSessionCourse.id, 
                     $scope.newSessionStartTime, 
