@@ -342,6 +342,10 @@ body {
   margin-bottom:25px;
 }
 
+.session-infowindow {
+  min-width: 300px;
+}
+
 .session-hovered > li {
   background-color: #FAFAFA;
 }
