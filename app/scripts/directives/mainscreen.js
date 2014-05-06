@@ -195,7 +195,7 @@ angular.module('studygroupClientApp')
 
         $scope.refreshPins = function() {
           $scope.clearMarkers();
-          console.log('derp');     
+          var index = 0;
 
           angular.forEach($scope.selectedSessions, function(session) {
 
@@ -312,6 +312,9 @@ angular.module('studygroupClientApp')
               });              
 
               // Push each infowindow and marker to their respective session objects so that they can be used in SessionPanel
+              marker.lookupIndex = index;
+              infowindow.lookupIndex = index;
+
               session.marker = marker;
               session.bubble = infowindow;
 
@@ -319,6 +322,7 @@ angular.module('studygroupClientApp')
               bubbles.push(infowindow);
               markers.push(marker);
             }
+            index ++;            
           });
         };
 
@@ -328,8 +332,8 @@ angular.module('studygroupClientApp')
             bubbles[i].close(map, markers[i]);
             
             $scope.safeApply(function() {
-              $scope.selectedSessions[i].selected = false;  
-              $scope.selectedSessions[i].hovered = false; 
+              $scope.selectedSessions[bubbles[i].lookupIndex].selected = false;  
+              $scope.selectedSessions[bubbles[i].lookupIndex].hovered = false; 
               bubbles[i].hovered = false; 
             });
           }
@@ -341,8 +345,8 @@ angular.module('studygroupClientApp')
               bubbles[i].hovered = false;              
               bubbles[i].stickyDisplay = false;
               bubbles[i].close(map, markers[i]);
-              $scope.selectedSessions[i].selected = false;
-              $scope.selectedSessions[i].hovered = false;              
+              $scope.selectedSessions[bubbles[i].lookupIndex].selected = false;
+              $scope.selectedSessions[bubbles[i].lookupIndex].hovered = false;              
             }
           }
         } 
