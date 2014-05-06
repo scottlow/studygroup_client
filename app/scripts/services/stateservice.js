@@ -179,7 +179,7 @@ angular.module('studygroupClientApp')
 
     this.removeCourse = function(course) {
       if(AuthService.isAuthenticated()) {
-        $http.post('http://localhost:8000/' + 'courses/remove/', {'course_id' : course.id})
+        return $http.post('http://localhost:8000/' + 'courses/remove/', {'course_id' : course.id})
         .success(function(data) {
           console.log('Removed course');
           var courseIndex = self.getActiveCourseIDs().indexOf(course.id); 
@@ -191,7 +191,6 @@ angular.module('studygroupClientApp')
           self.selectedCourses.push(course); // Re-add the course on the UI side in the case of an error since the data model hasn't been updated.
         });
       }
-      self.removeCourseData(course.id); // Due to the async nature of this call, this will run before the POST request comes back.
     };
 
     this.removeCourseData = function(courseID) {

@@ -135,12 +135,17 @@ angular.module('studygroupClientApp')
 
         $scope.removeCourse = function(course) {
           course.disabled = false;
-          StateService.removeCourse(course);
+          return StateService.removeCourse(course);
         };
 
         $scope.filterCourse = function(course) {
           return StateService.filterCourse(course);
         };
+
+        $scope.removeCourseData = function(course) {
+          StateService.removeCourseData(course.id);
+        };
+
       }],
     };
   })
@@ -162,7 +167,12 @@ angular.module('studygroupClientApp')
           });
         };
         scope.removeCourse = function() {
-          scope.$parent.removeCourse(scope.$parent.course);
+          scope.loading = true;          
+          scope.active = !scope.active;
+          scope.$parent.filterCourse(scope.$parent.course).then(function(){
+            scope.loading = false;
+            scope.$parent.removeCourseData(scope.$parent.course);            
+          });
         };
       },
     };
