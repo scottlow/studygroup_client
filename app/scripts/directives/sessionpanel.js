@@ -72,10 +72,11 @@ angular.module('studygroupClientApp')
                 return; // At this point, we can return since there's no need to make a database call if we're removing.
             }
 
+            // If we've gotten here, it means that we're either adding a course or we are on our initialization pass.
             // Create the url to call, with ids
             angular.forEach(values, function(value) {
                 if(previousIDs.indexOf(value.id) === -1) {
-                    // There has been a course added or we are on our initialization pass
+                    // Make sure that we're only querying the database for the NEW courses that have been added.
                     url = url + value.id + "&id=";
                     previousIDs.push(value.id);
                 }
@@ -83,35 +84,7 @@ angular.module('studygroupClientApp')
             url = url.substring(0, url.length - 4); // remove the trailing '&id='
             console.log("Making call using url " + url);
             return $http.get('http://localhost:8000/' + 'sessions/courses/?' + url).success(function(data) {
-                var dataIds = []; //make an array of ids from the results of the REST call
-                data.forEach(function(element) {
-                    console.log(element.id);
-                    dataIds.push(element.id);
-                });
-                var sessionToSplice = [];
-                // Go through each element in the old sessions, and if that old
-                // session no longer exists in the REST call, we will remove it from the session list
-                // by adding it's id to the 'sessionToSplice' array. Else, if the old session is in the data
-                // , remove it from the data because we do not want a second remove.
-                oldSessions.forEach(function(element, index) {
-                    // If this no longer exists in the data
-                    var dataIndex = dataIds.indexOf(element.id);
-                    if (!(dataIndex > -1)) {
-                        console.log("Not in the data. Remove from sessions");
-                        sessionToSplice.push(element);
-                    } else {
-                        console.log("In the data. Remove from data");
-                        data.splice(dataIndex, 1);
-                        dataIds.splice(dataIndex,1);
-                    }
-                });
-                // Remove sessions that did not come back in the new REST call
-                sessionToSplice.forEach(function(element) {
-                    var index = $scope.sessions.indexOf(element);
-                    $scope.sessions.splice(index, 1);
-                    $scope.sessionIds.splice(index, 1);
-                });
-                // Push all other sessions from the call into the scoped sessions
+                // Since we're now dealing with the addition case, we simply need to append any new sessions coming back to our list and update the map pins.
                 data.forEach(function(value) {
                         // Convert start and end times to their timezone specific versions.
                         value.start_time = new Date(value.start_time);
@@ -124,6 +97,7 @@ angular.module('studygroupClientApp')
                         $scope.sessions.push(value);
                         $scope.sessionIds.push(value.id);
                 });
+                // This call ensures that all filtering restrictions are taken into consideration when updating the session list/the map pins.
                 $scope.filteredCourse();
             });
         };
