@@ -165,7 +165,7 @@ angular.module('studygroupClientApp')
         $http.post('http://localhost:8000/' + 'courses/add/', {'course_id' : course.id})
         .success(function(data) {
           console.log('Added course');
-          currentUser.active_courses.push(course);          
+          currentUser.active_courses.push(course);
           $rootScope.$broadcast('changedCourse', selectedCourses);
         })
         .error(function(error) {
@@ -174,7 +174,8 @@ angular.module('studygroupClientApp')
         });
       }
       // This will push to the UI prematurely (i.e. before the post request has gone through. The call to self.removeCourseData above will fix this if it errors out)
-      selectedCourses.push(course);
+      course.loading = true; // For animations!
+      selectedCourses.push(course);     
     };
 
     this.removeCourse = function(course) {

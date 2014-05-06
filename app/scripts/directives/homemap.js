@@ -181,6 +181,7 @@ angular.module('studygroupClientApp')
             }
             index ++;            
           });
+		  $rootScope.$broadcast('pinsLoaded');
         };
 
         $scope.closeAllBubbles = function() {
