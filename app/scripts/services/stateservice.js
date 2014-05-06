@@ -16,6 +16,15 @@ angular.module('studygroupClientApp')
       return currentUser.first_name === '' ? currentUser.username : currentUser.first_name;
     };
 
+    this.getActiveCourseIDs = function() {
+      var returnValue = [];
+
+      angular.forEach(currentUser.active_courses, function(value) {
+        returnValue.push(value.id);
+      });
+      return returnValue;
+    };
+
     this.getSelectedCourses = function() {
       return selectedCourses;
     };
@@ -107,6 +116,7 @@ angular.module('studygroupClientApp')
             availableCourses.push(value);
           });
         }
+        $rootScope.$broadcast('changedCourse', selectedCourses);        
       })
       .error(function(data) {
         console.log('Error at StateService.getCourses()');
@@ -155,6 +165,8 @@ angular.module('studygroupClientApp')
         $http.post('http://localhost:8000/' + 'courses/add/', {'course_id' : course.id})
         .success(function(data) {
           console.log('Added course');
+          currentUser.active_courses.push(course);          
+          $rootScope.$broadcast('changedCourse', selectedCourses);
         })
         .error(function(error) {
           console.log('Error adding course');
@@ -170,6 +182,9 @@ angular.module('studygroupClientApp')
         $http.post('http://localhost:8000/' + 'courses/remove/', {'course_id' : course.id})
         .success(function(data) {
           console.log('Removed course');
+          var courseIndex = self.getActiveCourseIDs().indexOf(course.id); 
+          currentUser.active_courses.splice(courseIndex, 1);
+          $rootScope.$broadcast('changedCourse', selectedCourses);          
         })
         .error(function(error) {
           console.log('Error adding course');
@@ -191,21 +206,21 @@ angular.module('studygroupClientApp')
       if(AuthService.isAuthenticated()) {
         return $http.post('http://localhost:8000/' + 'courses/filter/', {'course_id' : course.id})
         .success(function(data) {
-          console.log('Filtered course');
+          
+          var courseIndex = self.getActiveCourseIDs().indexOf(course.id);
+          console.log(courseIndex);
+          if(courseIndex === -1) {
+            currentUser.active_courses.push(course);
+          } else {          
+            currentUser.active_courses.splice(courseIndex, 1);
+          }
+
+          $rootScope.$broadcast('filteredCourse');
         })
         .error(function(error) {
           console.log('Error filtering course');
-          self.filterCourseData(course); // Re-filter the course on the UI side in the case of an error since the data model hasn't been updated.
+          course.active = !course.active; // Flip the UI back to whatever its value was previously
         });        
-      }
-      self.filterCourseData(course.id); // Due to the async nature of this call, this will run before the POST request comes back.
-    };
-
-    this.filterCourseData = function(courseID) {
-      for(var i = 0; i < selectedCourses.length; i++) {
-        if(courseID === selectedCourses[i].id) {
-          selectedCourses[i].active = !selectedCourses[i].active;
-        }
       }
     };
 

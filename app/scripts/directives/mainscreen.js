@@ -48,7 +48,7 @@ angular.module('studygroupClientApp')
         });
 
         $scope.$on('sessionsChanged', function() {
-          $scope.sessions = StateService.getAvailableSessions();
+          $scope.sessions = StateService.getAvailableSessions();          
         });       
 
         $scope.$watchCollection('[newSessionStartTime, newSessionDurationHours, newSessionDurationMins]', function() {
@@ -140,7 +140,6 @@ angular.module('studygroupClientApp')
         $scope.filterCourse = function(course) {
           return StateService.filterCourse(course);
         };
-
       }],
     };
   })
@@ -151,9 +150,10 @@ angular.module('studygroupClientApp')
         lat: '=',
         long: '=',
         zoom: '=',
-        selectedSessions: '='
+        selectedSessions: '=',
       },
       link: function ($scope, elem, attrs) {
+
         var mapOptions,
           latitude = $scope.lat,
           longitude = $scope.long,
@@ -175,20 +175,27 @@ angular.module('studygroupClientApp')
           center: new google.maps.LatLng(latitude, longitude)
         };
 
-        map = new google.maps.Map(elem[0], mapOptions);
+        map = new google.maps.Map(elem[0], mapOptions);       
 
-        $scope.$watchCollection('selectedSessions', function(newVal, oldVal) {
+        // This listener will close all open info windows when the map is clicked
+        google.maps.event.addListener(map, 'click', function() {
+          $scope.closeAllBubbles();
+        });
+
+        $scope.$watch('selectedSessions', function(newVal, oldVal) {
           $scope.clearMarkers();     
           if(newVal !== oldVal && $scope.selectedSessions.length !== 0) {
-            console.log($scope.selectedSessions);
+            $scope.refreshPins();
+          }
+        });   
 
-            // This listener will close all open info windows when the map is clicked
-            google.maps.event.addListener(map, 'click', function() {
-              $scope.closeAllBubbles();
-            });
+        $scope.refreshPins = function() {
+          $scope.clearMarkers();
+          console.log('derp');     
 
-            angular.forEach($scope.selectedSessions, function(session) {
+          angular.forEach($scope.selectedSessions, function(session) {
 
+            if(session.filterDisplay) {
               // Create template for bubble
               var infoTemplate = '<div class="search_root media-body session-description-container">' + 
               '<h5 class="media-heading session-heading">' + session.course.name + '</h5><span class="badge duration bubble-duration">' + Math.floor(((session.end_time - session.start_time) % 86400000) / 3600000) + 'h ' + (((session.end_time - session.start_time)  % 86400000) % 3600000) / 60000 + ' m</span>' + 
@@ -307,9 +314,9 @@ angular.module('studygroupClientApp')
               // Push each infowindow and marker to their respective list to keep track of them
               bubbles.push(infowindow);
               markers.push(marker);
-            });
-          }
-        });
+            }
+          });
+        };
 
         $scope.closeAllBubbles = function() {
           for(var i = 0; i < bubbles.length; i++) {
@@ -387,11 +394,7 @@ angular.module('studygroupClientApp')
       link: function(scope, elements, attrs) {
         scope.filterCourse = function() {
           scope.loading = true;          
-          if(scope.active === true) {
-            scope.active = false;
-          } else {
-            scope.active = true;
-          }
+          scope.active = !scope.active;
           scope.$parent.filterCourse(scope.$parent.course).then(function(){
             scope.loading = false;
           });

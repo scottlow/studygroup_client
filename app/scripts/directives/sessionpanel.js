@@ -32,15 +32,13 @@ angular.module('studygroupClientApp')
             google.maps.event.trigger(session.marker, 'click', true);
         }
 
-        $scope.getAvailableSessions = function(values) {
+        $scope.getAvailableSessions = function(e, values) {
             var oldSessions = $scope.sessions.slice(); //make a copy of the session list
             id = 1;
             var url = "id=";
             // Create the url to call, with ids
             angular.forEach(values, function(value) {
-                if (value.active) {
-                    url = url + value.id + "&id=";
-                }
+                url = url + value.id + "&id=";
             });
             url = url.substring(0, url.length - 4); // remove the trailing '&id='
             console.log("Making call using url " + url);
@@ -80,12 +78,13 @@ angular.module('studygroupClientApp')
                         value.end_time = new Date(value.end_time);
                         value.selected = false;
                         value.hovered = false;
+                        value.filterDisplay = false;
                         value.id = id;
                         id += 1;
                         $scope.sessions.push(value);
                         $scope.sessionIds.push(value.id);
                 });
-                $rootScope.$broadcast('sessionsChanged');
+                $scope.filteredCourse();
             });
         };
 
@@ -102,11 +101,34 @@ angular.module('studygroupClientApp')
             };
             $scope.sessions.push(session);
             $scope.sessionIds.push(id);
-            // $rootScope.$broadcast('sessionsChanged');
         };
-                
-        $scope.$watch('selectedCourses', $scope.getAvailableSessions, true);
+
+        $scope.filteredCourse = function() {
+            var active_ids = StateService.getActiveCourseIDs();
+            console.log(active_ids);
+            for(var i = 0; i < $scope.sessions.length; i++) {
+                if(active_ids.indexOf($scope.sessions[i].course.id) !== -1) {
+                    $scope.sessions[i].filterDisplay = true;
+                } else {
+                    $scope.sessions[i].filterDisplay = false;
+                    $scope.sessions[i].hovered = false;
+                    $scope.sessions[i].selected = false;
+                }
+            }
+            $rootScope.$broadcast('sessionsChanged');            
+        }; 
+
+        $scope.displayFilter = function(session) {
+            if(session.filterDisplay) {
+                return true;
+            } else {
+                return false;
+            }
+        };        
+          
+        $scope.$on('filteredCourse', $scope.filteredCourse);     
         $scope.$on('sessionCreated', $scope.addNewSession); // Refactor this to call a different function that simply creates a client side session card.
+        $scope.$on('changedCourse', $scope.getAvailableSessions);
       }]
     };
   });

@@ -1,7 +1,7 @@
 <tabset justified="true">
     <tab heading="Explore">
         <ul class="media" style="margin:10px; padding-left:0px;">
-            <sessioncard ng-repeat="session in sessions"
+            <sessioncard ng-repeat="session in sessions | filter:displayFilter"
                          id="{{session.id}}"
                          location-name="session.location.name"  
                          room-number="session.room_number"          
