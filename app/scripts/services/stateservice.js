@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('studygroupClientApp')
-  .service('StateService', function ($rootScope, $http, $angularCacheFactory, AuthService, $timeout) {
+  .service('StateService', function ($rootScope, $q, $http, $angularCacheFactory, AuthService, $timeout) {
     var universities = [];
     var selectedUniversity = {};
     var availableCourses = [];
@@ -11,6 +11,7 @@ angular.module('studygroupClientApp')
     var self = this;
 
     var currentUser = {};
+    currentUser.active_courses = [];
 
     this.getUsername = function() {
       return currentUser.first_name === '' ? currentUser.username : currentUser.first_name;
@@ -116,7 +117,9 @@ angular.module('studygroupClientApp')
             availableCourses.push(value);
           });
         }
-        $rootScope.$broadcast('changedCourse', selectedCourses);        
+        if(selectedCourses.length !== 0) {
+          $rootScope.$broadcast('changedCourse', selectedCourses);
+        }
       })
       .error(function(data) {
         console.log('Error at StateService.getCourses()');
@@ -172,10 +175,16 @@ angular.module('studygroupClientApp')
           console.log('Error adding course');
           self.removeCourseData(course.id);
         });
-      }
-      // This will push to the UI prematurely (i.e. before the post request has gone through. The call to self.removeCourseData above will fix this if it errors out)
-      course.loading = true; // For animations!
-      selectedCourses.push(course);     
+
+        // This will push to the UI prematurely (i.e. before the post request has gone through. The call to self.removeCourseData above will fix this if it errors out)
+        course.loading = true; // For animations!
+        selectedCourses.push(course);        
+      } else {       
+        course.loading = true; // For animations!
+        currentUser.active_courses.push(course);        
+        selectedCourses.push(course);
+        $rootScope.$broadcast('changedCourse', selectedCourses);
+      }     
     };
 
     this.removeCourse = function(course) {
@@ -191,6 +200,13 @@ angular.module('studygroupClientApp')
           console.log('Error adding course');
           self.selectedCourses.push(course); // Re-add the course on the UI side in the case of an error since the data model hasn't been updated.
         });
+      } else {
+        var deferred = $q.defer();       
+        var courseIndex = self.getActiveCourseIDs().indexOf(course.id); 
+        currentUser.active_courses.splice(courseIndex, 1);
+        $rootScope.$broadcast('changedCourse', selectedCourses, course.id);
+        deferred.resolve(); 
+        return deferred.promise;
       }
     };
 
@@ -220,6 +236,18 @@ angular.module('studygroupClientApp')
           console.log('Error filtering course');
           course.active = !course.active; // Flip the UI back to whatever its value was previously
         });        
+      } else {
+        var deferred = $q.defer();  
+        var courseIndex = self.getActiveCourseIDs().indexOf(course.id);
+        if(courseIndex === -1) {
+          currentUser.active_courses.push(course);
+        } else {          
+          currentUser.active_courses.splice(courseIndex, 1);
+        }
+
+        $rootScope.$broadcast('filteredCourse');
+        deferred.resolve();        
+        return deferred.promise;      
       }
     };
 

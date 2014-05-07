@@ -45,7 +45,7 @@ angular.module('studygroupClientApp')
           if($scope.selectedSessions !== undefined && $scope.selectedSessions.length === 0) {
             $scope.selectedSessions = $scope.$parent.sessions;          
           }
-          if($scope.selectedSessions !== undefined && $scope.selectedSessions.length !== 0) {
+          if($scope.selectedSessions !== undefined) {
             $scope.refreshPins();  
           }
         });   
