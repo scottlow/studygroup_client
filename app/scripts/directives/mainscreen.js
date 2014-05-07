@@ -171,7 +171,7 @@ angular.module('studygroupClientApp')
           scope.loading = true;          
           scope.$parent.removeCourse(scope.$parent.course).then(function(){
             scope.loading = false;
-            scope.$parent.removeCourseData(scope.$parent.course);            
+            scope.$parent.removeCourseData(scope.$parent.course);         
           });
         };
         scope.$parent.$on('pinsLoaded', function() {

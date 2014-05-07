@@ -185,7 +185,7 @@ angular.module('studygroupClientApp')
           console.log('Removed course');
           var courseIndex = self.getActiveCourseIDs().indexOf(course.id); 
           currentUser.active_courses.splice(courseIndex, 1);
-          $rootScope.$broadcast('changedCourse', selectedCourses);          
+          $rootScope.$broadcast('changedCourse', selectedCourses, course.id);          
         })
         .error(function(error) {
           console.log('Error adding course');

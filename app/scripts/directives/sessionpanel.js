@@ -33,7 +33,7 @@ angular.module('studygroupClientApp')
             google.maps.event.trigger(session.marker, 'click', true);
         }
 
-        $scope.getAvailableSessions = function(e, values) {
+        $scope.getAvailableSessions = function(e, values, removeCourseId) {
             var oldSessions = $scope.sessions.slice(); //make a copy of the session list
             id = 1;
             var url = "id=";
@@ -41,12 +41,14 @@ angular.module('studygroupClientApp')
             var valueIDs = [];
             var tempSessions = [];
 
-            // Get an updated list of the new courseIDs coming in.
+            // Get an updated list of the new courseIDs coming in. Leave out the course we'll be removing if applicable.
             for(var i = 0; i < values.length; i++) {
-                valueIDs.push(values[i].id);
+                if(values[i].id !== removeCourseId) {
+                    valueIDs.push(values[i].id);
+                }
             }
 
-            if(previousIDs.length > values.length) {
+            if(previousIDs.length > valueIDs.length) {
                 // We have gotten here because a class was removed. We should delete it from previousIDs
                 for(var i = 0; i < previousIDs.length; i++) {
                     if(valueIDs.indexOf(previousIDs[i]) == -1) {
