@@ -22,17 +22,17 @@ angular.module('clientControllers', ['ngAnimate'])
     $scope.showSignUp = function() {
       $scope.showWelcome = false;
       $scope.dimMap = true;
-      $scope.displayUI = false;
+      // $scope.displayUI = false;
     };
 
     // Hide the sign up pane
     $scope.hideSignup = function() {
       if($scope.cameFromMap) {
         $scope.dimMap = false;
-        $scope.displayUI = true;
+        // $scope.displayUI = true;
       } else {
         $scope.dimMap = true;
-        $scope.displayUI = false;
+        // $scope.displayUI = false;
         $scope.showWelcome = true;
       }
     };
@@ -73,7 +73,7 @@ angular.module('clientControllers', ['ngAnimate'])
       $scope.emailErrorMessage = '';
       // Attempt to submit registration information to the userver
       if ($scope.registerForm.$valid) {
-        $http.post(constants.serverName + 'register/', {username: $scope.user.username, password: $scope.user.password, name: $scope.user.name, email: $scope.user.email, university: $scope.university.id})
+        $http.post(constants.serverName + 'register/', {username: $scope.user.username, password: $scope.user.password, name: $scope.user.name, email: $scope.user.email, university: $scope.university.id, courses: StateService.getSelectedCourses(), active_courses: StateService.getActiveCourseIDs()})
         .success(function (status) {
           // Once registered, we should be able to log in
           AuthService.login($scope.user.username, $scope.user.password).then(function(status) {
