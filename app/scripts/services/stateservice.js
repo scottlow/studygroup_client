@@ -208,7 +208,6 @@ angular.module('studygroupClientApp')
         .success(function(data) {
           
           var courseIndex = self.getActiveCourseIDs().indexOf(course.id);
-          console.log(courseIndex);
           if(courseIndex === -1) {
             currentUser.active_courses.push(course);
           } else {          

@@ -125,7 +125,6 @@ angular.module('studygroupClientApp')
 
         $scope.filteredCourse = function() {
             var active_ids = StateService.getActiveCourseIDs();
-            console.log(active_ids);
             for(var i = 0; i < $scope.sessions.length; i++) {
                 if(active_ids.indexOf($scope.sessions[i].course.id) !== -1) {
                     $scope.sessions[i].filterDisplay = true;

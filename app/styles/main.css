@@ -142,15 +142,19 @@ body {
 }
 
 .google-map {
-  -webkit-transition:all linear 0.5s;
+/*  -webkit-transition:all linear 0.5s;
   -moz-transition:all linear 0.5s;
   -o-transition:all linear 0.5s;
-  transition:all linear 0.5s;  
+  transition:all linear 0.5s; */ 
   height: 100%;
   margin: 0px;
   padding: 0px;
   float:right;
   padding-top:50px;
+}
+
+.no-padding {
+  padding: 0px !important;
 }
 
 .transition {
