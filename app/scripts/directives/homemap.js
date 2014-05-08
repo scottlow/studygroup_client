@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('studygroupClientApp')
-.directive('homeMap', function ($rootScope, $timeout, $location, $anchorScroll) {
+.directive('homeMap', function (AuthService, $rootScope, $timeout, $compile, $location, $anchorScroll) {
     // This directive is called only once when the initial app is loaded. It's what resets our map to good ol' #YYJ.
     return {
       scope: {
@@ -23,6 +23,8 @@ angular.module('studygroupClientApp')
         latitude = latitude && parseFloat(latitude, 10) || 48.4630959;
         longitude = longitude && parseFloat(longitude, 10) || -123.3121053;
         zoom = zoom && parseInt(zoom) || 10;
+
+        $scope.AuthService = AuthService;
 
         mapOptions = {
           zoomControl: false,
@@ -61,14 +63,15 @@ angular.module('studygroupClientApp')
               var infoTemplate = '<div class="search_root session-infowindow media-body session-description-container">' + 
               '<h5 class="media-heading session-heading">' + session.course.name + '</h5><span class="badge duration bubble-duration">' + Math.floor(((session.end_time - session.start_time) % 86400000) / 3600000) + 'h ' + (((session.end_time - session.start_time)  % 86400000) % 3600000) / 60000 + ' m</span>' + 
               '<div class="session-description">' + 
-              '<button type="button" class="btn btn-success btn-sm btn-join">Join</button>' + 
+              '<button type="button" ng-disabled="!AuthService.isAuthenticated()" class="btn btn-success btn-sm btn-join">Join</button>' + 
               '<h6 style="pointer-events:none;" class="glyphicon glyphicon-session glyphicon-map-marker"><span class="h5 session-detail"><small>' + session.location.name + '<span class="divider">&#183;</span>Room: ' + session.room_number + '</small></span></h6>' + 
               '<h6 style="pointer-events:none;" class="glyphicon glyphicon-session glyphicon-time"><span class="h5 session-detail"><small>' + session.start_time.toLocaleDateString() + '<span class="divider">&#183;</span>' + session.start_time.toLocaleTimeString() + '</small></span></h6>' + 
               '</div>' +
               '</div>';
+              
               // Get lat and long for the session marker
               var latLong = new google.maps.LatLng(session.location.latitude, session.location.longitude);
-              
+
               // Create the marker for this session
               var marker = new google.maps.Marker({
                 position: latLong,
@@ -77,9 +80,7 @@ angular.module('studygroupClientApp')
               });
 
               // Create the info window for this session
-              var infowindow = new google.maps.InfoWindow({
-                  content: infoTemplate,
-              });
+              var infowindow = new google.maps.InfoWindow();
 
               infowindow.hovered = false;
 
@@ -104,8 +105,11 @@ angular.module('studygroupClientApp')
 
               google.maps.event.addListener(marker, 'mouseover', function() { 
                 // This if prevents a flicker when mousing over a marker whose bubble is already displayed 
-                if(!infowindow.stickyDisplay) {          
+                if(!infowindow.stickyDisplay) {
                   infowindow.open(map,marker);
+                  infowindow.setContent(infoTemplate); 
+                  var compiled = ($compile(infowindow.content)($scope));
+                  infowindow.setContent(compiled[0]);               
                   infowindow.opened = true;
 
                   $scope.safeApply(function() {
@@ -181,7 +185,7 @@ angular.module('studygroupClientApp')
             }
             index ++;            
           });
-		  $rootScope.$broadcast('pinsLoaded');
+		      $rootScope.$broadcast('pinsLoaded');
         };
 
         $scope.closeAllBubbles = function() {
