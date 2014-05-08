@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('studygroupClientApp')
-  .directive('sessioncard', ['AuthService', function (AuthService) {
+  .directive('sessioncard', function () {
     return {
       templateUrl: 'scripts/directives/sessioncard.html',
       restrict: 'E',
@@ -15,8 +15,6 @@ angular.module('studygroupClientApp')
       },
       controller: ['$scope', function($scope) {
         $scope.Math = window.Math;
-        $scope.AuthService = AuthService;
-        console.log($scope.AuthService.isAuthenticated());
       }],
     };
-  }]);
+  });
