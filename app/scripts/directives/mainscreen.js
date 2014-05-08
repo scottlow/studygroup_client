@@ -31,6 +31,12 @@ angular.module('studygroupClientApp')
 
         $scope.$on('loginProcessed', function(){
           $scope.selectedCourses = StateService.getSelectedCourses();
+
+          // Activate informational popover if the user has no courses
+          if($scope.selectedCourses.length === 0) {
+            angular.element('#noCoursePopover').popover({ trigger: "hover" });            
+          }
+
           $scope.courseList = StateService.getCourseList();
           $scope.newSessionCourse = $scope.selectedCourses[0];
           $scope.university = StateService.getUniversity();
@@ -120,6 +126,7 @@ angular.module('studygroupClientApp')
         };
 
         $scope.addCourse = function(course) {
+          angular.element('#noCoursePopover').popover('destroy');
           course.disabled = true;
           StateService.addCourse(course);
         };
@@ -136,6 +143,9 @@ angular.module('studygroupClientApp')
         $scope.removeCourse = function(course) {
           course.disabled = false;
           StateService.removeCourse(course);
+          if($scope.selectedCourses.length === 0) {
+            angular.element('#noCoursePopover').popover({ trigger: "hover" });             
+          }
         };
 
         $scope.filterCourse = function(course) {
