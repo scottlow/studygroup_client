@@ -220,9 +220,21 @@ angular.module('studygroupClientApp')
 
     this.filterCourse = function(course) {
       if(AuthService.isAuthenticated()) {
+
+        var courseIndex = self.getActiveCourseIDs().indexOf(course.id);
+        if(courseIndex === -1) {
+          currentUser.active_courses.push(course);
+        } else {          
+          currentUser.active_courses.splice(courseIndex, 1);
+        }
+
+        $rootScope.$broadcast('filteredCourse');
+
         return $http.post('http://localhost:8000/' + 'courses/filter/', {'course_id' : course.id})
         .success(function(data) {
-          
+          console.log('filteredCourse');
+        })
+        .error(function(error) {
           var courseIndex = self.getActiveCourseIDs().indexOf(course.id);
           if(courseIndex === -1) {
             currentUser.active_courses.push(course);
@@ -231,9 +243,7 @@ angular.module('studygroupClientApp')
           }
 
           $rootScope.$broadcast('filteredCourse');
-        })
-        .error(function(error) {
-          console.log('Error filtering course');
+
           course.active = !course.active; // Flip the UI back to whatever its value was previously
         });        
       } else {
