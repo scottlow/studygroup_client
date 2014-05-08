@@ -189,12 +189,14 @@ angular.module('studygroupClientApp')
 
     this.removeCourse = function(course) {
       if(AuthService.isAuthenticated()) {
-        return $http.post('http://localhost:8000/' + 'courses/remove/', {'course_id' : course.id})
+
+        var courseIndex = self.getActiveCourseIDs().indexOf(course.id); 
+        currentUser.active_courses.splice(courseIndex, 1);
+        $rootScope.$broadcast('changedCourse', selectedCourses, course.id);
+
+        $http.post('http://localhost:8000/' + 'courses/remove/', {'course_id' : course.id})
         .success(function(data) {
-          console.log('Removed course');
-          var courseIndex = self.getActiveCourseIDs().indexOf(course.id); 
-          currentUser.active_courses.splice(courseIndex, 1);
-          $rootScope.$broadcast('changedCourse', selectedCourses, course.id);          
+          console.log('Removed course');        
         })
         .error(function(error) {
           console.log('Error adding course');
@@ -230,7 +232,7 @@ angular.module('studygroupClientApp')
 
         $rootScope.$broadcast('filteredCourse');
 
-        return $http.post('http://localhost:8000/' + 'courses/filter/', {'course_id' : course.id})
+        $http.post('http://localhost:8000/' + 'courses/filter/', {'course_id' : course.id})
         .success(function(data) {
           console.log('filteredCourse');
         })
