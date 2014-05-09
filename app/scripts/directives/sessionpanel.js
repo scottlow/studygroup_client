@@ -99,6 +99,7 @@ angular.module('studygroupClientApp')
                 });
                 // This call ensures that all filtering restrictions are taken into consideration when updating the session list/the map pins.
                 $scope.filteredCourse();
+                console.log($scope.sessions);
             });
         };
 

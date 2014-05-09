@@ -12,7 +12,6 @@ angular.module('studygroupClientApp')
         coordinatorName: '=',
         locationName: '=',
         roomNumber: '=',
-        id: '=',
         joinText: '=',
       },
       controller: ['$scope', function($scope) {
