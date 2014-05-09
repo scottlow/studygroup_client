@@ -114,6 +114,7 @@ angular.module('studygroupClientApp')
                 'room_number' : session.room_number,
                 'selected': false,
                 'hovered': false,
+                'joinText': 'Join',
                 'filterDisplay': StateService.getActiveCourseIDs().indexOf(session.course.id) !== -1 ? true : false,
             };
             $scope.sessions.push(session);
