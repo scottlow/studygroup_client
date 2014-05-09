@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('studygroupClientApp')
-  .directive('sessioncard', function () {
+  .directive('sessioncard', function (StateService) {
     return {
       templateUrl: 'scripts/directives/sessioncard.html',
       restrict: 'E',
@@ -12,9 +12,16 @@ angular.module('studygroupClientApp')
         coordinatorName: '=',
         locationName: '=',
         roomNumber: '=',
+        id: '=',
+        joinText: '=',
       },
       controller: ['$scope', function($scope) {
         $scope.Math = window.Math;
+
+        $scope.joinSession = function(sessionID) {
+          StateService.joinSession(sessionID);
+        }
+
       }],
     };
   });

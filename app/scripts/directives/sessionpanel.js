@@ -35,7 +35,6 @@ angular.module('studygroupClientApp')
 
         $scope.getAvailableSessions = function(e, values, removeCourseId) {
             var oldSessions = $scope.sessions.slice(); //make a copy of the session list
-            id = 1;
             var url = "id=";
             var idToRemove;
             var valueIDs = [];
@@ -94,8 +93,7 @@ angular.module('studygroupClientApp')
                         value.selected = false;
                         value.hovered = false;
                         value.filterDisplay = false;
-                        value.id = id;
-                        id += 1;
+                        value.joinText = 'Join';
                         $scope.sessions.push(value);
                         $scope.sessionIds.push(value.id);
                 });

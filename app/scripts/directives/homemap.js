@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('studygroupClientApp')
-.directive('homeMap', function ($rootScope, $timeout, $location, $anchorScroll) {
+.directive('homeMap', function (StateService, $rootScope, $timeout, $location, $anchorScroll, $compile) {
     // This directive is called only once when the initial app is loaded. It's what resets our map to good ol' #YYJ.
     return {
       scope: {
@@ -40,15 +40,23 @@ angular.module('studygroupClientApp')
           $scope.closeAllBubbles();
         });
 
-        $scope.$on('refreshPins', function() {
-          $scope.clearMarkers();    
+        $scope.$on('refreshPins', function() { 
           if($scope.selectedSessions !== undefined && $scope.selectedSessions.length === 0) {
             $scope.selectedSessions = $scope.$parent.sessions;          
           }
           if($scope.selectedSessions !== undefined) {
             $scope.refreshPins();  
           }
-        });   
+        }); 
+
+        $scope.joinSession = function(sessionID) {
+          StateService.joinSession(sessionID);
+          for(var i = 0; i < $scope.selectedSessions.length; i++) {
+            if(sessionID === $scope.selectedSessions[i].id) {
+              google.maps.event.trigger($scope.selectedSessions[i].marker, 'click', true);
+            }
+          }
+        }; 
 
         $scope.refreshPins = function() {
           $scope.clearMarkers();
@@ -61,7 +69,7 @@ angular.module('studygroupClientApp')
               var infoTemplate = '<div class="search_root session-infowindow media-body session-description-container">' + 
               '<h5 class="media-heading session-heading">' + session.course.name + '</h5><span class="badge duration bubble-duration">' + Math.floor(((session.end_time - session.start_time) % 86400000) / 3600000) + 'h ' + (((session.end_time - session.start_time)  % 86400000) % 3600000) / 60000 + ' m</span>' + 
               '<div class="session-description">' + 
-              '<button type="button" class="btn btn-success btn-sm btn-join">Join</button>' + 
+              '<button type="button" ng-click="joinSession(' + session.id + ')" class="btn btn-success btn-sm btn-join">' + session.joinText + '</button>' + 
               '<h6 style="pointer-events:none;" class="glyphicon glyphicon-session glyphicon-map-marker"><span class="h5 session-detail"><small>' + session.location.name + '<span class="divider">&#183;</span>Room: ' + session.room_number + '</small></span></h6>' + 
               '<h6 style="pointer-events:none;" class="glyphicon glyphicon-session glyphicon-time"><span class="h5 session-detail"><small>' + session.start_time.toLocaleDateString() + '<span class="divider">&#183;</span>' + session.start_time.toLocaleTimeString() + '</small></span></h6>' + 
               '</div>' +
@@ -77,9 +85,9 @@ angular.module('studygroupClientApp')
               });
 
               // Create the info window for this session
-              var infowindow = new google.maps.InfoWindow({
-                  content: infoTemplate,
-              });
+              var infowindow = new google.maps.InfoWindow();
+              infowindow.setContent(infoTemplate); 
+              var compiled = ($compile(infowindow.content)($scope));              
 
               infowindow.hovered = false;
 
@@ -96,6 +104,10 @@ angular.module('studygroupClientApp')
                     $anchorScroll();
                   }
 
+                  if(infowindow.getMap() === null) {
+                    infowindow.open(map, marker);
+                  }                  
+
                   $scope.safeApply(function() {
                     session.selected = true;
                   });
@@ -106,6 +118,7 @@ angular.module('studygroupClientApp')
                 // This if prevents a flicker when mousing over a marker whose bubble is already displayed 
                 if(!infowindow.stickyDisplay) {          
                   infowindow.open(map,marker);
+                  infowindow.setContent(compiled[0]);                
                   infowindow.opened = true;
 
                   $scope.safeApply(function() {
@@ -175,13 +188,17 @@ angular.module('studygroupClientApp')
               session.marker = marker;
               session.bubble = infowindow;
 
+              if(session.selected) {
+                infowindow.open(map,marker);
+              }
+
               // Push each infowindow and marker to their respective list to keep track of them
               bubbles.push(infowindow);
               markers.push(marker);
             }
             index ++;            
           });
-		  $rootScope.$broadcast('pinsLoaded');
+		      $rootScope.$broadcast('pinsLoaded');
         };
 
         $scope.closeAllBubbles = function() {

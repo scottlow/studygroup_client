@@ -17,6 +17,15 @@ angular.module('studygroupClientApp')
       return currentUser.first_name === '' ? currentUser.username : currentUser.first_name;
     };
 
+    this.joinSession = function(sessionID) {
+      for(var i = 0; i < availableSessions.length; i++) {
+        if(sessionID === availableSessions[i].id) {
+          availableSessions[i].joinText = 'Leave';
+        }
+      }
+      $rootScope.$broadcast('refreshPins');
+    }
+
     this.getActiveCourseIDs = function() {
       var returnValue = [];
 
