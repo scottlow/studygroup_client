@@ -1,5 +1,9 @@
 html { height: 100% }
 
+.reg-prompt {
+  margin-bottom: 0px;
+}
+
 .no-width {
   width: 0px !important;
 }

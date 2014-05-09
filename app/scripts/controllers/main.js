@@ -19,9 +19,10 @@ angular.module('clientControllers', ['ngAnimate'])
     });
 
     // Show the sign up pane
-    $scope.showSignUp = function() {
+    $scope.showSignUp = function(showRegisterPrompt) {
       $scope.showWelcome = false;
       $scope.dimMap = true;
+      $scope.showRegisterPrompt = showRegisterPrompt;
       // $scope.displayUI = false;
     };
 
@@ -36,6 +37,10 @@ angular.module('clientControllers', ['ngAnimate'])
         $scope.showWelcome = true;
       }
     };
+
+    $scope.$on('showRegisterPrompt', function() {
+      $scope.showSignUp(true);
+    });
 
     // Attempt a login
     $scope.login = function() {

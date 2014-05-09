@@ -18,16 +18,20 @@ angular.module('studygroupClientApp')
     };
 
     this.joinSession = function(sessionID) {
-      for(var i = 0; i < availableSessions.length; i++) {
-        if(sessionID === availableSessions[i].id) {
-          if(availableSessions[i].joinText === 'Join') {
-            availableSessions[i].joinText = 'Leave';
-          } else {
-            availableSessions[i].joinText = 'Join';
+      if(AuthService.isAuthenticated()) {
+        for(var i = 0; i < availableSessions.length; i++) {
+          if(sessionID === availableSessions[i].id) {
+            if(availableSessions[i].joinText === 'Join') {
+              availableSessions[i].joinText = 'Leave';
+            } else {
+              availableSessions[i].joinText = 'Join';
+            }
           }
         }
+        $rootScope.$broadcast('refreshPins');
+      } else {
+        $rootScope.$broadcast('showRegisterPrompt');
       }
-      $rootScope.$broadcast('refreshPins');
     }
 
     this.getActiveCourseIDs = function() {

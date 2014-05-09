@@ -37,6 +37,7 @@
 
       <div ng-hide="showWelcome" class="inner cover">
         <h1>Join the Community.</h1>
+        <p class="lead reg-prompt" ng-show="showRegisterPrompt">To join a session, you need to sign up first.</p>
         <p class="lead">Please complete the fields below to register.</p>
         <form name="registerForm" role="form" ng-submit="submitRegistration()" novalidate>
           <!-- Name -->
