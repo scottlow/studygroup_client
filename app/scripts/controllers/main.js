@@ -18,6 +18,11 @@ angular.module('clientControllers', ['ngAnimate'])
       $scope.university = $scope.universities[0];      
     });
 
+    // Place focus on the username field.
+    $scope.focusLogin = function() {
+      angular.element('#usernameField').focus();
+    };
+
     // Show the sign up pane
     $scope.showSignUp = function(showRegisterPrompt) {
       $scope.showWelcome = false;
