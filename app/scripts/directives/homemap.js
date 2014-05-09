@@ -33,7 +33,11 @@ angular.module('studygroupClientApp')
           center: new google.maps.LatLng(latitude, longitude)
         };
 
-        map = new google.maps.Map(elem[0], mapOptions);       
+        map = new google.maps.Map(elem[0], mapOptions);    
+
+        var oms = new OverlappingMarkerSpiderfier(map, {
+          keepSpiderfied: true,
+        });
 
         // This listener will close all open info windows when the map is clicked
         google.maps.event.addListener(map, 'click', function() {
@@ -227,6 +231,8 @@ angular.module('studygroupClientApp')
               // Push each infowindow and marker to their respective list to keep track of them
               bubbles.push(infowindow);
               markers.push(marker);
+
+              oms.addMarker(marker);
             }
             index ++;            
           });
@@ -280,6 +286,7 @@ angular.module('studygroupClientApp')
           }
           markers = [];
           bubbles = [];
+          oms.clearMarkers();
         };
 
         // If lat, long or zoom parameters on the map change (remember, these are passed in from HTML), update it accordingly.
