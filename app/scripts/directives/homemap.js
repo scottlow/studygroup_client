@@ -52,7 +52,37 @@ angular.module('studygroupClientApp')
           if($scope.selectedSessions !== undefined) {
             $scope.refreshPins();  
           }
-        }); 
+        });
+
+        $scope.getInfoTemplate = function(session) {
+          var infoTemplate = '<div class="search_root session-infowindow media-body session-description-container">' + 
+          '<h5 class="media-heading session-heading">' + session.course.name + '</h5><span class="badge duration bubble-duration">' + Math.floor(((session.end_time - session.start_time) % 86400000) / 3600000) + 'h ' + (((session.end_time - session.start_time)  % 86400000) % 3600000) / 60000 + ' m</span>' + 
+          '<div class="session-description">' + 
+          '<button type="button" ng-class="{\'btn-success\' : ' + (session.joinText=='Join').toString() + ', \'btn-danger\' : ' + (session.joinText=='Leave').toString() + '}" ng-click="joinSession(' + session.id + ')" class="btn btn-sm btn-join">' + session.joinText + '</button>' + 
+          '<h6 style="pointer-events:none;" class="glyphicon glyphicon-session glyphicon-map-marker"><span class="h5 session-detail"><small>' + session.location.name + '<span class="divider">&#183;</span>Room: ' + session.room_number + '</small></span></h6>' + 
+          '<h6 style="pointer-events:none;" class="glyphicon glyphicon-session glyphicon-time"><span class="h5 session-detail"><small>' + session.start_time.toLocaleDateString() + '<span class="divider">&#183;</span>' + session.start_time.toLocaleTimeString() + '</small></span></h6>' + 
+          '</div>' +
+          '</div>';
+
+          return infoTemplate;
+        };
+
+        $scope.$on('refreshBubbles', function() {
+          if($scope.selectedSessions !== undefined && $scope.selectedSessions.length === 0) {
+            $scope.selectedSessions = $scope.$parent.sessions;          
+          }      
+
+          if($scope.selectedSessions !== undefined) {
+            for(var i = 0; i < $scope.selectedSessions.length; i++) {
+              var session = $scope.selectedSessions[i];
+              var infoTemplate = $scope.getInfoTemplate(session);
+              var compiled = ($compile(infoTemplate)($scope));
+
+              session.bubble.setContent(compiled[0]);   
+
+            }
+          }
+        });
 
         // Called when a Join button on an info window is clicked.
         $scope.joinSession = function(sessionID) {
@@ -74,14 +104,8 @@ angular.module('studygroupClientApp')
             // If the session is actually supposed to be displayed (aka if it's not filtered)
             if(session.filterDisplay) {
               // Create template for bubble
-              var infoTemplate = '<div class="search_root session-infowindow media-body session-description-container">' + 
-              '<h5 class="media-heading session-heading">' + session.course.name + '</h5><span class="badge duration bubble-duration">' + Math.floor(((session.end_time - session.start_time) % 86400000) / 3600000) + 'h ' + (((session.end_time - session.start_time)  % 86400000) % 3600000) / 60000 + ' m</span>' + 
-              '<div class="session-description">' + 
-              '<button type="button" ng-class="{\'btn-success\' : ' + (session.joinText=='Join').toString() + ', \'btn-danger\' : ' + (session.joinText=='Leave').toString() + '}" ng-click="joinSession(' + session.id + ')" class="btn btn-sm btn-join">' + session.joinText + '</button>' + 
-              '<h6 style="pointer-events:none;" class="glyphicon glyphicon-session glyphicon-map-marker"><span class="h5 session-detail"><small>' + session.location.name + '<span class="divider">&#183;</span>Room: ' + session.room_number + '</small></span></h6>' + 
-              '<h6 style="pointer-events:none;" class="glyphicon glyphicon-session glyphicon-time"><span class="h5 session-detail"><small>' + session.start_time.toLocaleDateString() + '<span class="divider">&#183;</span>' + session.start_time.toLocaleTimeString() + '</small></span></h6>' + 
-              '</div>' +
-              '</div>';
+              var infoTemplate = $scope.getInfoTemplate(session);
+              
               // Get lat and long for the session marker
               var latLong = new google.maps.LatLng(session.location.latitude, session.location.longitude);
               

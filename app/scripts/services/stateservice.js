@@ -28,7 +28,7 @@ angular.module('studygroupClientApp')
             }
           }
         }
-        $rootScope.$broadcast('refreshPins');
+        $rootScope.$broadcast('refreshBubbles');
       } else {
         $rootScope.$broadcast('showRegisterPrompt');
       }
