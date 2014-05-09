@@ -13,6 +13,8 @@ angular.module('dashboardControllers', [])
       StateService.processLogin();      
     });
 
+    // This is $broadcasted by StateService when a user has successfully logged in.
+    // Here we grab the user's first name (or username if they didn't enter a name) for displaying in the top bar.
     $scope.$on('loginProcessed', function(){
       $scope.full_name = StateService.getUsername();
       $scope.first_name = $scope.full_name.split(' ')[0];

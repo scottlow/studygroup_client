@@ -14,35 +14,37 @@ angular.module('studygroupClientApp')
         zoom: '=',
       },
       controller: ['$scope', function($scope) {
-        $scope.courseList = [];
-        $scope.selectedCourses = [];
-        $scope.active = '';
-        $scope.buildingList = [];
-        $scope.minDate = new Date();
-        $scope.newSessionSubmitted = false;
-        $scope.buildingLat = 48.4428524;
-        $scope.buildingLong = -123.3592758;
-        $scope.newSessionStartTime = new Date();
-        $scope.sessions = [];
+        $scope.courseList = []; // List of courses available for a user to choose from
+        $scope.selectedCourses = []; // List of courses a user has added to his/her profile (displayed in the course bar)
+        $scope.buildingList = []; // List of buildings available for a user to host a session in
+        $scope.minDate = new Date(); // Minimum allowed date for session creation (not allowed to host sessions in the past!)
+        $scope.newSessionSubmitted = false; // True if the new session modal has been submitted (used to know when to display validation)
+        $scope.buildingLat = 48.4428524; // Latitude of selected building in the new session dialog. Default value is assigned here.
+        $scope.buildingLong = -123.3592758; // Longitude of selected building in the new session dialog. Default value is assigned here.
+        $scope.newSessionStartTime = new Date(); // Start date/time of the new session being created
+        $scope.sessions = []; // List of sessions available to the user
 
+        // Hide the "New Session" button if the user isn't authenticated
         if(AuthService.isAuthenticated()) {
           $scope.showCreateNewSession = true;
         }     
 
         $scope.$on('loginProcessed', function(){
-          $scope.selectedCourses = StateService.getSelectedCourses();
+          $scope.selectedCourses = StateService.getSelectedCourses(); // Get selected courses for specific user from the StateService
 
-          // Activate informational popover if the user has no courses
+          // Activate informational popover if the user has no courses added
           if($scope.selectedCourses.length === 0) {
             angular.element('#noCoursePopover').popover({ trigger: "hover" });            
           }
 
+          // Initialize various state variables
           $scope.courseList = StateService.getCourseList();
           $scope.newSessionCourse = $scope.selectedCourses[0];
           $scope.university = StateService.getUniversity();
-          $scope.showNewSessionModal();
+          $scope.showNewSessionModal(); // Misleading name, but this initializes various values in the new session modal.
         });
 
+        // When a university is selected from the main page, initialize the correct variables
         $scope.$on('universitySelected', function() {
           // console.log('universitySelected');
           StateService.getCourses().then(function() {
@@ -53,15 +55,19 @@ angular.module('studygroupClientApp')
           });
         });
 
+        // Whenever the session list is updated, ensure that MainScreen has the most recent copy from the StateService
+        // and update the map pins/bubbles accordingly
         $scope.$on('sessionsChanged', function() {
           $scope.sessions = StateService.getAvailableSessions();
           $scope.$broadcast('refreshPins');      
         });       
 
+        // If the start time or duration of a session are changed in the create session dialog, compute the new resulting end time.
         $scope.$watchCollection('[newSessionStartTime, newSessionDurationHours, newSessionDurationMins]', function() {
           $scope.computeEndTime();
         });
 
+        // Initalize a few variables on modal dialog launch. (This is so buildings display correctly in the dialog)
         var modal = angular.element('#newSessionModal');
         modal.on('shown.bs.modal', function(e) {
           $timeout(function() {
@@ -70,11 +76,16 @@ angular.module('studygroupClientApp')
           });
         });
 
+        // Called when the user submits the create session dialog
         $scope.newSessionSubmit = function() {
           $scope.newSessionSubmitted = true;
-          angular.element('#newSessionModal').modal('hide');
           if($scope.newSessionForm.$valid) {
+            angular.element('#newSessionModal').modal('hide');
+
+            // Broadcast new session information to SessionPanel so that the new session card can be instantly created in the UI.
             $rootScope.$broadcast('sessionCreated', {'coordinator' : {'username' : StateService.getUsername()}, 'course' : {'name' : $scope.newSessionCourse.full_name, 'id': $scope.newSessionCourse.id}, 'start_time' : $scope.newSessionStartTime, 'end_time' : $scope.newSessionEndTime, 'location' : $scope.newSessionBuilding, 'room_number' : $scope.newSessionRoomNumber}); // Refactor this to pass in the correct information to create a client side session card.            
+            
+            // Then, make the time consuming SQL call to create the session server-side
             StateService.createSession(
                     $scope.newSessionCourse.id, 
                     $scope.newSessionStartTime, 
@@ -83,8 +94,8 @@ angular.module('studygroupClientApp')
                     parseInt($scope.newSessionRoomNumber)
             )
             .success(function() {
-              console.log($scope); // Remove this before committing. This is just here to show what data we have in the current scope that could be useful for creating a client side session card.
               console.log('Created session');
+              $scope.newSessionSubmitted = false; // Reset any error validation flags
             })
             .error(function() {
               console.log('Error creating session');
@@ -92,16 +103,19 @@ angular.module('studygroupClientApp')
           }
         };
 
+        // When a new building is selected, update the map accordingly.
         $scope.buildingChange = function() {
           $scope.buildingLat = $scope.newSessionBuilding.latitude;
           $scope.buildingLong = $scope.newSessionBuilding.longitude;
         };
 
+        // Does exactly what it says :) Round time to the nearest five minutes
         $scope.roundTimeToNearestFive = function(date) {
           var coeff = 1000 * 60 * 5;
           return new Date(Math.round(date.getTime() / coeff) * coeff);
         };
 
+        // Compute the new end time of a session 
         $scope.computeEndTime = function() {
           if($scope.newSessionStartTime ==   null) {
             return;
@@ -111,26 +125,22 @@ angular.module('studygroupClientApp')
           $scope.newSessionEndTime.setHours($scope.newSessionEndTime.getHours() + ($scope.newSessionDurationHours == null ? 0 : parseInt($scope.newSessionDurationHours)));
         };
 
+        // Initializes the default times/durations in the create session dialog.
         $scope.initTimes = function() {
           $scope.newSessionStartTime = $scope.roundTimeToNearestFive(new Date());      
           $scope.newSessionDurationHours = '1';
           $scope.newSessionDurationMins = '00';
           $scope.computeEndTime();
-        };       
-
-        $scope.open = function($event) {
-          $event.preventDefault();
-          $event.stopPropagation();
-
-          $scope.opened = true;
         };
 
+        // Add a course to the course bar
         $scope.addCourse = function(course) {
-          angular.element('#noCoursePopover').popover('destroy');
-          course.disabled = true;
-          StateService.addCourse(course);
+          angular.element('#noCoursePopover').popover('destroy'); // Destory the popover on the New Session button that is displayed if a user has no courses added
+          course.disabled = true; // Disable the course in the course list
+          StateService.addCourse(course); // Add a course to the client and serverside data via StateService.
         };
 
+        // Show the create new session modal
         $scope.showNewSessionModal = function() {
           $scope.buildingList = [];
           StateService.getUniversityBuildings().then(function() {
@@ -140,18 +150,21 @@ angular.module('studygroupClientApp')
           });
         };
 
+        // Remove a course from the course bar
         $scope.removeCourse = function(course) {
           course.disabled = false;
           StateService.removeCourse(course);
           if($scope.selectedCourses.length === 0) {
-            angular.element('#noCoursePopover').popover({ trigger: "hover" });             
+            angular.element('#noCoursePopover').popover({ trigger: "hover" }); // Activate informational popover if the user has no more courses added.        
           }
         };
 
+        // Filter a course in the course bar
         $scope.filterCourse = function(course) {
           StateService.filterCourse(course);
         };
 
+        // Remove a course from the client side data
         $scope.removeCourseData = function(course) {
           StateService.removeCourseData(course.id);
         };
@@ -170,21 +183,22 @@ angular.module('studygroupClientApp')
       },
       template: '<div ng-class="{active : active}" class="course-btn btn btn-default" ng-click="filterCourse()" ng-transclude></div><div class="course-close-btn btn btn-primary" ng-click="removeCourse()" ng-class="{loading : loading, notloading : !loading}"><span ng-show="loading"><img class="spinner" src="../img/spinner.gif" /></span><span ng-show="!loading"class="h6 glyphicon glyphicon-remove"></span></div>',
       link: function(scope, elements, attrs) {
-        scope.filterCourse = function() {         
-          scope.active = !scope.active;
-          scope.$parent.filterCourse(scope.$parent.course);
+        scope.filterCourse = function() {       
+          scope.active = !scope.active; // Cause the course button to be permanently pressed/released depending on its previous state
+          scope.$parent.filterCourse(scope.$parent.course); // Filter the course by calling $scope.filterCourse above.
         };
         scope.removeCourse = function() {  
-          scope.$parent.removeCourseData(scope.$parent.course); 
-          scope.$parent.removeCourse(scope.$parent.course);
+          scope.$parent.removeCourseData(scope.$parent.course); // Remove the course from the UI instantaneously
+          scope.$parent.removeCourse(scope.$parent.course); // Make the more expensive SQL call to remove the course from the server side data
         };
         scope.$parent.$on('pinsLoaded', function() {
-          scope.loading = false;
+          scope.loading = false; // This stops the loading animation once a specific course has loaded after being added. Right now, it will stop all animations. Known bug.
         });
       },
     };
   })
   .directive('integer', function() {
+    // This is a directive to ensure that an input field contains an integer value.
     var INTEGER_REGEXP = /^\-?\d+$/;    
     return {
       require: 'ngModel',
