@@ -5,10 +5,10 @@ angular.module('studygroupClientApp')
     // This directive is called only once when the initial app is loaded. It's what resets our map to good ol' #YYJ.
     return {
       scope: {
-        lat: '=',
-        long: '=',
-        zoom: '=',
-        selectedSessions: '=',
+        lat: '=', // latitude of the map
+        long: '=', // longitude of the map
+        zoom: '=', // zoom level of the map
+        selectedSessions: '=', // list of sessions to be fed into the map for displaying
       },
       link: function ($scope, elem, attrs) {
 
@@ -40,6 +40,11 @@ angular.module('studygroupClientApp')
           $scope.closeAllBubbles();
         });
 
+        /* When we need to refresh the pins, ensure that this directive has the latest version of
+           the sessions list from MainScreen.js. You may be wondering why this is necessary since
+           selectedSessions is bound to MainScreen.sessions. The issue, however, is that the $broadcasting
+           of 'refreshPins' is happening faster than the data binding can refresh, and as a result, we *sometimes*
+           enter this $on with old data. As a result, we'll update to make sure we're on the latest. */
         $scope.$on('refreshPins', function() { 
           if($scope.selectedSessions !== undefined && $scope.selectedSessions.length === 0) {
             $scope.selectedSessions = $scope.$parent.sessions;          
@@ -49,6 +54,7 @@ angular.module('studygroupClientApp')
           }
         }); 
 
+        // Called when a Join button on an info window is clicked.
         $scope.joinSession = function(sessionID) {
           StateService.joinSession(sessionID);
           for(var i = 0; i < $scope.selectedSessions.length; i++) {
@@ -58,12 +64,14 @@ angular.module('studygroupClientApp')
           }
         }; 
 
+        // Refreshes pins and info windows (bubbles)
         $scope.refreshPins = function() {
           $scope.clearMarkers();
           var index = 0;
 
           angular.forEach($scope.selectedSessions, function(session) {
 
+            // If the session is actually supposed to be displayed (aka if it's not filtered)
             if(session.filterDisplay) {
               // Create template for bubble
               var infoTemplate = '<div class="search_root session-infowindow media-body session-description-container">' + 
@@ -132,12 +140,13 @@ angular.module('studygroupClientApp')
                 }                  
               });
 
+              // Close the infowindow on mouseout
               google.maps.event.addListener(marker, 'mouseout', function(e) {
                 var param;
                 if(typeof(e) !== 'number') {
-                  param = 100;
+                  param = 100; // set a delay in closing an info window if we mouse out from a pin
                 } else {
-                  param = e;
+                  param = e; // There will be no delay for mousing out from a session card
                 }
                 $timeout(function(){
                   if(!infowindow.stickyDisplay && !infowindow.hovered) {
@@ -151,23 +160,22 @@ angular.module('studygroupClientApp')
                 }, param);
               });
 
+              // When the infowindow is dislayed, if a user is hovering over it, make sure it stays open
               google.maps.event.addListener(infowindow, 'domready', function() {
                 var content = angular.element('.search_root');
-                content.parent().parent().parent().mouseover(function() { // This is nasty, but necessary due to the fact that Google Maps doesn't let
+                content.parent().parent().parent().mouseover(function() { // This is nasty, but necessary due to the fact that Google Maps doesn't let devs access DOM structure easily.
                   if(!infowindow.hovered) {
                     infowindow.hovered = true;
                   }
                 });
-              });
 
-              google.maps.event.addListener(infowindow, 'domready', function() {
-                var content = angular.element('.search_root');
+                // Likewise, if a user mouses out from an info window, close it.
                 content.parent().parent().parent().mouseout(function() {
                   if(infowindow.hovered) {
                     infowindow.hovered = false;
                     google.maps.event.trigger(marker, 'mouseout');
                   }
-                });
+                });                
               });
 
               google.maps.event.addListener(infowindow, 'mouseout', function() {
@@ -201,6 +209,7 @@ angular.module('studygroupClientApp')
 		      $rootScope.$broadcast('pinsLoaded');
         };
 
+        // Close all bubbles on the map
         $scope.closeAllBubbles = function() {
           for(var i = 0; i < bubbles.length; i++) {
             bubbles[i].stickyDisplay = false;
@@ -214,6 +223,7 @@ angular.module('studygroupClientApp')
           }
         }
 
+        // Close all bubbles except for the one that's already open
         $scope.closeAllBubblesExcept = function() {
           for(var i = 0; i < bubbles.length; i++) {
             if(!bubbles[i].opened) {
@@ -226,6 +236,8 @@ angular.module('studygroupClientApp')
           }
         } 
 
+        // Witchcraft. Don't ask what this does or how it works. Essentially, it just ensures that AngularJS can safely call $apply
+        // without having it conflict with any existing $digest/$apply calls
         $scope.safeApply = function(fn) {
           var phase = this.$root.$$phase;
           if(phase == '$apply' || phase == '$digest') {
@@ -237,6 +249,7 @@ angular.module('studygroupClientApp')
           }
         };               
 
+        // Completely clear all markers on the map
         $scope.clearMarkers = function() {
           for(var i = 0; i < markers.length; i++) {
             markers[i].setMap(null);
@@ -245,22 +258,18 @@ angular.module('studygroupClientApp')
           bubbles = [];
         };
 
+        // If lat, long or zoom parameters on the map change (remember, these are passed in from HTML), update it accordingly.
         $scope.$watchCollection('[lat, long, zoom]', function(newValues, oldValues) {
           var center = new google.maps.LatLng(newValues[0], newValues[1]);
           map.panTo(center);
           map.setZoom(newValues[2]);
 
+          // Timeout of 0ms is necessary here.
           $timeout(function() {
             google.maps.event.trigger(map, 'resize');
             var center = new google.maps.LatLng($scope.lat, $scope.long);
             map.setCenter(center);
           });
-        });
-
-        $timeout(function() {
-          google.maps.event.trigger(map, 'resize');
-          var center = new google.maps.LatLng($scope.lat, $scope.long);
-          map.setCenter(center);
         });
       },
     };
