@@ -20,7 +20,11 @@ angular.module('studygroupClientApp')
     this.joinSession = function(sessionID) {
       for(var i = 0; i < availableSessions.length; i++) {
         if(sessionID === availableSessions[i].id) {
-          availableSessions[i].joinText = 'Leave';
+          if(availableSessions[i].joinText === 'Join') {
+            availableSessions[i].joinText = 'Leave';
+          } else {
+            availableSessions[i].joinText = 'Join';
+          }
         }
       }
       $rootScope.$broadcast('refreshPins');

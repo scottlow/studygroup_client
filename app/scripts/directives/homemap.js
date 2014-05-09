@@ -69,7 +69,7 @@ angular.module('studygroupClientApp')
               var infoTemplate = '<div class="search_root session-infowindow media-body session-description-container">' + 
               '<h5 class="media-heading session-heading">' + session.course.name + '</h5><span class="badge duration bubble-duration">' + Math.floor(((session.end_time - session.start_time) % 86400000) / 3600000) + 'h ' + (((session.end_time - session.start_time)  % 86400000) % 3600000) / 60000 + ' m</span>' + 
               '<div class="session-description">' + 
-              '<button type="button" ng-click="joinSession(' + session.id + ')" class="btn btn-success btn-sm btn-join">' + session.joinText + '</button>' + 
+              '<button type="button" ng-class="{\'btn-success\' : ' + (session.joinText=='Join').toString() + ', \'btn-danger\' : ' + (session.joinText=='Leave').toString() + '}" ng-click="joinSession(' + session.id + ')" class="btn btn-sm btn-join">' + session.joinText + '</button>' + 
               '<h6 style="pointer-events:none;" class="glyphicon glyphicon-session glyphicon-map-marker"><span class="h5 session-detail"><small>' + session.location.name + '<span class="divider">&#183;</span>Room: ' + session.room_number + '</small></span></h6>' + 
               '<h6 style="pointer-events:none;" class="glyphicon glyphicon-session glyphicon-time"><span class="h5 session-detail"><small>' + session.start_time.toLocaleDateString() + '<span class="divider">&#183;</span>' + session.start_time.toLocaleTimeString() + '</small></span></h6>' + 
               '</div>' +
@@ -87,7 +87,8 @@ angular.module('studygroupClientApp')
               // Create the info window for this session
               var infowindow = new google.maps.InfoWindow();
               infowindow.setContent(infoTemplate); 
-              var compiled = ($compile(infowindow.content)($scope));              
+              var compiled = ($compile(infowindow.content)($scope));
+              infowindow.setContent(compiled[0]);              
 
               infowindow.hovered = false;
 
@@ -117,8 +118,7 @@ angular.module('studygroupClientApp')
               google.maps.event.addListener(marker, 'mouseover', function() { 
                 // This if prevents a flicker when mousing over a marker whose bubble is already displayed 
                 if(!infowindow.stickyDisplay) {          
-                  infowindow.open(map,marker);
-                  infowindow.setContent(compiled[0]);                
+                  infowindow.open(map,marker);               
                   infowindow.opened = true;
 
                   $scope.safeApply(function() {
