@@ -13,6 +13,7 @@ angular.module('studygroupClientApp')
         locationName: '=',
         roomNumber: '=',
         joinText: '=',
+        attendees: '=',
       },
       controller: ['$scope', function($scope) {
         $scope.Math = window.Math;

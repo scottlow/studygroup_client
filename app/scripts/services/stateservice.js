@@ -26,6 +26,19 @@ angular.module('studygroupClientApp')
             } else {
               availableSessions[i].joinText = 'Join';
             }
+
+            availableSessions[i].attendees.unshift(currentUser);
+
+            $http.post('http://localhost:8000/' + 'sessions/join', {'session_id' : sessionID})
+            .success(function(data) {
+              console.log("Joined session with ID "  + sessionID);
+            })
+            .error(function(error) {
+              console.log("Could not join session with ID " + sessionID);
+              availableSessions[i].attendees.splice(0, 1);
+            });
+
+            break;
           }
         }
         $rootScope.$broadcast('refreshBubbles');
@@ -135,7 +148,9 @@ angular.module('studygroupClientApp')
           });
         }
         if(selectedCourses.length !== 0) {
-          $rootScope.$broadcast('changedCourse', selectedCourses);
+          $timeout(function() {
+            $rootScope.$broadcast('changedCourse', selectedCourses);
+          });
         }
       })
       .error(function(data) {
