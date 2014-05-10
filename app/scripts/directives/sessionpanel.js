@@ -93,7 +93,22 @@ angular.module('studygroupClientApp')
                         value.selected = false;
                         value.hovered = false;
                         value.filterDisplay = false;
-                        value.joinText = 'Join';
+
+                        var isAttending = false;
+
+                        for(var i = 0; i < value.attendees; i++) {
+                            if(attendees[i].id === StateService.getUserID()) {
+                                isAttending = true;
+                            }
+                            break;
+                        }                        
+
+                        if(value.coordinator.id === StateService.getUserID() || isAttending) {
+                            value.joinText = 'Leave'
+                        } else {
+                            value.joinText = 'Join'
+                        }
+
                         $scope.sessions.push(value);
                         $scope.sessionIds.push(value.id);
                 });

@@ -17,6 +17,10 @@ angular.module('studygroupClientApp')
       return currentUser.first_name === '' ? currentUser.username : currentUser.first_name;
     };
 
+    this.getUserID = function() {
+      return currentUser.id;
+    }
+
     this.joinSession = function(sessionID) {
       console.log(sessionID);
       if(AuthService.isAuthenticated()) {
