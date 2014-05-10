@@ -14,6 +14,7 @@ angular.module('studygroupClientApp')
         roomNumber: '=',
         joinText: '=',
         id: '@',
+        attendees: '=',
       },
       controller: ['$scope', function($scope) {
         $scope.Math = window.Math;
