@@ -93,7 +93,7 @@ angular.module('studygroupClientApp')
           StateService.joinSession(sessionID);
           for(var i = 0; i < $scope.selectedSessions.length; i++) {
             if(sessionID === $scope.selectedSessions[i].id) {
-              google.maps.event.trigger($scope.selectedSessions[i].marker, 'click', true);
+              google.maps.event.trigger($scope.selectedSessions[i].marker, 'click', false);
             }
           }
         }; 
@@ -130,16 +130,17 @@ angular.module('studygroupClientApp')
 
               // This listener will close all open info windows and open the clicked marker's info window
               google.maps.event.addListener(marker, 'click', function(fromList) {
+
+                if(fromList === false) {
+                  $location.hash(session.id);
+                  $anchorScroll();
+                }
+
                 // This if prevents a flicker when clicking a marker whose bubble is already displayed
                 if(!infowindow.stickyDisplay) {
                   $scope.closeAllBubblesExcept();
                   infowindow.opened = false;            
                   infowindow.stickyDisplay = true;
-
-                  if(!(fromList === true)) {
-                    $location.hash(session.id);
-                    $anchorScroll();
-                  }
 
                   if(infowindow.getMap() === null) {
                     infowindow.open(map, marker);

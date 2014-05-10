@@ -18,6 +18,7 @@ angular.module('studygroupClientApp')
     };
 
     this.joinSession = function(sessionID) {
+      console.log(sessionID);
       if(AuthService.isAuthenticated()) {
         for(var i = 0; i < availableSessions.length; i++) {
           if(sessionID === availableSessions[i].id) {

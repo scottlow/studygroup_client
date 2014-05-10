@@ -13,12 +13,13 @@ angular.module('studygroupClientApp')
         locationName: '=',
         roomNumber: '=',
         joinText: '=',
+        id: '@',
       },
       controller: ['$scope', function($scope) {
         $scope.Math = window.Math;
 
         $scope.joinSession = function(sessionID) {
-          StateService.joinSession(sessionID);
+          StateService.joinSession(parseInt(sessionID));        
         }
 
       }],
