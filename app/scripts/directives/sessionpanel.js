@@ -94,20 +94,7 @@ angular.module('studygroupClientApp')
                         value.hovered = false;
                         value.filterDisplay = false;
 
-                        var isAttending = false;
-
-                        for(var i = 0; i < value.attendees; i++) {
-                            if(attendees[i].id === StateService.getUserID()) {
-                                isAttending = true;
-                            }
-                            break;
-                        }                        
-
-                        if(value.coordinator.id === StateService.getUserID() || isAttending) {
-                            value.joinText = 'Leave'
-                        } else {
-                            value.joinText = 'Join'
-                        }
+                        $scope.getJoinText(value);
 
                         $scope.sessions.push(value);
                         $scope.sessionIds.push(value.id);
@@ -117,6 +104,23 @@ angular.module('studygroupClientApp')
                 console.log($scope.sessions);
             });
         };
+
+        $scope.getJoinText = function(value) {
+            var isAttending = false;
+
+            for(var i = 0; i < value.attendees.length; i++) {
+                if(value.attendees[i].id === StateService.getUserID()) {
+                    isAttending = true;
+                }
+                break;
+            }                        
+
+            if(value.coordinator.id === StateService.getUserID() || isAttending) {
+                value.joinText = 'Leave'
+            } else {
+                value.joinText = 'Join'
+            }          
+        }
 
         $scope.addNewSession = function(event, session) {
             id += 1;
@@ -130,7 +134,7 @@ angular.module('studygroupClientApp')
                 'room_number' : session.room_number,
                 'selected': false,
                 'hovered': false,
-                'joinText': 'Join',
+                'joinText': $scope.getJoinText(session),
                 'filterDisplay': StateService.getActiveCourseIDs().indexOf(session.course.id) !== -1 ? true : false,
             };
             $scope.sessions.push(session);
