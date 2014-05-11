@@ -83,7 +83,18 @@ angular.module('studygroupClientApp')
             angular.element('#newSessionModal').modal('hide');
 
             // Broadcast new session information to SessionPanel so that the new session card can be instantly created in the UI.
-            $rootScope.$broadcast('sessionCreated', {'coordinator' : {'username' : StateService.getUsername()}, 'course' : {'name' : $scope.newSessionCourse.full_name, 'id': $scope.newSessionCourse.id}, 'start_time' : $scope.newSessionStartTime, 'end_time' : $scope.newSessionEndTime, 'location' : $scope.newSessionBuilding, 'room_number' : $scope.newSessionRoomNumber}); // Refactor this to pass in the correct information to create a client side session card.            
+            $rootScope.$broadcast('sessionCreated', {
+              'attendees': [],
+              'coordinator' : StateService.getUserObj(),
+              'course' : {
+                'name' : $scope.newSessionCourse.full_name,
+                'id': $scope.newSessionCourse.id
+              },
+              'start_time' : $scope.newSessionStartTime, 
+              'end_time' : $scope.newSessionEndTime, 
+              'location' : $scope.newSessionBuilding, 
+              'room_number' : $scope.newSessionRoomNumber
+            });          
             
             // Then, make the time consuming SQL call to create the session server-side
             StateService.createSession(

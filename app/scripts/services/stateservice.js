@@ -13,6 +13,10 @@ angular.module('studygroupClientApp')
     var currentUser = {};
     currentUser.active_courses = [];
 
+    this.getUserObj = function() {
+      return currentUser;
+    }
+
     this.getUsername = function() {
       return currentUser.first_name === '' ? currentUser.username : currentUser.first_name;
     };

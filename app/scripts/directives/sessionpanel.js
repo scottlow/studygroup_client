@@ -124,6 +124,7 @@ angular.module('studygroupClientApp')
 
         $scope.addNewSession = function(event, session) {
             id += 1;
+            $scope.getJoinText(session);
             var session = {
                 'id' : id,
                 'coordinator' : session.coordinator,
@@ -134,7 +135,7 @@ angular.module('studygroupClientApp')
                 'room_number' : session.room_number,
                 'selected': false,
                 'hovered': false,
-                'joinText': $scope.getJoinText(session),
+                'joinText': session.joinText,
                 'filterDisplay': StateService.getActiveCourseIDs().indexOf(session.course.id) !== -1 ? true : false,
             };
             $scope.sessions.push(session);
