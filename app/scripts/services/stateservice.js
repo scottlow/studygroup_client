@@ -323,6 +323,8 @@ angular.module('studygroupClientApp')
       universityBuildings = [];           
       selectedCourses = [];
       availableSessions = [];
+      currentUser = {};
+      currentUser.active_courses = [];      
     };
 
     this.logout = function()  {

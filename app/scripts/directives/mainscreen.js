@@ -34,7 +34,7 @@ angular.module('studygroupClientApp')
 
           // Activate informational popover if the user has no courses added
           if($scope.selectedCourses.length === 0) {
-            angular.element('#noCoursePopover').popover({ trigger: "hover" });            
+            angular.element('#noCoursePopover').popover({ trigger: "hover", html: "true" });            
           }
 
           // Initialize various state variables
@@ -166,7 +166,7 @@ angular.module('studygroupClientApp')
           course.disabled = false;
           StateService.removeCourse(course);
           if($scope.selectedCourses.length === 0) {
-            angular.element('#noCoursePopover').popover({ trigger: "hover" }); // Activate informational popover if the user has no more courses added.        
+            angular.element('#noCoursePopover').popover({ trigger: "hover", html:"true" }); // Activate informational popover if the user has no more courses added.        
           }
         };
 
