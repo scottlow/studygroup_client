@@ -48,7 +48,8 @@ angular.module('studygroupClientApp')
 
               // If you are the coordinator and there are other attendees, remove coordinator from session
               // If there are no other attendees, delete the session.
-              // If you are NOT the coordinator, then simply leave the session.
+              // If you are NOT the coordinator, leave the session if there are other attendees, and if there
+              // are not, then delete the session.
               if (availableSessions[i].coordinator && availableSessions[i].coordinator.id == currentUser.id) {
                 if (availableSessions[i].attendees.length == 0) {
                   availableSessions.splice(i, 1);
@@ -58,17 +59,25 @@ angular.module('studygroupClientApp')
                   availableSessions[i].coordinator = null;
                 }
               } else {
-                // Remove the current user from the list of attendees.
-                var userIndex = 0;
-                for (var j = 0; j < availableSessions[i].attendees.length; j++) {
-                  if (availableSessions[i].attendees[j].username == currentUser.username) { 
-                    // Index needed later to reinsert into the list of attendees in case HTTP POST returns an error
-                    userIndex = j;
-                    availableSessions[i].attendees.splice(userIndex, 1);
-                    break;
+                // If you are the only attendee, and there are no coordinators, then delete the session.
+
+                var removedSession = undefined;
+
+                if (!availableSessions[i].coordinator && availableSessions[i].attendees.length == 1) {
+                  removedSession = availableSessions.splice(i, 1);
+                  $rootScope.$broadcast('refreshPins');
+                } else {
+                  var userIndex = 0;
+                  for (var j = 0; j < availableSessions[i].attendees.length; j++) {
+                    if (availableSessions[i].attendees[j].username == currentUser.username) { 
+                      // Index needed later to reinsert into the list of attendees in case HTTP POST returns an error
+                      userIndex = j;
+                      availableSessions[i].attendees.splice(userIndex, 1);
+                      break;
+                    }
                   }
                 }
-              }
+              } 
 
               $http.post('http://localhost:8000/' + 'sessions/leave', {'session_id' : sessionID})
               .success(function(data) {
@@ -76,7 +85,12 @@ angular.module('studygroupClientApp')
               })
               .error(function(error) {
                 console.log("Could not leave session with ID " + sessionID);
-                availableSessions[i].attendees.splice(userIndex, 0, currentUser);
+
+                if (removedSession != undefined) {
+                  availableSessions.splice(i, 0, removedSession);                  
+                } else {
+                  availableSessions[i].attendees.splice(userIndex, 0, currentUser);
+                }
               });
             }
 
