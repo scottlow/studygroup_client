@@ -115,7 +115,7 @@ angular.module('studygroupClientApp')
                 break;
             }                        
 
-            if(value.coordinator.id === StateService.getUserID() || isAttending) {
+            if((value.coordinator && value.coordinator.id === StateService.getUserID()) || isAttending) {
                 value.joinText = 'Leave'
             } else {
                 value.joinText = 'Join'

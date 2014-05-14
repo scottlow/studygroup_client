@@ -25,27 +25,60 @@ angular.module('studygroupClientApp')
       return currentUser.id;
     }
 
-    this.joinSession = function(sessionID) {
+    this.joinOrLeaveSession = function(sessionID) {
       console.log(sessionID);
       if(AuthService.isAuthenticated()) {
         for(var i = 0; i < availableSessions.length; i++) {
           if(sessionID === availableSessions[i].id) {
             if(availableSessions[i].joinText === 'Join') {
               availableSessions[i].joinText = 'Leave';
+              // Insert at index 0
+              availableSessions[i].attendees.unshift(currentUser);
+
+              $http.post('http://localhost:8000/' + 'sessions/join', {'session_id' : sessionID})
+              .success(function(data) {
+                console.log("Joined session with ID " + sessionID);
+              })
+              .error(function(error) {
+                console.log("Could not join session with ID " + sessionID);
+                availableSessions[i].attendees.splice(0, 1);
+              });
             } else {
               availableSessions[i].joinText = 'Join';
+
+              // If you are the coordinator and there are other attendees, remove coordinator from session
+              // If there are no other attendees, delete the session.
+              // If you are NOT the coordinator, then simply leave the session.
+              if (availableSessions[i].coordinator && availableSessions[i].coordinator.id == currentUser.id) {
+                if (availableSessions[i].attendees.length == 0) {
+                  availableSessions.splice(i, 1);
+                  $rootScope.$broadcast('refreshPins');
+                } else {
+                  // Is there a better way to do this.?
+                  availableSessions[i].coordinator = null;
+                }
+              } else {
+                // Remove the current user from the list of attendees.
+                var userIndex = 0;
+                for (var j = 0; j < availableSessions[i].attendees.length; j++) {
+                  if (availableSessions[i].attendees[j].username == currentUser.username) { 
+                    // Index needed later to reinsert into the list of attendees in case HTTP POST returns an error
+                    userIndex = j;
+                    availableSessions[i].attendees.splice(userIndex, 1);
+                    break;
+                  }
+                }
+              }
+
+              $http.post('http://localhost:8000/' + 'sessions/leave', {'session_id' : sessionID})
+              .success(function(data) {
+                console.log("Left a session with ID " + sessionID);
+              })
+              .error(function(error) {
+                console.log("Could not leave session with ID " + sessionID);
+                availableSessions[i].attendees.splice(userIndex, 0, currentUser);
+              });
             }
-
-            availableSessions[i].attendees.unshift(currentUser);
-
-            $http.post('http://localhost:8000/' + 'sessions/join', {'session_id' : sessionID})
-            .success(function(data) {
-              console.log("Joined session with ID "  + sessionID);
-            })
-            .error(function(error) {
-              console.log("Could not join session with ID " + sessionID);
-              availableSessions[i].attendees.splice(0, 1);
-            });
 
             break;
           }

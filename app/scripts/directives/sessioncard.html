@@ -2,10 +2,10 @@
     <div class="media-body session-description-container">
             <h5 class="media-heading session-heading">{{ courseName }}</h5><span class="badge duration">{{ Math.floor(((endTime - startTime) % 86400000) / 3600000) }}h {{ (((endTime - startTime)  % 86400000) % 3600000) / 60000 }}m</span> 
             <div class="session-description">
-            <button ng-click="joinSession(id)" ng-class="{'btn-success' : joinText=='Join', 'btn-danger' : joinText=='Leave'}" type="button" class="btn btn-sm btn-join">{{ joinText }}</button>
+            <button ng-click="joinOrLeaveSession(id)" ng-class="{'btn-success' : joinText=='Join', 'btn-danger' : joinText=='Leave'}" type="button" class="btn btn-sm btn-join">{{ joinText }}</button>
 	        <h6 style="pointer-events:none;" class="glyphicon glyphicon-session glyphicon-map-marker"><span class="h5 session-detail"><small>{{ locationName }}<span class="divider">&#183;</span>Room: {{ roomNumber }}</small></span></h6>
 	        <h6 style="pointer-events:none;" class="glyphicon glyphicon-session glyphicon-time"><span class="h5 session-detail"><small>{{ startTime.toLocaleDateString() }}<span class="divider">&#183;</span>{{ startTime.toLocaleTimeString() }}</small></span></h6>
-	        <h6 class="glyphicon glyphicon-session glyphicon-session-fade glyphicon-user"><span class="h5 session-detail"><small><strong>{{ coordinatorName }}</strong><span class="divider">&#183;</span><span ng-repeat="attendee in attendees">{{ attendee.first_name }}</span></h6>
+	        <h6 class="glyphicon glyphicon-session glyphicon-session-fade glyphicon-user"><span class="h5 session-detail"><small><strong>{{ coordinatorName }}</strong><span class="divider">&#183;</span><span ng-repeat="attendee in attendees">{{ attendee.first_name }} </span></h6>
         </div>
     </div>
 </li>

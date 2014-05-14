@@ -19,8 +19,8 @@ angular.module('studygroupClientApp')
       controller: ['$scope', function($scope) {
         $scope.Math = window.Math;
 
-        $scope.joinSession = function(sessionID) {
-          StateService.joinSession(parseInt(sessionID));        
+        $scope.joinOrLeaveSession = function(sessionID) {
+          StateService.joinOrLeaveSession(parseInt(sessionID));
         }
 
       }],
