@@ -111,8 +111,8 @@ angular.module('studygroupClientApp')
             for(var i = 0; i < value.attendees.length; i++) {
                 if(value.attendees[i].id === StateService.getUserID()) {
                     isAttending = true;
+                    break;
                 }
-                break;
             }                        
 
             if((value.coordinator && value.coordinator.id === StateService.getUserID()) || isAttending) {
