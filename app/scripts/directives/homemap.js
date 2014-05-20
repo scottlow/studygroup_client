@@ -78,11 +78,10 @@ angular.module('studygroupClientApp')
 
           if($scope.selectedSessions !== undefined) {
             for(var i = 0; i < $scope.selectedSessions.length; i++) {
-              var session = $scope.selectedSessions[i];
-              var infoTemplate = $scope.getInfoTemplate(session);
+              var infoTemplate = $scope.getInfoTemplate($scope.selectedSessions[i]);
               var compiled = ($compile(infoTemplate)($scope));
 
-              session.bubble.setContent(compiled[0]);   
+              $scope.selectedSessions[i].bubble.setContent(compiled[0]);   
 
             }
           }
