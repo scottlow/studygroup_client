@@ -130,7 +130,7 @@ angular.module('studygroupClientApp')
               // This listener will close all open info windows and open the clicked marker's info window
               google.maps.event.addListener(marker, 'click', function(fromList) {
 
-                if(fromList === false) {
+                if(fromList !== true) {
                   $location.hash(session.id);
                   $anchorScroll();
                 }
