@@ -1,6 +1,6 @@
 <tabset justified="true">
     <tab heading="Explore">
-        <ul class="media" style="margin:10px; padding-left:0px;">
+        <ul class="media" id="heightRoot" style="margin:10px; padding-left:0px;">
             <sessioncard ng-repeat="session in sessions | filter:displayFilter"
                          id="{{session.id}}"
                          join-text="session.joinText"

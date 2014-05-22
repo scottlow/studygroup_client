@@ -346,8 +346,8 @@ body {
   cursor: pointer;
   padding: 10px;
   user-select: none;
-  margin-top:25px;
-  margin-bottom:25px;
+  margin-top:20px;
+  margin-bottom:20px;
 }
 
 .session-infowindow {
@@ -384,9 +384,9 @@ body {
 }
 
 .session-panel .tab-content {
-  overflow-y: scroll;
-  max-height: 700px;
-  margin-top: 10px;
+  overflow-y: auto;
+/*  height:100%;*/
+  /*max-height: 700px;*/
 }
 
 .btn-join {

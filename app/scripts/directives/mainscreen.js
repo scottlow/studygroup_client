@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('studygroupClientApp')
-  .directive('mainScreen', function (StateService, $rootScope, AuthService, $timeout) {
+  .directive('mainScreen', function (StateService, $rootScope, AuthService, $timeout, $window) {
     return {
       templateUrl: 'scripts/directives/mainScreen.html',
       restrict: 'E',
@@ -27,7 +27,11 @@ angular.module('studygroupClientApp')
         // Hide the "New Session" button if the user isn't authenticated
         if(AuthService.isAuthenticated()) {
           $scope.showCreateNewSession = true;
-        }     
+        } 
+
+        angular.element($window).bind('resize', function() {
+          $scope.resizeSidebar();
+        });            
 
         $scope.$on('loginProcessed', function(){
           $scope.selectedCourses = StateService.getSelectedCourses(); // Get selected courses for specific user from the StateService
@@ -55,11 +59,18 @@ angular.module('studygroupClientApp')
           });
         });
 
+        $scope.resizeSidebar = function() {
+          var height = angular.element('#sidebarRoot').height() - 147;
+          angular.element('.session-panel .tab-content').height(height);          
+        };
+
         // Whenever the session list is updated, ensure that MainScreen has the most recent copy from the StateService
         // and update the map pins/bubbles accordingly
         $scope.$on('sessionsChanged', function() {
           $scope.sessions = StateService.getAvailableSessions();
-          $scope.$broadcast('refreshPins');      
+          $scope.$broadcast('refreshPins');  
+
+          $scope.resizeSidebar(); 
         });       
 
         // If the start time or duration of a session are changed in the create session dialog, compute the new resulting end time.
