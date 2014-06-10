@@ -35,6 +35,10 @@ angular.module('clientServices', ['ivpusic.cookie'])
       }
     };
 
+    this.checkPassword = function(username, password) {
+      return $http.post('http://localhost:8000/' + 'verify_credentials/', {username: username, password: password});
+    };
+
     // Log the user out and clean up the session a bit by deleting the Authorization header, and clearing the cached profile data.
     this.logout = function() {
       ipCookie.remove('studyToken');
