@@ -99,7 +99,7 @@ angular.module('studygroupClientApp')
         }
         $rootScope.$broadcast('refreshBubbles');
       } else {
-        $rootScope.$broadcast('showRegisterPrompt');
+        $rootScope.$broadcast('showRegisterPrompt', true);
       }
     }
 

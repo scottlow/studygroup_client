@@ -27,7 +27,8 @@ angular.module('clientControllers', ['ngAnimate'])
     $scope.showSignUp = function(showRegisterPrompt) {
       $scope.showWelcome = false;
       $scope.dimMap = true;
-      $scope.showRegisterPrompt = showRegisterPrompt;
+      $scope.attemptedAction = showRegisterPrompt ? 'join ' : 'create ';
+      $scope.showRegisterPrompt = true;
       // $scope.displayUI = false;
     };
 
@@ -43,8 +44,8 @@ angular.module('clientControllers', ['ngAnimate'])
       }
     };
 
-    $scope.$on('showRegisterPrompt', function() {
-      $scope.showSignUp(true);
+    $scope.$on('showRegisterPrompt', function(e, attemptedToJoin) {
+      $scope.showSignUp(attemptedToJoin);
     });
 
     // Attempt a login

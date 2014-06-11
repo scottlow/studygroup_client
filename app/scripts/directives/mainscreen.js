@@ -87,6 +87,14 @@ angular.module('studygroupClientApp')
           });
         });
 
+        $scope.popNewSessionModal = function() {
+          if(AuthService.isAuthenticated()) {
+            angular.element('#newSessionModal').modal('show');              
+          } else {
+            $rootScope.$broadcast('showRegisterPrompt', false);
+          }
+        };
+
         // Called when the user submits the create session dialog
         $scope.newSessionSubmit = function() {
           $scope.newSessionSubmitted = true;

@@ -4,7 +4,7 @@
       <div class="container-fluid" ng-show="showInterface">   
       <div class="sidebar">
         <div style="display:inline-block" id="noCoursePopover" data-container="body" data-placement="right" data-content="To get started, add some courses by clicking the <strong>+</strong> icon on the right side of the course bar.">
-          <button ng-disabled="selectedCourses.length === 0" ng-show="showCreateNewSession" class="btn btn-success btn-lg" data-toggle="modal" data-target="#newSessionModal">
+          <button ng-disabled="selectedCourses.length === 0" class="btn btn-success btn-lg" ng-click="popNewSessionModal()">
             New Session
           </button>
         </div>
