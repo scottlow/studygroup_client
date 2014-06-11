@@ -56,6 +56,11 @@ angular.module('studygroupClientApp')
             $scope.newSessionCourse = $scope.selectedCourses[0];
             $scope.courseList = StateService.getCourseList();
             $scope.university = StateService.getUniversity();
+
+            if($scope.selectedCourses.length === 0) {
+              angular.element('#noCoursePopover').popover({ trigger: "hover", html: "true" });            
+            }
+            
           });
         });
 

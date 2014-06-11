@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('studygroupClientApp')
-  .directive('sessionpanel', function ($rootScope, StateService, $http) {
+  .directive('sessionpanel', function ($rootScope, StateService, $http, AuthService) {
     return {
       templateUrl: 'scripts/directives/sessionpanel.html',
       restrict: 'E',
@@ -15,6 +15,8 @@ angular.module('studygroupClientApp')
         $scope.sessionIds = [];
         $scope.hostSessions = [];
         $scope.viewSessions = [];
+
+        $scope.AuthService = AuthService;
 
         var id;
         var previousIDs = [];
