@@ -60,7 +60,7 @@ angular.module('studygroupClientApp')
             if($scope.selectedCourses.length === 0) {
               angular.element('#noCoursePopover').popover({ trigger: "hover", html: "true" });            
             }
-            
+
           });
         });
 
@@ -71,10 +71,14 @@ angular.module('studygroupClientApp')
 
         // Whenever the session list is updated, ensure that MainScreen has the most recent copy from the StateService
         // and update the map pins/bubbles accordingly
-        $scope.$on('sessionsChanged', function() {
+        $scope.$on('sessionsChanged', function() {          
           $scope.sessions = StateService.getAvailableSessions();
+          if($scope.sessions.length === 0) {
+            $rootScope.$broadcast('noSessions', true);            
+          } else {
+            $rootScope.$broadcast('noSessions', false);            
+          }
           $scope.$broadcast('refreshPins');  
-
           $scope.resizeSidebar(); 
         });       
 
