@@ -18,7 +18,6 @@ angular.module('studygroupClientApp')
 
         $scope.AuthService = AuthService;
 
-        var id;
         var previousIDs = [];
 
         StateService.setAvailableSessions($scope.sessions);
@@ -129,10 +128,10 @@ angular.module('studygroupClientApp')
         }
 
         $scope.addNewSession = function(event, session) {
-            id += 1;
             $scope.getJoinText(session);
             var session = {
-                'id' : id,
+                'id' : -1,
+                'attendees' : [],
                 'coordinator' : session.coordinator,
                 'course' : session.course,
                 'location' : session.location,
@@ -145,7 +144,6 @@ angular.module('studygroupClientApp')
                 'filterDisplay': StateService.getActiveCourseIDs().indexOf(session.course.id) !== -1 ? true : false,
             };
             $scope.sessions.push(session);
-            $scope.sessionIds.push(id);
             $rootScope.$broadcast('sessionsChanged');            
         };
 

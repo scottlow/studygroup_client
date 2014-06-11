@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('studygroupClientApp')
-  .directive('mainScreen', function (StateService, $rootScope, AuthService, $timeout, $window) {
+  .directive('mainScreen', function (StateService, $rootScope, AuthService, $timeout, $window, $http) {
     return {
       templateUrl: 'scripts/directives/mainScreen.html',
       restrict: 'E',
@@ -132,8 +132,26 @@ angular.module('studygroupClientApp')
                     $scope.newSessionBuilding, 
                     parseInt($scope.newSessionRoomNumber)
             )
-            .success(function() {
+            .success(function(data) {
               console.log('Created session');
+              for(var i = 0; i < $scope.sessions.length; i++) {
+                if($scope.sessions[i].id === -1) {
+                  $scope.sessions[i].id = data.id;
+                  break;
+                }
+              }
+
+              // If the newly created session has since been removed on the client side
+              if(i === $scope.sessions.length) {
+                $http.post('http://localhost:8000/' + 'sessions/leave', {'session_id' : data.id})
+                .success(function() {
+                  console.log("Left a session with ID " + data.id);
+                })
+                .error(function(error) {
+                  console.log("Could not leave session with ID " + data.id);
+                });                
+              }
+
               $scope.newSessionSubmitted = false; // Reset any error validation flags
             })
             .error(function() {

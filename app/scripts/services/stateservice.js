@@ -85,6 +85,10 @@ angular.module('studygroupClientApp')
                 }
               } 
 
+              if(sessionID === -1) {
+                return;
+              }
+
               $http.post('http://localhost:8000/' + 'sessions/leave', {'session_id' : sessionID})
               .success(function(data) {
                 console.log("Left a session with ID " + sessionID);
