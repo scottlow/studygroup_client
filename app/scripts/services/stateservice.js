@@ -53,6 +53,9 @@ angular.module('studygroupClientApp')
               if (availableSessions[i].coordinator && availableSessions[i].coordinator.id == currentUser.id) {
                 if (availableSessions[i].attendees.length == 0) {
                   availableSessions.splice(i, 1);
+                  if(availableSessions.length === 0) {
+                    $rootScope.$broadcast('noSessions', true);
+                  }
                   $rootScope.$broadcast('refreshPins');
                 } else {
                   // Is there a better way to do this.?
@@ -65,6 +68,9 @@ angular.module('studygroupClientApp')
 
                 if (!availableSessions[i].coordinator && availableSessions[i].attendees.length == 1) {
                   removedSession = availableSessions.splice(i, 1);
+                  if(availableSessions.length === 0) {
+                    $rootScope.$broadcast('noSessions', true);
+                  }                  
                   $rootScope.$broadcast('refreshPins');
                 } else {
                   var userIndex = 0;
@@ -207,6 +213,8 @@ angular.module('studygroupClientApp')
           $timeout(function() {
             $rootScope.$broadcast('changedCourse', selectedCourses);
           });
+        } else {
+          $rootScope.$broadcast('noSessions', true);
         }
       })
       .error(function(data) {

@@ -2,7 +2,7 @@
     <tab heading="Explore">
         <ul class="media" id="heightRoot" style="margin:10px; padding-left:0px;">
             <!-- At some point, there should probably be a loader here -->
-            <div ng-show="sessions.length === 0 && !AuthService.isAuthenticated()" class="noSessions">
+            <div ng-show="(sessions.length === 0 && !AuthService.isAuthenticated()) || forceShowMessage" class="noSessions">
                 <h3><small><strong>There are currently no sessions to display.</strong></small></h3>
                 <h4><small>Try adding some courses using the <strong>+</strong> icon on the right side of the course bar or checking back later!</small></h4>
             </div>

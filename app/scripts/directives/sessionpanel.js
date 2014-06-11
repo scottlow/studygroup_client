@@ -71,7 +71,11 @@ angular.module('studygroupClientApp')
                 }
 
                 // Broadcast so that the pins are updated accordingly.
-                $rootScope.$broadcast('sessionsChanged');                
+                if($scope.sessions.length === 0) {
+                    $rootScope.$broadcast('noSessions', true);                
+                }
+
+                $rootScope.$broadcast('sessionsChanged');           
                 return; // At this point, we can return since there's no need to make a database call if we're removing.
             }
 
@@ -170,6 +174,10 @@ angular.module('studygroupClientApp')
         $scope.$on('filteredCourse', $scope.filteredCourse);     
         $scope.$on('sessionCreated', $scope.addNewSession); // Refactor this to call a different function that simply creates a client side session card.
         $scope.$on('changedCourse', $scope.getAvailableSessions);
+
+        $scope.$on('noSessions', function(evt, shouldShow) {
+            $scope.forceShowMessage = shouldShow;
+        });
       }]
     };
   });
