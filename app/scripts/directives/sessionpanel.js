@@ -158,7 +158,10 @@ angular.module('studygroupClientApp')
                     $scope.sessions[i].selected = false;
                 }
             }
-            $rootScope.$broadcast('sessionsChanged');            
+            $rootScope.$broadcast('sessionsChanged'); 
+            if(active_ids.length == 0) {
+                $rootScope.$broadcast('noSessions', true);
+            }                       
         }; 
 
         $scope.displayFilter = function(session) {
