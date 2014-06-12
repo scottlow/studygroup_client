@@ -117,7 +117,7 @@ angular.module('studygroupClientApp')
                 position: latLong,
                 map: map,
                 title: session.course.name,
-                icon: {scaledSize: new google.maps.Size(22, 40), url:"../img/spotlight-poi-blue.png"}
+                icon: {scaledSize: new google.maps.Size(22, 40), url:"../img/spotlight-poi-green.png"}
               });
 
               // Create the info window for this session
@@ -155,7 +155,7 @@ angular.module('studygroupClientApp')
               google.maps.event.addListener(marker, 'mouseover', function() { 
                 // This if prevents a flicker when mousing over a marker whose bubble is already displayed 
                 if(!infowindow.stickyDisplay) {          
-                  infowindow.open(map,marker);               
+                  infowindow.open(map,marker);           
                   infowindow.opened = true;
 
                   $scope.safeApply(function() {
@@ -223,7 +223,7 @@ angular.module('studygroupClientApp')
               infowindow.lookupIndex = index;
 
               if(session.coordinator.id === StateService.getUserObj().id) {
-                marker.setIcon({scaledSize: new google.maps.Size(22, 40), url:"../img/spotlight-poi-green.png"});
+                marker.setIcon({scaledSize: new google.maps.Size(22, 40), url:"../img/spotlight-poi-blue.png"});
               } else {
                 for (var i = 0; i < session.attendees.length; i++) {
                   if(session.attendees[i].username == StateService.getUserObj().username) {

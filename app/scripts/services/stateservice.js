@@ -46,7 +46,7 @@ angular.module('studygroupClientApp')
               });
             } else {
               availableSessions[i].joinText = 'Join';
-              availableSessions[i].marker.setIcon({scaledSize: new google.maps.Size(22, 40), url:"../img/spotlight-poi-blue.png"});               
+              availableSessions[i].marker.setIcon({scaledSize: new google.maps.Size(22, 40), url:"../img/spotlight-poi-green.png"});               
 
               // If you are the coordinator and there are other attendees, remove coordinator from session
               // If there are no other attendees, delete the session.
