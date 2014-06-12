@@ -31,6 +31,7 @@ angular.module('studygroupClientApp')
         for(var i = 0; i < availableSessions.length; i++) {
           if(sessionID === availableSessions[i].id) {
             if(availableSessions[i].joinText === 'Join') {
+              availableSessions[i].marker.setIcon({scaledSize: new google.maps.Size(22, 40), url:"../img/spotlight-poi-yellow.png"});              
               availableSessions[i].joinText = 'Leave';
               // Insert at index 0
               availableSessions[i].attendees.unshift(currentUser);
@@ -45,6 +46,7 @@ angular.module('studygroupClientApp')
               });
             } else {
               availableSessions[i].joinText = 'Join';
+              availableSessions[i].marker.setIcon({scaledSize: new google.maps.Size(22, 40), url:"../img/spotlight-poi-blue.png"});               
 
               // If you are the coordinator and there are other attendees, remove coordinator from session
               // If there are no other attendees, delete the session.

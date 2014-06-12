@@ -116,7 +116,8 @@ angular.module('studygroupClientApp')
               var marker = new google.maps.Marker({
                 position: latLong,
                 map: map,
-                title: session.course.name
+                title: session.course.name,
+                icon: {scaledSize: new google.maps.Size(22, 40), url:"../img/spotlight-poi-blue.png"}
               });
 
               // Create the info window for this session
@@ -220,6 +221,17 @@ angular.module('studygroupClientApp')
               // Push each infowindow and marker to their respective session objects so that they can be used in SessionPanel
               marker.lookupIndex = index;
               infowindow.lookupIndex = index;
+
+              if(session.coordinator.id === StateService.getUserObj().id) {
+                marker.setIcon({scaledSize: new google.maps.Size(22, 40), url:"../img/spotlight-poi-green.png"});
+              } else {
+                for (var i = 0; i < session.attendees.length; i++) {
+                  if(session.attendees[i].username == StateService.getUserObj().username) {
+                    marker.setIcon({scaledSize: new google.maps.Size(22, 40), url:"../img/spotlight-poi-yellow.png"}); 
+                    break;                     
+                  }
+                }
+              }
 
               session.marker = marker;
               session.bubble = infowindow;
