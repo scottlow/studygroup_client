@@ -65,7 +65,7 @@ angular.module('studygroupClientApp')
         });
 
         $scope.resizeSidebar = function() {
-          var height = angular.element('#sidebarRoot').height() - 147;
+          var height = angular.element('#sidebarRoot').height() - 152;
           angular.element('.session-panel .tab-content').height(height);          
         };
 
