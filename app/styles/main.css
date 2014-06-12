@@ -341,13 +341,11 @@ body {
 }
 
 .session-entry {
-  margin:5px;
   list-style-type: none;
   cursor: pointer;
   padding: 10px;
   user-select: none;
   margin-top:20px;
-  margin-bottom:20px;
 }
 
 .session-infowindow {
