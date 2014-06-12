@@ -14,7 +14,7 @@
                          course-name="session.course.name"
                          start-time="session.start_time"
                          end-time="session.end_time"
-                         coordinator-name="session.coordinator.username"
+                         coordinator-name="session.coordinator.first_name === '' ? session.coordinator.username : session.coordinator.first_name"
                          attendees="session.attendees"
                          ng-mouseenter="previewSession(session)"
                          ng-mouseleave="dismissPreviewSession(session)"
@@ -22,34 +22,8 @@
                          ng-click="selectSession(session)"/>
         </ul>
     </tab>
-    <tab disabled="!AuthService.isAuthenticated()" heading="My Sessions">
-        <accordion close-others="false">
-            <accordion-group heading="Hosting">
-                <sessioncard ng-repeat="session in hostsessions"
-                             location-name="session.location.name"
-                             room-number="session.room_number"                                 
-                             course-name="session.course.name"
-                             start-time="session.start_time"
-                             end-time="session.end_time"
-                             coordinator-name="session.coordinator.username"
-                             ng-mouseenter="previewSession(session)"
-                             ng-mouseleave="dismissPreviewSession(session)" 
-                             ng-class="{'session-selected' : session.selected, 'session-not-selected' : !session.selected}"                             
-                             ng-click="selectSession(session)"/>                                                     
-            </accordion-group>
-            <accordion-group heading="Attending">
-                <sessioncard ng-repeat="session in viewsessions"
-                             location-name="session.location.name"  
-                             room-number="session.room_number"    
-                             course-name="session.course.name"
-                             start-time="session.start_time"
-                             end-time="session.end_time"
-                             coordinator-name="session.coordinator.username"
-                             ng-mouseenter="previewSession(session)"
-                             ng-mouseleave="dismissPreviewSession(session)"
-                             ng-class="{'session-selected' : session.selected, 'session-not-selected' : !session.selected}"                             
-                             ng-click="selectSession(session)"/>                                                       
-            </accordion-group>
-        </accordion>
+    <tab disabled="!AuthService.isAuthenticated()" heading="Hosting">
+    </tab>
+    <tab disabled="!AuthService.isAuthenticated()" heading="Attending">
     </tab>
 </tabset>

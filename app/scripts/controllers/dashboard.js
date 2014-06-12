@@ -27,7 +27,7 @@ angular.module('dashboardControllers', [])
       $scope.newEmail = copiedUser.email;
 
       $scope.full_name = copiedUser.first_name;
-      $scope.first_name = $scope.full_name.split(' ')[0];
+      $scope.first_name = $scope.full_name == '' ? copiedUser.username : $scope.full_name.split(' ')[0];
     });
 
     $scope.checkPasswords = function() {
