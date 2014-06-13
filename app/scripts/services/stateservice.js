@@ -10,6 +10,30 @@ angular.module('studygroupClientApp')
     var availableSessions = [];
     var self = this;
 
+    var showAllFilter = function() {
+      return true;
+    }    
+
+    var showHostedFilter = function(session) {
+      if(session.coordinator.id === currentUser.id) {
+        return true;
+      } else {
+        return false;
+      }
+    }        
+
+    var showAttendingFilter = function(session) {
+      for(var i = 0; i < session.attendees.length; i++) {
+        if(session.attendees[i].id === currentUser.id) {
+          return true;
+          break;
+        }
+      }
+      return false;
+    }     
+
+    var filterFunction = showAllFilter;
+
     var currentUser = {};
     currentUser.active_courses = [];
 
@@ -24,6 +48,31 @@ angular.module('studygroupClientApp')
     this.getUserID = function() {
       return currentUser.id;
     }
+
+    this.isFiltered = function(session) {
+      return !filterFunction(session);
+    }
+
+    $rootScope.$on('displayHostingSessions', function() {
+      filterFunction = showHostedFilter;
+      $timeout(function() {
+        $rootScope.$broadcast('refreshPins');
+      });
+    });
+
+    $rootScope.$on('displayAttendingSessions', function() {
+      filterFunction = showAttendingFilter;
+      $timeout(function() {
+        $rootScope.$broadcast('refreshPins');
+      });
+    });
+
+    $rootScope.$on('displayAllSessions', function() {
+      filterFunction = showAllFilter;
+      $timeout(function() {
+        $rootScope.$broadcast('refreshPins');
+      });
+    });    
 
     this.joinOrLeaveSession = function(sessionID) {
       console.log(sessionID);

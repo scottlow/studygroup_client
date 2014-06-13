@@ -107,144 +107,146 @@ angular.module('studygroupClientApp')
             // If the session is actually supposed to be displayed (aka if it's not filtered)
             if(session.filterDisplay) {
               // Create template for bubble
-              var infoTemplate = $scope.getInfoTemplate(session);
-              
-              // Get lat and long for the session marker
-              var latLong = new google.maps.LatLng(session.location.latitude, session.location.longitude);
-              
-              // Create the marker for this session
-              var marker = new google.maps.Marker({
-                position: latLong,
-                map: map,
-                title: session.course.name,
-                icon: {scaledSize: new google.maps.Size(22, 40), url:"../img/spotlight-poi-green.png"}
-              });
+              if(!StateService.isFiltered(session)) {
+                var infoTemplate = $scope.getInfoTemplate(session);
+                
+                // Get lat and long for the session marker
+                var latLong = new google.maps.LatLng(session.location.latitude, session.location.longitude);
+                
+                // Create the marker for this session
+                var marker = new google.maps.Marker({
+                  position: latLong,
+                  map: map,
+                  title: session.course.name,
+                  icon: {scaledSize: new google.maps.Size(22, 40), url:"../img/spotlight-poi-green.png"}
+                });
 
-              // Create the info window for this session
-              var infowindow = new google.maps.InfoWindow();
-              infowindow.setContent(infoTemplate); 
-              var compiled = ($compile(infowindow.content)($scope));
-              infowindow.setContent(compiled[0]);              
+                // Create the info window for this session
+                var infowindow = new google.maps.InfoWindow();
+                infowindow.setContent(infoTemplate); 
+                var compiled = ($compile(infowindow.content)($scope));
+                infowindow.setContent(compiled[0]);              
 
-              infowindow.hovered = false;
+                infowindow.hovered = false;
 
-              // This listener will close all open info windows and open the clicked marker's info window
-              google.maps.event.addListener(marker, 'click', function(fromList) {
+                // This listener will close all open info windows and open the clicked marker's info window
+                google.maps.event.addListener(marker, 'click', function(fromList) {
 
-                if(fromList !== true) {
-                  $location.hash(session.id);
-                  $anchorScroll();
-                }
-
-                // This if prevents a flicker when clicking a marker whose bubble is already displayed
-                if(!infowindow.stickyDisplay) {
-                  $scope.closeAllBubblesExcept();
-                  infowindow.opened = false;            
-                  infowindow.stickyDisplay = true;
-
-                  if(infowindow.getMap() === null) {
-                    infowindow.open(map, marker);
-                  }                  
-
-                  $scope.safeApply(function() {
-                    session.selected = true;
-                  });
-                }
-              });
-
-              google.maps.event.addListener(marker, 'mouseover', function() { 
-                // This if prevents a flicker when mousing over a marker whose bubble is already displayed 
-                if(!infowindow.stickyDisplay) {          
-                  infowindow.open(map,marker);           
-                  infowindow.opened = true;
-
-                  $scope.safeApply(function() {
-                    session.hovered = true;
-                  });                  
-                } else {
-                  // This is a hacky workaround to display bubbles that are off the map, but already open.
-                  if(!(map.getBounds().contains(marker.getPosition()))) {
-                    infowindow.open(map, marker);
+                  if(fromList !== true) {
+                    $location.hash(session.id);
+                    $anchorScroll();
                   }
-                }                  
-              });
 
-              // Close the infowindow on mouseout
-              google.maps.event.addListener(marker, 'mouseout', function(e) {
-                var param;
-                if(typeof(e) !== 'number') {
-                  param = 100; // set a delay in closing an info window if we mouse out from a pin
-                } else {
-                  param = e; // There will be no delay for mousing out from a session card
-                }
-                $timeout(function(){
-                  if(!infowindow.stickyDisplay && !infowindow.hovered) {
-                    infowindow.close(map,marker);
-                    infowindow.opened = false;
+                  // This if prevents a flicker when clicking a marker whose bubble is already displayed
+                  if(!infowindow.stickyDisplay) {
+                    $scope.closeAllBubblesExcept();
+                    infowindow.opened = false;            
+                    infowindow.stickyDisplay = true;
+
+                    if(infowindow.getMap() === null) {
+                      infowindow.open(map, marker);
+                    }                  
 
                     $scope.safeApply(function() {
-                      session.hovered = false;
-                    });                  
-                  }
-                }, param);
-              });
-
-              // When the infowindow is dislayed, if a user is hovering over it, make sure it stays open
-              google.maps.event.addListener(infowindow, 'domready', function() {
-                var content = angular.element('.search_root');
-                content.parent().parent().parent().mouseover(function() { // This is nasty, but necessary due to the fact that Google Maps doesn't let devs access DOM structure easily.
-                  if(!infowindow.hovered) {
-                    infowindow.hovered = true;
+                      session.selected = true;
+                    });
                   }
                 });
 
-                // Likewise, if a user mouses out from an info window, close it.
-                content.parent().parent().parent().mouseout(function() {
-                  if(infowindow.hovered) {
-                    infowindow.hovered = false;
-                    google.maps.event.trigger(marker, 'mouseout');
+                google.maps.event.addListener(marker, 'mouseover', function() { 
+                  // This if prevents a flicker when mousing over a marker whose bubble is already displayed 
+                  if(!infowindow.stickyDisplay) {          
+                    infowindow.open(map,marker);           
+                    infowindow.opened = true;
+
+                    $scope.safeApply(function() {
+                      session.hovered = true;
+                    });                  
+                  } else {
+                    // This is a hacky workaround to display bubbles that are off the map, but already open.
+                    if(!(map.getBounds().contains(marker.getPosition()))) {
+                      infowindow.open(map, marker);
+                    }
+                  }                  
+                });
+
+                // Close the infowindow on mouseout
+                google.maps.event.addListener(marker, 'mouseout', function(e) {
+                  var param;
+                  if(typeof(e) !== 'number') {
+                    param = 100; // set a delay in closing an info window if we mouse out from a pin
+                  } else {
+                    param = e; // There will be no delay for mousing out from a session card
                   }
-                });                
-              });
+                  $timeout(function(){
+                    if(!infowindow.stickyDisplay && !infowindow.hovered) {
+                      infowindow.close(map,marker);
+                      infowindow.opened = false;
 
-              google.maps.event.addListener(infowindow, 'mouseout', function() {
-                infowindow.hovered = false;
-              });              
+                      $scope.safeApply(function() {
+                        session.hovered = false;
+                      });                  
+                    }
+                  }, param);
+                });
 
-              // This listener will close all open info windows when the marker's close button is pressed.
-              // This is *technically* not the correct behaviour, but since we'll only ever have one
-              // marker open at any time, we can reset these.
-              google.maps.event.addListener(infowindow, 'closeclick', function() {
-                $scope.closeAllBubbles();
-              });              
+                // When the infowindow is dislayed, if a user is hovering over it, make sure it stays open
+                google.maps.event.addListener(infowindow, 'domready', function() {
+                  var content = angular.element('.search_root');
+                  content.parent().parent().parent().mouseover(function() { // This is nasty, but necessary due to the fact that Google Maps doesn't let devs access DOM structure easily.
+                    if(!infowindow.hovered) {
+                      infowindow.hovered = true;
+                    }
+                  });
 
-              // Push each infowindow and marker to their respective session objects so that they can be used in SessionPanel
-              marker.lookupIndex = index;
-              infowindow.lookupIndex = index;
+                  // Likewise, if a user mouses out from an info window, close it.
+                  content.parent().parent().parent().mouseout(function() {
+                    if(infowindow.hovered) {
+                      infowindow.hovered = false;
+                      google.maps.event.trigger(marker, 'mouseout');
+                    }
+                  });                
+                });
 
-              if(session.coordinator.id === StateService.getUserObj().id) {
-                marker.setIcon({scaledSize: new google.maps.Size(22, 40), url:"../img/spotlight-poi-blue.png"});
-              } else {
-                for (var i = 0; i < session.attendees.length; i++) {
-                  if(session.attendees[i].username == StateService.getUserObj().username) {
-                    marker.setIcon({scaledSize: new google.maps.Size(22, 40), url:"../img/spotlight-poi-yellow.png"}); 
-                    break;                     
+                google.maps.event.addListener(infowindow, 'mouseout', function() {
+                  infowindow.hovered = false;
+                });              
+
+                // This listener will close all open info windows when the marker's close button is pressed.
+                // This is *technically* not the correct behaviour, but since we'll only ever have one
+                // marker open at any time, we can reset these.
+                google.maps.event.addListener(infowindow, 'closeclick', function() {
+                  $scope.closeAllBubbles();
+                });              
+
+                // Push each infowindow and marker to their respective session objects so that they can be used in SessionPanel
+                marker.lookupIndex = index;
+                infowindow.lookupIndex = index;
+
+                if(session.coordinator.id === StateService.getUserObj().id) {
+                  marker.setIcon({scaledSize: new google.maps.Size(22, 40), url:"../img/spotlight-poi-blue.png"});
+                } else {
+                  for (var i = 0; i < session.attendees.length; i++) {
+                    if(session.attendees[i].username == StateService.getUserObj().username) {
+                      marker.setIcon({scaledSize: new google.maps.Size(22, 40), url:"../img/spotlight-poi-yellow.png"}); 
+                      break;                     
+                    }
                   }
                 }
+
+                session.marker = marker;
+                session.bubble = infowindow;
+
+                if(session.selected) {
+                  infowindow.open(map,marker);
+                }
+
+                // Push each infowindow and marker to their respective list to keep track of them
+                bubbles.push(infowindow);
+                markers.push(marker);
+
+                oms.addMarker(marker);
               }
-
-              session.marker = marker;
-              session.bubble = infowindow;
-
-              if(session.selected) {
-                infowindow.open(map,marker);
-              }
-
-              // Push each infowindow and marker to their respective list to keep track of them
-              bubbles.push(infowindow);
-              markers.push(marker);
-
-              oms.addMarker(marker);
             }
             index ++;            
           });

@@ -1,5 +1,5 @@
 <tabset justified="true">
-    <tab heading="Explore">
+    <tab heading="Explore" ng-click="showAllSessions();">
         <ul class="media" id="heightRoot" style="margin:10px; padding-left:0px;">
             <!-- At some point, there should probably be a loader here -->
             <div ng-show="(sessions.length === 0 && !AuthService.isAuthenticated()) || forceShowMessage" class="noSessions">
@@ -22,8 +22,8 @@
                          ng-click="selectSession(session)"/>
         </ul>
     </tab>
-    <tab disabled="!AuthService.isAuthenticated()" heading="Hosting">
+    <tab disabled="!AuthService.isAuthenticated()" heading="Hosting" ng-click="showHostingSessions();">
     </tab>
-    <tab disabled="!AuthService.isAuthenticated()" heading="Attending">
+    <tab disabled="!AuthService.isAuthenticated()" heading="Attending" ng-click="showAttendingSessions();">
     </tab>
 </tabset>

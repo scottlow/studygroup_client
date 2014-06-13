@@ -170,7 +170,19 @@ angular.module('studygroupClientApp')
             } else {
                 return false;
             }
-        };        
+        };
+
+        $scope.showHostingSessions = function() {
+            $rootScope.$emit('displayHostingSessions');
+        } 
+
+        $scope.showAttendingSessions = function() {
+            $rootScope.$emit('displayAttendingSessions');
+        }
+
+        $scope.showAllSessions = function() {
+            $rootScope.$emit('displayAllSessions');
+        }                    
           
         $scope.$on('filteredCourse', $scope.filteredCourse);     
         $scope.$on('sessionCreated', $scope.addNewSession); // Refactor this to call a different function that simply creates a client side session card.
