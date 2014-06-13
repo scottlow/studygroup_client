@@ -23,7 +23,49 @@
         </ul>
     </tab>
     <tab disabled="!AuthService.isAuthenticated()" heading="Hosting" ng-click="showHostingSessions();">
+        <ul class="media" id="heightRoot" style="margin:10px; padding-left:0px;">
+            <!-- At some point, there should probably be a loader here -->
+            <div ng-show="(sessions.length === 0 && !AuthService.isAuthenticated()) || forceShowMessage" class="noSessions">
+                <h3><small><strong>There are currently no sessions to display.</strong></small></h3>
+                <h4><small>Try adding some courses using the <strong>+</strong> icon on the right side of the course bar or checking back later!</small></h4>
+            </div>
+            <sessioncard ng-repeat="session in sessions | filter:hostingFilter"
+                         id="{{session.id}}"
+                         join-text="session.joinText"
+                         location-name="session.location.name"  
+                         room-number="session.room_number"          
+                         course-name="session.course.name"
+                         start-time="session.start_time"
+                         end-time="session.end_time"
+                         coordinator-name="session.coordinator.first_name === '' ? session.coordinator.username : session.coordinator.first_name"
+                         attendees="session.attendees"
+                         ng-mouseenter="previewSession(session)"
+                         ng-mouseleave="dismissPreviewSession(session)"
+                         ng-class="{'session-selected' : session.selected, 'session-not-selected' : !session.selected, 'session-hovered' : session.hovered}"
+                         ng-click="selectSession(session)"/>
+        </ul>    
     </tab>
     <tab disabled="!AuthService.isAuthenticated()" heading="Attending" ng-click="showAttendingSessions();">
+        <ul class="media" id="heightRoot" style="margin:10px; padding-left:0px;">
+            <!-- At some point, there should probably be a loader here -->
+            <div ng-show="(sessions.length === 0 && !AuthService.isAuthenticated()) || forceShowMessage" class="noSessions">
+                <h3><small><strong>There are currently no sessions to display.</strong></small></h3>
+                <h4><small>Try adding some courses using the <strong>+</strong> icon on the right side of the course bar or checking back later!</small></h4>
+            </div>
+            <sessioncard ng-repeat="session in sessions | filter:attendingFilter"
+                         id="{{session.id}}"
+                         join-text="session.joinText"
+                         location-name="session.location.name"  
+                         room-number="session.room_number"          
+                         course-name="session.course.name"
+                         start-time="session.start_time"
+                         end-time="session.end_time"
+                         coordinator-name="session.coordinator.first_name === '' ? session.coordinator.username : session.coordinator.first_name"
+                         attendees="session.attendees"
+                         ng-mouseenter="previewSession(session)"
+                         ng-mouseleave="dismissPreviewSession(session)"
+                         ng-class="{'session-selected' : session.selected, 'session-not-selected' : !session.selected, 'session-hovered' : session.hovered}"
+                         ng-click="selectSession(session)"/>
+        </ul>    
     </tab>
 </tabset>
