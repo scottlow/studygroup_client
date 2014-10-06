@@ -12,11 +12,12 @@
     <div class="navbar-collapse collapse">
       <ul class="nav navbar-nav navbar-right">
         <li><p class="navbar-text">Welcome, {{first_name}}</p></li>
+        <li><a href=""><span class="h4 glyphicon glyphicon-envelope"></span></a></li>
         <li class="dropdown">
           <a href="" class="dropdown-toggle" data-toggle="dropdown"><span class="h4 glyphicon glyphicon-cog"></span></a>
-          <ul class="dropdown-menu">          
+          <ul class="dropdown-menu">
             <li><a data-toggle="modal" data-target="#editProfileModal" href="">Edit Profile</a></li>
-            <li><a ng-click="logout()" href="">Sign Out</a></li>            
+            <li><a ng-click="logout()" href="">Sign Out</a></li>
           </ul>
         </li>
       </ul>
@@ -38,68 +39,68 @@
         <form name="updateUserForm" class="form-horizontal" role="form" ng-submit="submitRegistration()" novalidate>
           <!-- Username -->
           <div class="form-group">
-              <label class="col-sm-2 control-label">Username</label> 
+              <label class="col-sm-2 control-label">Username</label>
               <div class="col-sm-10">
-                <input class="form-control" style="cursor: default" id="disabledInput" type="text" placeholder="{{staticUsername}}" disabled>       
+                <input class="form-control" style="cursor: default" id="disabledInput" type="text" placeholder="{{staticUsername}}" disabled>
               </div>
-          </div>        
+          </div>
           <!-- Full Name -->
           <div class="form-group">
-              <label class="col-sm-2 control-label">Full Name</label> 
+              <label class="col-sm-2 control-label">Full Name</label>
               <div class="col-sm-10">
                 <input type="text" name="name" class="form-control" ng-model="newFirstName" placeholder="Full Name (Optional)">
               </div>
           </div>
           <!-- Email -->
           <div class="form-group" ng-class="{ 'has-error' : updateUserForm.email.$invalid && hasSubmitted || emailPostError }">
-            <label class="col-sm-2 control-label">Email</label> 
+            <label class="col-sm-2 control-label">Email</label>
             <div class="col-sm-10">
               <input type="email" name="email" class="form-control" ng-model="newEmail" required placeholder="Email">
-              <p ng-show="emailPostError" class="help-block">{{emailErrorMessage}}</p>          
+              <p ng-show="emailPostError" class="help-block">{{emailErrorMessage}}</p>
               <p ng-show="updateUserForm.email.$invalid && hasSubmitted" class="help-block">Please enter a valid email.</p>
             </div>
           </div>
           <!-- Password -->
           <div class="form-group">
-            <label class="col-sm-2 control-label">Password</label>             
+            <label class="col-sm-2 control-label">Password</label>
             <div class="col-sm-10">
-              <button type="button" ng-show="!showChangePassword" ng-click="showChangePassword = true; hasSubmitted = false;" class="btn btn-primary">Change Password</button>            
+              <button type="button" ng-show="!showChangePassword" ng-click="showChangePassword = true; hasSubmitted = false;" class="btn btn-primary">Change Password</button>
               <div ng-show="showChangePassword" class="well" style="margin-bottom: 0px;">
                 <!-- Current Password -->
-                <div class="form-group" ng-class="{ 'has-error' : showChangePassword && updateUserForm.password.$invalid && hasSubmitted }">              
-                  <label class="col-sm-4 control-label">Current Password</label>               
-                  <div class="col-sm-8">                            
+                <div class="form-group" ng-class="{ 'has-error' : showChangePassword && updateUserForm.password.$invalid && hasSubmitted }">
+                  <label class="col-sm-4 control-label">Current Password</label>
+                  <div class="col-sm-8">
                     <input type="password" name="password" class="form-control" ng-model="userPassword" ng-required="showChangePassword">
                     <p ng-show="updateUserForm.password.$error.required && !updateUserForm.password.$error.passwordIncorrect && hasSubmitted" class="help-block">Please enter your current password.</p>
-                    <p ng-show="updateUserForm.password.$error.passwordIncorrect && hasSubmitted" class="help-block">The password you entered does not match the one we have on file for you! Please try again.</p>                    
+                    <p ng-show="updateUserForm.password.$error.passwordIncorrect && hasSubmitted" class="help-block">The password you entered does not match the one we have on file for you! Please try again.</p>
                   </div>
                 </div>
                 <!-- New Password -->
-                <div class="form-group" ng-class="{ 'has-error' : showChangePassword && updateUserForm.newPassword.$invalid && hasSubmitted }">                 
-                  <label class="col-sm-4 control-label">New Password</label>               
-                  <div class="col-sm-8">                            
+                <div class="form-group" ng-class="{ 'has-error' : showChangePassword && updateUserForm.newPassword.$invalid && hasSubmitted }">
+                  <label class="col-sm-4 control-label">New Password</label>
+                  <div class="col-sm-8">
                     <input type="password" name="newPassword" class="form-control" ng-model="newPassword" ng-required="showChangePassword">
                     <p ng-show="updateUserForm.newPassword.$error.required && hasSubmitted" class="help-block">Please enter a new password.</p>
-                  </div> 
-                </div>  
+                  </div>
+                </div>
                 <!-- Confirm Password -->
-                <div class="form-group" ng-class="{ 'has-error' : showChangePassword && updateUserForm.verifyPassword.$invalid && hasSubmitted }">                 
-                  <label class="col-sm-4 control-label">Verify Password</label>               
-                  <div class="col-sm-8">                            
+                <div class="form-group" ng-class="{ 'has-error' : showChangePassword && updateUserForm.verifyPassword.$invalid && hasSubmitted }">
+                  <label class="col-sm-4 control-label">Verify Password</label>
+                  <div class="col-sm-8">
                     <input type="password" name="verifyPassword" class="form-control" ng-model="verifyPassword" ng-required="showChangePassword">
                     <p ng-show="updateUserForm.verifyPassword.$error.required && hasSubmitted" class="help-block">Please verify your new password.</p>
-                    <p ng-show="updateUserForm.verifyPassword.$error.passwordMatch && hasSubmitted" class="help-block">The passwords you entered do not match!</p>                    
-                  </div> 
+                    <p ng-show="updateUserForm.verifyPassword.$error.passwordMatch && hasSubmitted" class="help-block">The passwords you entered do not match!</p>
+                  </div>
                 </div>
                 <!-- Hide Button -->
-                <div class="form-group" style="margin-bottom: 0px">  
-                  <div class="col-sm-12">                                
-                    <button style="float: right;" type="button" ng-click="  showChangePassword = false" class="btn btn-default">Cancel</button>   
+                <div class="form-group" style="margin-bottom: 0px">
+                  <div class="col-sm-12">
+                    <button style="float: right;" type="button" ng-click="  showChangePassword = false" class="btn btn-default">Cancel</button>
                   </div>
-                </div>                                        
+                </div>
               </div>
             </div>
-          </div>                                           
+          </div>
         </form>
       </div>
       <div class="modal-footer">

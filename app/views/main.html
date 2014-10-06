@@ -17,7 +17,7 @@
         <div class="form-group">
           <input type="password" name="password" ng-model="login.password" placeholder="Password" class="form-control">
         </div>
-        <button type="submit" ng-click="login()" class="btn btn-primary">Log In</button>        
+        <button type="submit" ng-click="login()" class="btn btn-primary">Log In</button>
         <button type="submit" ng-click="showSignUp()" class="btn btn-primary">Sign Up</button>
       </form>
     </div>
@@ -27,7 +27,7 @@
 <div class="signup-wrapper fade-transition" ng-show="dimMap">
   <div class="container signup-wrapper-inner">
     <div class="home-dialog jumbotron cover-container">
-      
+
       <div ng-show="showWelcome" id="welcome_content" class="inner cover">
         <h1>Study better.</h1>
         <p class="lead">To find a group of students who are studying for the same courses as you right now, choose a university from the menu below and press Get Started.</p>
@@ -43,12 +43,12 @@
           <!-- Name -->
           <div class="form-group">
               <input type="text" name="name" class="form-control" ng-model="user.name" placeholder="Full Name (Optional)">
-          </div>        
+          </div>
           <!-- Username -->
           <div class="form-group" ng-class="{ 'has-error' : (registerForm.username.$invalid && hasSubmitted) || usernamePostError}">
-            <input type="text" name="username" class="form-control" ng-model="user.username" ng-minlength="4" ng-maxlength="14" required placeholder="Username">           
-            <p ng-show="usernamePostError" class="help-block">{{usernameErrorMessage}}</p>             
-            <p ng-show="registerForm.username.$error.required && hasSubmitted" class="help-block">Please enter a username greater than 4 characters.</p>            
+            <input type="text" name="username" class="form-control" ng-model="user.username" ng-minlength="4" ng-maxlength="14" required placeholder="Username">
+            <p ng-show="usernamePostError" class="help-block">{{usernameErrorMessage}}</p>
+            <p ng-show="registerForm.username.$error.required && hasSubmitted" class="help-block">Please enter a username greater than 4 characters.</p>
             <p ng-show="registerForm.username.$error.minlength && hasSubmitted" class="help-block">Please enter a username greater than 4 characters.</p>
             <p ng-show="registerForm.username.$error.maxlength && hasSubmitted" class="help-block">Please enter a username less than 15 characters.</p>
           </div>
@@ -56,20 +56,20 @@
           <div class="form-group" ng-class="{ 'has-error' : registerForm.password.$invalid && hasSubmitted }">
               <input type="password" name="password" class="form-control" ng-model="user.password" required placeholder="Password">
               <p ng-show="registerForm.password.$invalid && hasSubmitted" class="help-block">Please enter a password.</p>
-          </div>   
+          </div>
           <!-- Email  -->
           <div class="form-group" ng-class="{ 'has-error' : registerForm.email.$invalid && hasSubmitted || emailPostError }">
               <input type="email" name="email" class="form-control" ng-model="user.email" required placeholder="Email">
-              <p ng-show="emailPostError" class="help-block">{{emailErrorMessage}}</p>              
+              <p ng-show="emailPostError" class="help-block">{{emailErrorMessage}}</p>
               <p ng-show="registerForm.email.$invalid && hasSubmitted" class="help-block">Please enter a valid email.</p>
           </div>
         <div class="form-group">
-          <select ng-model="university" class="university-picker form-control" ng-options="university.name for university in universities"></select>          
-        </div>  
+          <select ng-model="university" class="university-picker form-control" ng-options="university.name for university in universities"></select>
+        </div>
         <button type="submit" ng-click="showSignUp()" class="btn btn-primary btn-lg">Register</button>
-        <button type="button" ng-click="hideSignup()" class="btn btn-default btn-lg">Cancel</button>                 
+        <button type="button" ng-click="hideSignup()" class="btn btn-default btn-lg">Cancel</button>
         </form>
-      </div>      
+      </div>
     </div>
   </div>
 </div>
@@ -78,6 +78,26 @@
 
 <div id="footer" ng-class="{'hide' : displayUI}">
   <div class="container">
-    <p class="text-muted text-center">&copy; 2014 Scott Low, Justin Guze and Paul Moon</p>
+    <p class="text-muted text-center"><a data-toggle="modal" data-target="#aboutUsModal" href="">&copy; 2014 Scott Low, Justin Guze and Paul Moon</a></p>
+    </div>
   </div>
 </div>
+
+<!-- Edit Profile Modal -->
+<div class="modal fade" id="aboutUsModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="myModalLabel">About us<br /><small>We are just a humble group of students</small></h4>
+      </div>
+      <div class="modal-body">
+        Team members here?
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+  </div>
+</div>
+
