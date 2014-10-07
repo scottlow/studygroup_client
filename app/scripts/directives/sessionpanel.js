@@ -173,7 +173,7 @@ angular.module('studygroupClientApp')
         };
 
         $scope.hostingFilter = function(session) {
-            if(session.coordinator.id === StateService.getUserObj().id && session.filterDisplay) {
+            if(session.coordinator && session.coordinator.id === StateService.getUserObj().id && session.filterDisplay) {
                 return true;
             } else {
                 return false;
