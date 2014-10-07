@@ -223,7 +223,7 @@ angular.module('studygroupClientApp')
                 marker.lookupIndex = index;
                 infowindow.lookupIndex = index;
 
-                if(session.coordinator.id === StateService.getUserObj().id) {
+                if(session.coordinator != undefined && session.coordinator.id === StateService.getUserObj().id) {
                   marker.setIcon({scaledSize: new google.maps.Size(22, 40), url:"../img/spotlight-poi-blue.png"});
                 } else {
                   for (var i = 0; i < session.attendees.length; i++) {
