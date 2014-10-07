@@ -8,6 +8,11 @@ angular.module('dashboardControllers', [])
     $scope.verifyPassword = "";
 
     // Log the user out
+    $scope.contactHelp = function() {
+      console.log("human help requested.");
+    };
+
+    // Log the user out
     $scope.logout = function() {
       StateService.logout();
       AuthService.logout();
@@ -15,7 +20,7 @@ angular.module('dashboardControllers', [])
 
     // If the user has come from somewhere to here, get their username from the server and cache the result for use later.
     $scope.$on('$stateChangeSuccess', function(){
-      StateService.processLogin();      
+      StateService.processLogin();
     });
 
     // This is $broadcasted by StateService when a user has successfully logged in.
@@ -39,7 +44,7 @@ angular.module('dashboardControllers', [])
         // If entered passwords don't match, we can error out early.
         if($scope.newPassword !== $scope.verifyPassword) {
           $scope.updateUserForm.verifyPassword.$error.passwordMatch = true;
-          $scope.updateUserForm.newPassword.$invalid = true;          
+          $scope.updateUserForm.newPassword.$invalid = true;
           $scope.updateUserForm.verifyPassword.$invalid = true;
           $scope.updateUserForm.password.$invalid = false;
           deferred.resolve(null); // We don't know whether or not we have to make a REST API call due to invalid data. Thus, we can return null (which will terminate execution of submitAccountUpdate())
@@ -49,17 +54,17 @@ angular.module('dashboardControllers', [])
           .success(function(){
             // If so, set the appropriate form validation state and continue processing
             $scope.updateUserForm.verifyPassword.$error.passwordMatch = false;
-            $scope.updateUserForm.newPassword.$invalid = false;            
-            $scope.updateUserForm.verifyPassword.$invalid = false;          
+            $scope.updateUserForm.newPassword.$invalid = false;
+            $scope.updateUserForm.verifyPassword.$invalid = false;
             deferred.resolve(true); // We do need to make a request to the REST API in this case, so we can return true
           })
           .error(function() {
             // Otherwise, set the appropriate form validation state and error out
             $scope.updateUserForm.password.$error.passwordIncorrect = true;
             $scope.updateUserForm.password.$invalid = true;
-            $scope.updateUserForm.verifyPassword.$error.passwordMatch = false;          
-            $scope.updateUserForm.newPassword.$invalid = false;            
-            $scope.updateUserForm.verifyPassword.$invalid = false; 
+            $scope.updateUserForm.verifyPassword.$error.passwordMatch = false;
+            $scope.updateUserForm.newPassword.$invalid = false;
+            $scope.updateUserForm.verifyPassword.$invalid = false;
             deferred.resolve(null); // We don't know whether or not we have to make a REST API call due to invalid data. Thus, we can return null (which will terminate execution of submitAccountUpdate())
           });
         }
@@ -84,7 +89,7 @@ angular.module('dashboardControllers', [])
       $scope.updateUserForm.password.$error.passwordIncorrect = false;
 
       // If we're here, it means the Save Changes button has been clicked and the form has been submitted
-      $scope.hasSubmitted = true; 
+      $scope.hasSubmitted = true;
 
       if($scope.updateUserForm.$valid) {
 
@@ -118,14 +123,14 @@ angular.module('dashboardControllers', [])
           }
 
           // Make the profile change request if necessary
-          if(makeRequest) {           
+          if(makeRequest) {
             $http.post('http://localhost:8000/' + 'users/update_profile/', params)
-            .success(function (status) {           
+            .success(function (status) {
               console.log("Changed user information");
-              StateService.getUserObj().email = $scope.newEmail; // Update email as long as it is unique in the DB (If it's not, the call to /users/update_profile will error out)       
-              angular.element('#editProfileModal').modal('hide');  
-              
-              // Reset the modal UI so that anyone who clicks on the Edit Profile button again will be shown a fresh slate.            
+              StateService.getUserObj().email = $scope.newEmail; // Update email as long as it is unique in the DB (If it's not, the call to /users/update_profile will error out)
+              angular.element('#editProfileModal').modal('hide');
+
+              // Reset the modal UI so that anyone who clicks on the Edit Profile button again will be shown a fresh slate.
               $scope.hasSubmitted = false;
               $scope.showChangePassword = false;
             })
@@ -139,14 +144,14 @@ angular.module('dashboardControllers', [])
                 $scope.emailPostError = true;
                 $scope.emailErrorMessage = h['error-message'];
               }
-            });                
+            });
           } else {
             // If we get here, it means there was no need to make a request. I'm unsure of what the best behaviour is, but for now, I'm going to say we should
             // maintain modal state and close the modal.
-            angular.element('#editProfileModal').modal('hide');            
+            angular.element('#editProfileModal').modal('hide');
           }
         });
-      }     
+      }
     };
 
   });
