@@ -23,6 +23,10 @@ angular.module('studygroupClientApp')
           StateService.joinOrLeaveSession(parseInt(sessionID));
         }
 
+        $scope.addSessionToCalendar = function(sessionID) {
+          StateService.addToCalendar(parseInt(sessionID));
+        }
+
       }],
     };
   });
