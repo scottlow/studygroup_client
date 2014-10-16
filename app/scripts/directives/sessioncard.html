@@ -4,6 +4,7 @@
             <div class="session-description">
             <button ng-click="joinOrLeaveSession(id)" ng-class="{'btn-success' : joinText=='Join', 'btn-danger' : joinText=='Leave'}" type="button" class="btn btn-sm btn-join">{{ joinText }}</button>
 	        <h6 style="pointer-events:none;" class="glyphicon glyphicon-session glyphicon-map-marker"><span class="h5 session-detail"><small>{{ locationName }}<span class="divider">&#183;</span>Room: {{ roomNumber }}</small></span></h6>
+
 	        <a href = "" ng-click="addSessionToCalendar(id)"><h6 style="pointer-events:none;" class="glyphicon glyphicon-session glyphicon-time"><span class="h5 session-detail"><small>{{ startTime.toLocaleDateString() }}<span class="divider">&#183;</span>{{ startTime.toLocaleTimeString() }}</small></span></h6></a>
 	        <h6 class="glyphicon glyphicon-session glyphicon-session-fade glyphicon-user"><span class="h5 session-detail"><small><strong>{{ coordinatorName }}</strong><span class="divider">&#183;</span><span ng-repeat="attendee in attendees">{{ attendee.first_name }} </span></h6>
         </div>
