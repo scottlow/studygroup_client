@@ -25,6 +25,7 @@ angular.module('studygroupClientApp')
 
         $scope.addSessionToCalendar = function(sessionID) {
           StateService.addToCalendar(parseInt(sessionID));
+          console.log("Generating Calendar Object...");
         }
 
       }],
