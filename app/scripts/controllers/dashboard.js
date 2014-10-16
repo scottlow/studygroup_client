@@ -8,7 +8,7 @@ angular.module('dashboardControllers', [])
     $scope.verifyPassword = "";
 
     // Log the user out
-    $scope.contactHelp = function() {
+    $scope.contactHuman = function() {
       console.log("human help requested.");
     };
 
