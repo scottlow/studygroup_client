@@ -7,7 +7,12 @@ angular.module('dashboardControllers', [])
     $scope.newPassword = "";
     $scope.verifyPassword = "";
 
-    // Log the user out
+    // Email functionality
+    $scope.notifyByEmail = function() {
+      console.log("Email notification initiated.");
+    };
+
+    // Contacts a human in help
     $scope.contactHuman = function() {
       console.log("human help requested.");
     };
