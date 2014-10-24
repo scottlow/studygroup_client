@@ -27,7 +27,7 @@ angular.module('studygroupClientApp')
           StateService.addToCalendar(parseInt(sessionID));
           console.log($scope.startTime.toLocaleDateString());
           StateService.iCalObj = ics();
-          StateService.iCalObj.addEvent($scope.courseName, 'This is thirty minut event', $scope.locationName, $scope.startTime, $scope.endTime);
+          StateService.iCalObj.addEvent($scope.courseName, 'This is an event description from http://studyhostredux.cloudapp.net', $scope.locationName+" Room: "+$scope.roomNumber, $scope.startTime, $scope.endTime);
           return StateService.iCalObj.download();
 
 

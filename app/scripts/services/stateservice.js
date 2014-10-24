@@ -74,6 +74,7 @@ angular.module('studygroupClientApp')
       });
     });
 
+    // Parse session to Calendar object
     this.addToCalendar = function(sessionID) {
       //return a iCal object
     }
