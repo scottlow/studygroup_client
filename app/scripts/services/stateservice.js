@@ -12,7 +12,7 @@ angular.module('studygroupClientApp')
 
     var showAllFilter = function() {
       return true;
-    }    
+    }
 
     var showHostedFilter = function(session) {
       if(session.coordinator.id === currentUser.id) {
@@ -20,7 +20,7 @@ angular.module('studygroupClientApp')
       } else {
         return false;
       }
-    }        
+    }
 
     var showAttendingFilter = function(session) {
       for(var i = 0; i < session.attendees.length; i++) {
@@ -30,7 +30,7 @@ angular.module('studygroupClientApp')
         }
       }
       return false;
-    }     
+    }
 
     var filterFunction = showAllFilter;
 
@@ -72,7 +72,12 @@ angular.module('studygroupClientApp')
       $timeout(function() {
         $rootScope.$broadcast('refreshPins');
       });
-    });    
+    });
+
+    // Parse session to Calendar object
+    this.addToCalendar = function(sessionID) {
+      //return a iCal object
+    }
 
     this.joinOrLeaveSession = function(sessionID) {
       console.log(sessionID);
@@ -80,7 +85,7 @@ angular.module('studygroupClientApp')
         for(var i = 0; i < availableSessions.length; i++) {
           if(sessionID === availableSessions[i].id) {
             if(availableSessions[i].joinText === 'Join') {
-              availableSessions[i].marker.setIcon({scaledSize: new google.maps.Size(22, 40), url:"../img/spotlight-poi-yellow.png"});              
+              availableSessions[i].marker.setIcon({scaledSize: new google.maps.Size(22, 40), url:"../img/spotlight-poi-yellow.png"});
               availableSessions[i].joinText = 'Leave';
               // Insert at index 0
               availableSessions[i].attendees.unshift(currentUser);
@@ -95,7 +100,7 @@ angular.module('studygroupClientApp')
               });
             } else {
               availableSessions[i].joinText = 'Join';
-              availableSessions[i].marker.setIcon({scaledSize: new google.maps.Size(22, 40), url:"../img/spotlight-poi-green.png"});               
+              availableSessions[i].marker.setIcon({scaledSize: new google.maps.Size(22, 40), url:"../img/spotlight-poi-green.png"});
 
               // If you are the coordinator and there are other attendees, remove coordinator from session
               // If there are no other attendees, delete the session.
@@ -121,12 +126,12 @@ angular.module('studygroupClientApp')
                   removedSession = availableSessions.splice(i, 1);
                   if(availableSessions.length === 0) {
                     $rootScope.$broadcast('noSessions', true);
-                  }                  
+                  }
                   $rootScope.$broadcast('refreshPins');
                 } else {
                   var userIndex = 0;
                   for (var j = 0; j < availableSessions[i].attendees.length; j++) {
-                    if (availableSessions[i].attendees[j].username == currentUser.username) { 
+                    if (availableSessions[i].attendees[j].username == currentUser.username) {
                       // Index needed later to reinsert into the list of attendees in case HTTP POST returns an error
                       userIndex = j;
                       availableSessions[i].attendees.splice(userIndex, 1);
@@ -134,7 +139,7 @@ angular.module('studygroupClientApp')
                     }
                   }
                 }
-              } 
+              }
 
               if(sessionID === -1) {
                 return;
@@ -148,7 +153,7 @@ angular.module('studygroupClientApp')
                 console.log("Could not leave session with ID " + sessionID);
 
                 if (removedSession != undefined) {
-                  availableSessions.splice(i, 0, removedSession);                  
+                  availableSessions.splice(i, 0, removedSession);
                 } else {
                   availableSessions[i].attendees.splice(userIndex, 0, currentUser);
                 }
@@ -219,9 +224,9 @@ angular.module('studygroupClientApp')
           });
           /* This is a really nasty block of code, but it's the best way I could think of to do it.
            * essentially what's happening here is at this point, if we're logged in, we KNOW that
-           * we have the user data. We've created a list of the course ids that the user has 
-           * selected from the database and now we perform the following algorithm. 
-           * 
+           * we have the user data. We've created a list of the course ids that the user has
+           * selected from the database and now we perform the following algorithm.
+           *
            * For each course that should be in the course search drop down, check to see if it's been
            * selected by the user, if not, don't disable it and add it to the dropdown menu. (It's worth
            * noting here that pushing to availableCourses actually pushes to MainScreen.courseList due
@@ -230,7 +235,7 @@ angular.module('studygroupClientApp')
            * Otherwise, if the course has been selected by the user, disable it, and push it to selectedCourses
            * to add the course to both the data model and MainScreen.selectedCourses (again due to the singleton
            * nature of services in Angular).
-           * 
+           *
            * By doing this, we're essentially GUARANTEEING that the UI and the data model will be consistent with one
            * another.
            */
@@ -252,7 +257,7 @@ angular.module('studygroupClientApp')
               } else {
                 value.active = false;
               }
-              selectedCourses.push(value);              
+              selectedCourses.push(value);
             }
           });
         } else {
@@ -329,36 +334,36 @@ angular.module('studygroupClientApp')
 
         // This will push to the UI prematurely (i.e. before the post request has gone through. The call to self.removeCourseData above will fix this if it errors out)
         course.loading = true; // For animations!
-        selectedCourses.push(course);        
-      } else {       
+        selectedCourses.push(course);
+      } else {
         course.loading = true; // For animations!
-        currentUser.active_courses.push(course);        
+        currentUser.active_courses.push(course);
         selectedCourses.push(course);
         $rootScope.$broadcast('changedCourse', selectedCourses);
-      }     
+      }
     };
 
     this.removeCourse = function(course) {
       if(AuthService.isAuthenticated()) {
 
-        var courseIndex = self.getActiveCourseIDs().indexOf(course.id); 
+        var courseIndex = self.getActiveCourseIDs().indexOf(course.id);
         currentUser.active_courses.splice(courseIndex, 1);
         $rootScope.$broadcast('changedCourse', selectedCourses, course.id);
 
         $http.post('http://localhost:8000/' + 'courses/remove/', {'course_id' : course.id})
         .success(function(data) {
-          console.log('Removed course');        
+          console.log('Removed course');
         })
         .error(function(error) {
           console.log('Error adding course');
           self.selectedCourses.push(course); // Re-add the course on the UI side in the case of an error since the data model hasn't been updated.
         });
       } else {
-        var deferred = $q.defer();       
-        var courseIndex = self.getActiveCourseIDs().indexOf(course.id); 
+        var deferred = $q.defer();
+        var courseIndex = self.getActiveCourseIDs().indexOf(course.id);
         currentUser.active_courses.splice(courseIndex, 1);
         $rootScope.$broadcast('changedCourse', selectedCourses, course.id);
-        deferred.resolve(); 
+        deferred.resolve();
         return deferred.promise;
       }
     };
@@ -377,7 +382,7 @@ angular.module('studygroupClientApp')
         var courseIndex = self.getActiveCourseIDs().indexOf(course.id);
         if(courseIndex === -1) {
           currentUser.active_courses.push(course);
-        } else {          
+        } else {
           currentUser.active_courses.splice(courseIndex, 1);
         }
 
@@ -391,26 +396,26 @@ angular.module('studygroupClientApp')
           var courseIndex = self.getActiveCourseIDs().indexOf(course.id);
           if(courseIndex === -1) {
             currentUser.active_courses.push(course);
-          } else {          
+          } else {
             currentUser.active_courses.splice(courseIndex, 1);
           }
 
           $rootScope.$broadcast('filteredCourse');
 
           course.active = !course.active; // Flip the UI back to whatever its value was previously
-        });        
+        });
       } else {
-        var deferred = $q.defer();  
+        var deferred = $q.defer();
         var courseIndex = self.getActiveCourseIDs().indexOf(course.id);
         if(courseIndex === -1) {
           currentUser.active_courses.push(course);
-        } else {          
+        } else {
           currentUser.active_courses.splice(courseIndex, 1);
         }
 
         $rootScope.$broadcast('filteredCourse');
-        deferred.resolve();        
-        return deferred.promise;      
+        deferred.resolve();
+        return deferred.promise;
       }
     };
 
@@ -429,12 +434,12 @@ angular.module('studygroupClientApp')
 
     this.clearState = function() {
       selectedUniversity = {};
-      availableCourses = []; 
-      universityBuildings = [];           
+      availableCourses = [];
+      universityBuildings = [];
       selectedCourses = [];
       availableSessions = [];
       currentUser = {};
-      currentUser.active_courses = [];      
+      currentUser.active_courses = [];
     };
 
     this.logout = function()  {

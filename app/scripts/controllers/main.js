@@ -15,7 +15,7 @@ angular.module('clientControllers', ['ngAnimate'])
     // Populate the universities drop down list
     StateService.getUniversities().then(function() {
       $scope.universities = StateService.getUniversityList();
-      $scope.university = $scope.universities[0];      
+      $scope.university = $scope.universities[0];
     });
 
     // Place focus on the username field.
@@ -113,6 +113,6 @@ angular.module('clientControllers', ['ngAnimate'])
     };
   })
   .constant('constants', {
-    // Some constants in an attempt to reduce hardcoding. Turns out constants aren't global, so this doesn't do much. 
+    // Some constants in an attempt to reduce hardcoding. Turns out constants aren't global, so this doesn't do much.
     serverName: 'http://localhost:8000/'
   });
