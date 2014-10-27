@@ -1,5 +1,13 @@
 html { height: 100% }
 
+.calendar-link {
+  color: black;
+}
+
+.calendar-link:hover {
+  color: #999999;
+}
+
 .reg-prompt {
   margin-bottom: 0px;
 }
@@ -328,8 +336,10 @@ body {
 
 .glyphicon-session {
   display: block !important;
-    padding-top: 1px;
+  padding-top: 1px;
   padding-bottom: 1px;  
+  color: black;
+  text-decoration: none;
 }
 
 .glyphicon-session-fade {
