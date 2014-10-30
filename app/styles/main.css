@@ -1,5 +1,9 @@
 html { height: 100% }
 
+textarea {
+  resize: vertical;
+}
+
 .calendar-link {
   color: black;
 }
