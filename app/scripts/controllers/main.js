@@ -84,7 +84,20 @@ angular.module('clientControllers', ['ngAnimate'])
       $scope.emailErrorMessage = '';
       // Attempt to submit registration information to the userver
       if ($scope.registerForm.$valid) {
-        $http.post(constants.serverName + 'register/', {username: $scope.user.username, password: $scope.user.password, name: $scope.user.name, email: $scope.user.email, university: $scope.university.id, courses: StateService.getSelectedCourses(), active_courses: StateService.getActiveCourseIDs()})
+        $http.post(constants.serverName + 'register/', 
+          {
+            username: $scope.user.username, 
+            password: $scope.user.password, 
+            name: $scope.user.name, 
+            email: $scope.user.email, 
+            university: $scope.university.id, 
+            courses: StateService.getSelectedCourses(), 
+            active_courses: StateService.getActiveCourseIDs(),
+            program: $scope.user.program,
+            learning_style: $scope.learningStyle,
+            year_of_study: $scope.yearOfStudy,
+            level_of_study: $scope.levelOfStudy
+          })
         .success(function (status) {
           // Once registered, we should be able to log in
           AuthService.login($scope.user.username, $scope.user.password).then(function(status) {

@@ -45,29 +45,79 @@
               <input type="text" name="name" class="form-control" ng-model="user.name" placeholder="Full Name (Optional)">
           </div>
           <!-- Username -->
-          <div class="form-group" ng-class="{ 'has-error' : (registerForm.username.$invalid && hasSubmitted) || usernamePostError}">
-            <input type="text" name="username" class="form-control" ng-model="user.username" ng-minlength="4" ng-maxlength="14" required placeholder="Username">
-            <p ng-show="usernamePostError" class="help-block">{{usernameErrorMessage}}</p>
-            <p ng-show="registerForm.username.$error.required && hasSubmitted" class="help-block">Please enter a username greater than 4 characters.</p>
-            <p ng-show="registerForm.username.$error.minlength && hasSubmitted" class="help-block">Please enter a username greater than 4 characters.</p>
-            <p ng-show="registerForm.username.$error.maxlength && hasSubmitted" class="help-block">Please enter a username less than 15 characters.</p>
-          </div>
-          <!-- Password  -->
-          <div class="form-group" ng-class="{ 'has-error' : registerForm.password.$invalid && hasSubmitted }">
-              <input type="password" name="password" class="form-control" ng-model="user.password" required placeholder="Password">
-              <p ng-show="registerForm.password.$invalid && hasSubmitted" class="help-block">Please enter a password.</p>
+          <div class="row">
+            <div class="col-xs-6">
+              <div class="form-group" ng-class="{ 'has-error' : (registerForm.username.$invalid && hasSubmitted) || usernamePostError}">
+                <input type="text" name="username" class="form-control" ng-model="user.username" ng-minlength="4" ng-maxlength="14" required placeholder="Username">
+                <p ng-show="usernamePostError" class="help-block">{{usernameErrorMessage}}</p>
+                <p ng-show="registerForm.username.$error.required && hasSubmitted" class="help-block"><small>Please enter a username greater than 4 characters.</small></p>
+                <p ng-show="registerForm.username.$error.minlength && hasSubmitted" class="help-block"><small>Please enter a username greater than 4 characters.</small></p>
+                <p ng-show="registerForm.username.$error.maxlength && hasSubmitted" class="help-block"><small>Please enter a username less than 15 characters.</small></p>
+              </div>
+            </div>
+            <div class="col-xs-6">
+              <!-- Password  -->
+              <div class="form-group" ng-class="{ 'has-error' : registerForm.password.$invalid && hasSubmitted }">
+                  <input type="password" name="password" class="form-control" ng-model="user.password" required placeholder="Password">
+                  <p ng-show="registerForm.password.$invalid && hasSubmitted" class="help-block"><small>Please enter a password.</small></p>
+              </div>
+            </div>
           </div>
           <!-- Email  -->
           <div class="form-group" ng-class="{ 'has-error' : registerForm.email.$invalid && hasSubmitted || emailPostError }">
               <input type="email" name="email" class="form-control" ng-model="user.email" required placeholder="Email">
               <p ng-show="emailPostError" class="help-block">{{emailErrorMessage}}</p>
-              <p ng-show="registerForm.email.$invalid && hasSubmitted" class="help-block">Please enter a valid email.</p>
+              <p ng-show="registerForm.email.$invalid && hasSubmitted" class="help-block"><small>Please enter a valid email.</small></p>
+          </div>                      
+          <!-- Personal Information -->
+          <div class="row">
+            <div class="col-xs-4">
+              <div class="form-group" ng-class="{ 'has-error' : (registerForm.yearSelect.$invalid && hasSubmitted)}">
+                <select name="yearSelect" required ng-model="yearOfStudy" class="form-control">
+                  <option value="" selected disabled>Year of Study</option>
+                  <option value="1">First Year</option>
+                  <option value="2">Second Year</option>
+                  <option value="3">Third Year</option>
+                  <option value="4">Fourth Year</option>
+                  <option value="5">Fifth Year</option>
+                  <option value="6">Sixth Year</option>
+                  <option value="7">Seventh Year</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-xs-4">
+              <div class="form-group" ng-class="{ 'has-error' : (registerForm.levelSelect.$invalid && hasSubmitted)}">
+                <select name="levelSelect" required ng-model="levelOfStudy" class="form-control">
+                  <option value="" selected disabled>Level of Study</option>
+                  <option value="UN">Undergraduate</option>
+                  <option value="MA">Masters</option>
+                  <option value="PH">PHD</option>
+                  <option value="OT">Other</option>
+                </select>
+              </div>            
+            </div>
+            <div class="col-xs-4">
+              <div class="form-group" ng-class="{ 'has-error' : (registerForm.learningSelect.$invalid && hasSubmitted)}">
+                <select name="learningSelect" required ng-model="learningStyle" class="form-control">
+                  <option value="" selected disabled>Learning Style</option>
+                  <option value="AU">Auditory</option>
+                  <option value="VI">Visual</option>
+                  <option value="KI">Kinesthetic</option>
+                  <option value="OT">Other</option>
+                </select>
+              </div>             
+            </div>
           </div>
-        <div class="form-group">
-          <select ng-model="university" class="university-picker form-control" ng-options="university.name for university in universities"></select>
-        </div>
-        <button type="submit" ng-click="showSignUp()" class="btn btn-primary btn-lg">Register</button>
-        <button type="button" ng-click="hideSignup()" class="btn btn-default btn-lg">Cancel</button>
+          <!-- University -->
+          <div class="form-group">
+            <select ng-model="university" class="form-control" ng-options="university.name for university in universities"></select>
+          </div>
+          <!-- Program -->
+          <div class="form-group"ng-class="{ 'has-error' : (registerForm.program.$invalid && hasSubmitted) || usernamePostError}">
+              <input type="text" required name="program" class="form-control" ng-model="user.program" placeholder="Field of Study">
+          </div>               
+          <button type="submit" ng-click="showSignUp()" class="btn btn-primary btn-lg">Register</button>
+          <button type="button" ng-click="hideSignup()" class="btn btn-default btn-lg">Cancel</button>
         </form>
       </div>
     </div>
