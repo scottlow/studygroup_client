@@ -207,3 +207,33 @@
     </div>
   </div>
 </div>
+
+<!-- User Profile Modal -->
+<div class="modal fade" id="userProfileModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="myModalLabel">
+          {{userForProfileModal.first_name}}'s Profile
+        </h4>
+      </div>
+      <div class="modal-body">
+        <label>First Name:&nbsp;</label>{{userForProfileModal.first_name}}<br>
+        <span ng-show="userForProfileModal.program  !== ''">
+          <label>Student Information:&nbsp;</label>{{userForProfileModal.year_of_study}} {{userForProfileModal.level_of_study}} Student in {{userForProfileModal.program}}<br>
+        </span>
+        <span ng-hide="userForProfileModal.program !== ''">
+          <label>Student Information:&nbsp;</label>{{userForProfileModal.year_of_study}} {{userForProfileModal.level_of_study}} Student<br>
+        </span>
+        <label>Learning Style:&nbsp;</label>{{userForProfileModal.learning_style}}<br>
+        <div ng-show="userForProfileModal.about_me !== ''">    
+          <label>About Me:&nbsp;</label><div style="word-wrap:break-word;">{{userForProfileModal.about_me}}</div><br>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>

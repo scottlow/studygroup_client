@@ -1,5 +1,9 @@
 html { height: 100% }
 
+.a-color-override {
+  color: inherit !important;
+}
+
 textarea {
   resize: vertical;
 }

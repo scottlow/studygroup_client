@@ -6,6 +6,7 @@ angular.module('dashboardControllers', [])
     $scope.showChangePassword = false;
     $scope.newPassword = "";
     $scope.verifyPassword = "";
+    $scope.userForProfileModal = undefined;
 
     // Email functionality
     $scope.notifyByEmail = function() {
@@ -44,6 +45,12 @@ angular.module('dashboardControllers', [])
 
       $scope.full_name = copiedUser.first_name;
       $scope.first_name = $scope.full_name == '' ? copiedUser.username : $scope.full_name.split(' ')[0];
+    });
+
+    $scope.$on('showUserProfileModal', function(event, user){
+      console.log(user);
+      $scope.userForProfileModal = user;
+      angular.element('#userProfileModal').modal('show');      
     });
 
     $scope.checkPasswords = function() {

@@ -101,6 +101,20 @@
                     </div>
                   </div>
                 </div>
+                <div class="row">
+                  <div class="col-xs-3 col-md-3">
+                    <div class="form-group" ng-class="{ 'has-error' : newSessionSubmitted && newSessionForm.participants.$invalid }">
+                      <label>Participant Cap</label>
+                      <input name="participants" required ng-model="$parent.newSessionParticipantCap" id="participantField" maxlength="3" integer class="form-control" />
+                    </div>
+                  </div>
+                  <div class="col-xs-9">
+                    <div class="form-group" ng-class="{ 'has-error' : newSessionSubmitted && newSessionForm.sessionDescriptionField.$invalid }">                  
+                      <label>Session Description</label>
+                      <textarea name="sessionDesc" ng-model="$parent.newSessionDescription" id="sessionDescriptionField" required maxlength="800" placeholder="Describe your session. What chapters are you studying? How confident are you on the material?" class="form-control"></textarea>
+                    </div>
+                  </div>
+                </div>                
                 <!-- <h5 ng-show="!$parent.newSessionForm.durationHours.$invalid && !$parent.newSessionForm.durationMins.$invalid && !$parent.newSessionForm.startTime.$invalid"><small>Your session will start on {{$parent.newSessionStartTime.toDateString()}} at {{$parent.newSessionStartTime.toTimeString()}} and will last until {{$parent.newSessionEndTime.toDateString()}} at {{$parent.newSessionEndTime.toTimeString()}}.</small></h5> -->
               </form>
             </div>

@@ -121,7 +121,9 @@ angular.module('studygroupClientApp')
               'start_time' : $scope.newSessionStartTime, 
               'end_time' : $scope.newSessionEndTime, 
               'location' : $scope.newSessionBuilding, 
-              'room_number' : $scope.newSessionRoomNumber
+              'room_number' : $scope.newSessionRoomNumber,
+              'max_participants' : $scope.newSessionParticipantCap,
+              'description' : $scope.newSessionDescription,
             });          
             
             // Then, make the time consuming SQL call to create the session server-side
@@ -130,7 +132,9 @@ angular.module('studygroupClientApp')
                     $scope.newSessionStartTime, 
                     $scope.newSessionEndTime, 
                     $scope.newSessionBuilding, 
-                    parseInt($scope.newSessionRoomNumber)
+                    parseInt($scope.newSessionRoomNumber),
+                    $scope.newSessionParticipantCap,
+                    $scope.newSessionDescription
             )
             .success(function(data) {
               console.log('Created session');
