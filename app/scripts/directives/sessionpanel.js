@@ -167,7 +167,8 @@ angular.module('studygroupClientApp')
         }; 
 
         $scope.displayFilter = function(session) {
-            if(session.filterDisplay && session.attendees.length + 1 < session.max_participants) {
+            var compLength = session.coordinator != undefined ? session.attendees.length + 1 : session.attendees.length;
+            if(session.filterDisplay && compLength < session.max_participants) {
                 return true;
             } else {
                 return false;

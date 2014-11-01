@@ -15,7 +15,7 @@ angular.module('studygroupClientApp')
     }
 
     var showHostedFilter = function(session) {
-      if(session.coordinator.id === currentUser.id) {
+      if(session.coordinator != undefined && session.coordinator.id === currentUser.id) {
         return true;
       } else {
         return false;
