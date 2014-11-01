@@ -6,7 +6,7 @@
 	        <h6 style="pointer-events:none;" class="glyphicon glyphicon-session glyphicon-map-marker"><span class="h5 session-detail"><small>{{ locationName }}<span class="divider">&#183;</span>Room: {{ roomNumber }}</small></span></h6>
 
 	        <a class="calendar-link" href="#" ng-click="addSessionToCalendar(id)"><h6 style="pointer-events:none;" class="glyphicon glyphicon-session glyphicon-time"><span class="h5 session-detail"><small>{{ startTime.toLocaleDateString() }}<span class="divider">&#183;</span>{{ startTime.toLocaleTimeString() }}</small></span></h6></a>
-	        <h6 class="glyphicon glyphicon-session glyphicon-session-fade glyphicon-user"><span class="h5 session-detail"><small><strong><a class="a-color-override" ng-click="viewUserProfile(coordinator)">{{ coordinator.first_name === '' ? coordinator.username : coordinator.first_name }}</a></strong><span class="divider">&#183;</span><span ng-repeat="attendee in attendees"><a class="a-color-override" ng-click="viewUserProfile(attendee)">{{ attendee.first_name }} </span></a></h6>
+	        <h6 class="glyphicon glyphicon-session glyphicon-session-fade glyphicon-user"><span class="h5 session-detail"><small>({{attendees.length + 1}}/{{maxParticipants}})&nbsp;<strong><a class="a-color-override" ng-click="viewUserProfile(coordinator)">{{ coordinator.first_name === '' ? coordinator.username : coordinator.first_name }}</a></strong><span class="divider">&#183;</span><span ng-repeat="attendee in attendees"><a class="a-color-override" ng-click="viewUserProfile(attendee)">{{ attendee.first_name }} </span></a></h6>
         </div>
     </div>
 </li>

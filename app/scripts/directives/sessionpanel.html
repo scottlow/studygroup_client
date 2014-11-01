@@ -1,5 +1,5 @@
 <tabset justified="true">
-    <tab heading="Explore" ng-click="showAllSessions();">
+    <tab heading="Find Sessions" ng-click="showAllSessions();">
         <ul class="media" id="heightRoot" style="margin:10px; padding-left:0px;">
             <!-- At some point, there should probably be a loader here -->
             <div ng-show="(sessions.length === 0 && !AuthService.isAuthenticated()) || forceShowMessage || filteredSessions.length === 0" class="noSessions">
@@ -16,6 +16,7 @@
                          end-time="session.end_time"
                          coordinator="session.coordinator"
                          attendees="session.attendees"
+                         max-participants="session.max_participants"
                          ng-mouseenter="previewSession(session)"
                          ng-mouseleave="dismissPreviewSession(session)"
                          ng-class="{'session-selected' : session.selected, 'session-not-selected' : !session.selected, 'session-hovered' : session.hovered}"
@@ -39,6 +40,7 @@
                          end-time="session.end_time"
                          coordinator="session.coordinator"
                          attendees="session.attendees"
+                         max-participants="session.max_participants"
                          ng-mouseenter="previewSession(session)"
                          ng-mouseleave="dismissPreviewSession(session)"
                          ng-class="{'session-selected' : session.selected, 'session-not-selected' : !session.selected, 'session-hovered' : session.hovered}"
@@ -62,6 +64,7 @@
                          end-time="session.end_time"
                          coordinator="session.coordinator"
                          attendees="session.attendees"
+                         max-participants="session.max_participants"
                          ng-mouseenter="previewSession(session)"
                          ng-mouseleave="dismissPreviewSession(session)"
                          ng-class="{'session-selected' : session.selected, 'session-not-selected' : !session.selected, 'session-hovered' : session.hovered}"

@@ -15,6 +15,7 @@ angular.module('studygroupClientApp')
         joinText: '=',
         id: '@',
         attendees: '=',
+        maxParticipants: '=',
       },
       controller: ['$scope', function($scope) {
         $scope.Math = window.Math;
