@@ -66,6 +66,8 @@ angular.module('studygroupClientApp')
           '<h6 style="pointer-events:none;" class="glyphicon glyphicon-session glyphicon-map-marker"><span class="h5 session-detail"><small>' + session.location.name + '<span class="divider">&#183;</span>Room: ' + session.room_number + '</small></span></h6>' + 
           '<h6 style="pointer-events:none;" class="glyphicon glyphicon-session glyphicon-time"><span class="h5 session-detail"><small>' + session.start_time.toLocaleDateString() + '<span class="divider">&#183;</span>' + session.start_time.toLocaleTimeString() + '</small></span></h6>' + 
           '</div>' +
+          '<h6 class="glyphicon glyphicon-session glyphicon-session-fade glyphicon-user"><span class="h5 session-detail"><small>' + (session.attendees.length + (session.coordinator != null ? 1 : 0)) +  ' of ' + session.max_participants + ' students registered</small></span></h6>' + 
+          '<h6 class="glyphicon glyphicon-session glyphicon-session-fade glyphicon glyphicon-info-sign"><span class="h5 session-detail"><small>' + session.description + '</small></span></h6>' +
           '</div>';
 
           return infoTemplate;
