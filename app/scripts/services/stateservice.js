@@ -434,6 +434,22 @@ angular.module('studygroupClientApp')
       }
     };
 
+    this.createOffCampusSession = function(courseID, startTime, endTime, latitude, longitude, address_string, participants, description) {
+      if(AuthService.isAuthenticated()) {
+        return $http.post('http://localhost:8000/' + 'sessions/create/', {
+                'coordinator' : currentUser.id,
+                'course' : courseID,
+                'start_time' : startTime,
+                'end_time' : endTime,
+                'latitude' : latitude,
+                'longitude' : longitude,
+                'name' : address_string,
+                'max_participants' : participants,
+                'description' : description,
+        });
+      }
+    };    
+
     this.clearState = function() {
       selectedUniversity = {};
       availableCourses = [];

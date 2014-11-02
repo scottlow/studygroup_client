@@ -60,7 +60,7 @@
         </div>
         <p><strong>Are you studying on campus or off campus?</strong></p>
         <tabset justified="true">
-          <tab heading="On Campus">
+          <tab heading="On Campus" ng-click="selectOnCampus()">
             <div class="container-fluid container-modal">
               <form role="form" name="$parent.newSessionForm" novalidate ng-submit="newSessionSubmit()">
                 <div style="margin-bottom: 5px" class="modal-map" lat="buildingLat" long="buildingLong" zoom="17" home-map ></div>
@@ -119,8 +119,56 @@
               </form>
             </div>
           </tab>
-          <tab heading="Off Campus" disabled="true">
-            <div class="container-fluid container-modal"></div>
+          <tab heading="Off Campus" ng-click="selectOffCampus()">
+            <div class="container-fluid container-modal">
+              <form role="form" name="$parent.offCampusForm" novalidate ng-submit="newSessionSubmit()">
+                <label for="modalOnCampusPicker">Search for an Address</label>
+                <div class="form-group" ng-class="{ 'has-error' : (offCampusForm.addressText.$invalid) && newSessionSubmitted}">
+                   <input type="text" autocomplete="off" name="addressText" typeahead="result.formatted_address for result in getLocation($viewValue)" typeahead-on-select="makeSelection($item)" class="form-control" ng-model="$parent.addressSearchText" placeholder="Search for an Address" required>
+                </div>
+                <div class="row">
+                  <div class="col-xs-5 col-md-5" ng-class="{'has-error': newSessionSubmitted && offCampusForm.room.$invalid}">
+                    <div class="form-group">
+                      <label>Start date:</label>
+                      <div class="input-group">
+                        <input required type="text" name="room" class="form-control date-picker" show-weeks="false" show-button-bar="false" datepicker-popup="MM/dd/yyyy" ng-model="$parent.newSessionStartTime" is-open="$parent.opened" min="minDate" max="'2015-06-22'" datepicker-options="dateOptions" ng-required="true" close-text="Close" />
+                        <span class="input-group-btn">
+                          <button class="btn btn-default" ng-click="open($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-xs-4 col-md-4">
+                    <div class="form-group" ng-class="{'has-error': newSessionSubmitted && offCampusForm.startTime.$invalid}">
+                      <label class="control-label"><i class="fa fa-clock-o"></i>Start time:</label>
+                      <input required type="text" class="form-control" size="8" ng-model="$parent.newSessionStartTime" name="startTime" bs-timepicker>
+                    </div>
+                  </div>
+                  <div class="col-xs-3 col-md-3">
+                    <div class="form-group" ng-class="{'has-error': newSessionSubmitted && ($parent.offCampusForm.durationHours.$invalid || $parent.offCampusForm.durationMins.$invalid)}">
+                      <label style="float: left;"class="control-label"><i class="fa fa-clock-o"></i>Duration</label>
+                      <input required type="text" style="float:left; clear:left; width:35px; margin-right:5px" class="form-control" ng-model="$parent.newSessionDurationHours" maxlength="1" integer placeholder="H" name="durationHours">
+                      <input required type="text" style="float:left; width:50px;" class="form-control" ng-model="$parent.newSessionDurationMins" maxlength="2" integer placeholder="MM" name="durationMins">
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-xs-3 col-md-3">
+                    <div class="form-group" ng-class="{ 'has-error' : newSessionSubmitted && offCampusForm.participants.$invalid }">
+                      <label>Participant Cap</label>
+                      <input name="participants" required ng-model="$parent.newSessionParticipantCap" id="participantField" maxlength="3" integer class="form-control" />
+                    </div>
+                  </div>
+                  <div class="col-xs-9">
+                    <div class="form-group" ng-class="{ 'has-error' : newSessionSubmitted && offCampusForm.sessionDesc.$invalid }">                  
+                      <label>Session Description</label>
+                      <textarea name="sessionDesc" ng-model="$parent.newSessionDescription" id="sessionDescriptionField" required maxlength="400" placeholder="Describe your session. For example, which chapters are you studying, or how confident are you with the material?" class="form-control"></textarea>
+                    </div>
+                  </div>
+                </div>                
+                <!-- <h5 ng-show="!$parent.offCampusForm.durationHours.$invalid && !$parent.offCampusForm.durationMins.$invalid && !$parent.offCampusForm.startTime.$invalid"><small>Your session will start on {{$parent.newSessionStartTime.toDateString()}} at {{$parent.newSessionStartTime.toTimeString()}} and will last until {{$parent.newSessionEndTime.toDateString()}} at {{$parent.newSessionEndTime.toTimeString()}}.</small></h5> -->
+              </form>              
+            </div>
           </tab>
         </tabset>
         <span class="modal-headsup help-block"><strong>Note:</strong> Your full name as it appears on your profile ({{$parent.full_name}}) will be listed to identify you as this session's coordinator.</span>
