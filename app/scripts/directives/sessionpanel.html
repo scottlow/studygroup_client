@@ -1,5 +1,5 @@
 <tabset justified="true">
-    <tab heading="Find Sessions" ng-click="showAllSessions();">
+    <tab heading="Join" ng-click="showAllSessions();">
         <ul class="media" id="heightRoot" style="margin:10px; padding-left:0px;">
             <!-- At some point, there should probably be a loader here -->
             <div ng-show="(sessions.length === 0 && !AuthService.isAuthenticated()) || forceShowMessage || filteredSessions.length === 0" class="noSessions">
