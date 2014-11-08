@@ -126,7 +126,7 @@
 
 <main-screen id="main-screen" show-interface="displayUI" blur-map="dimMap" map-lat="lat" map-long="long" zoom="zoom" class="fill"></main-screen>
 
-<div id="footer" ng-class="{'hide' : displayUI}">
+<div id="footer" ng-class="{'hide' : displayUI}" ng-show="showAboutUsModal">
   <div class="container">
     <p class="text-muted text-center"><a data-toggle="modal" data-target="#aboutUsModal" href="">&copy; 2014 Scott Low, Bill Xiong, Justin Guze and Paul Moon</a></p>
     </div>
