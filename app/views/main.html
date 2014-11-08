@@ -68,7 +68,7 @@
               <input type="email" name="email" class="form-control" ng-model="user.email" required placeholder="Email">
               <p ng-show="emailPostError" class="help-block">{{emailErrorMessage}}</p>
               <p ng-show="registerForm.email.$invalid && hasSubmitted" class="help-block"><small>Please enter a valid email.</small></p>
-          </div>                      
+          </div>
           <!-- Personal Information -->
           <div class="row">
             <div class="col-xs-4">
@@ -94,7 +94,7 @@
                   <option value="PH">PHD</option>
                   <option value="OT">Other</option>
                 </select>
-              </div>            
+              </div>
             </div>
             <div class="col-xs-4">
               <div class="form-group" ng-class="{ 'has-error' : (registerForm.learningSelect.$invalid && hasSubmitted)}">
@@ -105,7 +105,7 @@
                   <option value="KI">Kinesthetic</option>
                   <option value="OT">Other</option>
                 </select>
-              </div>             
+              </div>
             </div>
           </div>
           <!-- University -->
@@ -115,7 +115,7 @@
           <!-- Program -->
           <div class="form-group"ng-class="{ 'has-error' : (registerForm.program.$invalid && hasSubmitted) || usernamePostError}">
               <input type="text" required name="program" class="form-control" ng-model="user.program" placeholder="Field of Study">
-          </div>               
+          </div>
           <button type="submit" ng-click="showSignUp()" class="btn btn-primary btn-lg">Register</button>
           <button type="button" ng-click="hideSignup()" class="btn btn-default btn-lg">Cancel</button>
         </form>
@@ -126,7 +126,7 @@
 
 <main-screen id="main-screen" show-interface="displayUI" blur-map="dimMap" map-lat="lat" map-long="long" zoom="zoom" class="fill"></main-screen>
 
-<div id="footer" ng-class="{'hide' : displayUI}">
+<div id="footer" ng-class="{'hide' : displayUI}" ng-show="showAboutUsFooter">
   <div class="container">
     <p class="text-muted text-center"><a data-toggle="modal" data-target="#aboutUsModal" href="">&copy; 2014 Scott Low, Bill Xiong, Justin Guze and Paul Moon</a></p>
     </div>
