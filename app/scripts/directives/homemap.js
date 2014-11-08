@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('studygroupClientApp')
-.directive('homeMap', function (StateService, $rootScope, $timeout, $location, $anchorScroll, $compile) {
+.directive('homeMap', function (StateService, $rootScope, $timeout, $location, $anchorScroll, $compile, $filter) {
     // This directive is called only once when the initial app is loaded. It's what resets our map to good ol' #YYJ.
     return {
       scope: {
@@ -11,6 +11,16 @@ angular.module('studygroupClientApp')
         selectedSessions: '=', // list of sessions to be fed into the map for displaying
       },
       link: function ($scope, elem, attrs) {
+
+        $scope.displayFilter = function(session) {
+            console.log('wat');
+            var compLength = session.coordinator != undefined ? session.attendees.length + 1 : session.attendees.length;
+            if(session.filterDisplay && compLength < session.max_participants) {
+                return true;
+            } else {
+                return false;
+            }
+        };
 
         var mapOptions,
           latitude = $scope.lat,
@@ -51,12 +61,12 @@ angular.module('studygroupClientApp')
            enter this $on with old data. As a result, we'll update to make sure we're on the latest. */
         $scope.$on('refreshPins', function() { 
           if($scope.selectedSessions !== undefined && $scope.selectedSessions.length === 0) {
-            $scope.selectedSessions = $scope.$parent.sessions;          
+          $scope.selectedSessions = $filter('filter')($scope.$parent.sessions, $scope.displayFilter);     
           }
           if($scope.selectedSessions !== undefined) {
             $scope.refreshPins();  
           }
-        });
+        });       
 
         $scope.getInfoTemplate = function(session) {
           var infoTemplate = '<div class="search_root session-infowindow media-body session-description-container">' + 
@@ -75,7 +85,7 @@ angular.module('studygroupClientApp')
 
         $scope.$on('refreshBubbles', function() {
           if($scope.selectedSessions !== undefined && $scope.selectedSessions.length === 0) {
-            $scope.selectedSessions = $scope.$parent.sessions;          
+            $scope.selectedSessions = $filter('filter')($scope.$parent.sessions, $scope.displayFilter);           
           }      
 
           if($scope.selectedSessions !== undefined) {

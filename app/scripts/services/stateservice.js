@@ -183,6 +183,7 @@ angular.module('studygroupClientApp')
     };
 
     this.getUniversities = function() {
+      universities = [];
       return $http.get('http://localhost:8000/' + 'universities/list/', {cache: $angularCacheFactory.get('defaultCache')}).success(function(data) {
         angular.forEach(data, function(value) {
           universities.push(value);

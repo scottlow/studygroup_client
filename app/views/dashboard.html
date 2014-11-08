@@ -83,13 +83,13 @@
               <select name="levelSelect" required ng-model="newLevelOfStudy" class="form-control">
                 <option value="UN">Undergraduate</option>
                 <option value="MA">Masters</option>
-                <option value="PH">PHD</option>
+                <option value="PH">PhD</option>
                 <option value="OT">Other</option>
               </select>
             </div>
           </div>           
           <div class="form-group" ng-class="{ 'has-error' : (updateUserForm.learningSelect.$invalid && hasSubmitted)}">
-            <label class="col-sm-3 control-label">Level of Study</label>
+            <label class="col-sm-3 control-label">Learning Style</label>
             <div class="col-sm-9">          
               <select name="learningSelect" required ng-model="newLearningStyle" class="form-control">
                 <option value="AU">Auditory</option>

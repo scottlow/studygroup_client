@@ -307,7 +307,7 @@ angular.module('studygroupClientApp')
             $scope.newSessionBuilding = $scope.buildingList[0];
             $scope.initTimes();            
           });
-        };
+        };      
 
         // Remove a course from the course bar
         $scope.removeCourse = function(course) {

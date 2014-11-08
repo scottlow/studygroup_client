@@ -40,7 +40,7 @@
           </div>
         </div>
       </div>
-      <div ng-class="{'blur' : blurMap}" class="fill fill-width" lat="mapLat" long="mapLong" zoom="zoom" selected-sessions="sessions" home-map ></div>
+      <div ng-class="{'blur' : blurMap}" class="fill fill-width" lat="mapLat" long="mapLong" zoom="zoom" selected-sessions="sessions" home-map></div>
     </div>
   </div>
 </div>
@@ -76,13 +76,13 @@
                       <input name="roomNumber" required ng-model="$parent.newSessionRoomNumber" id="modalRoomNumber" maxlength="5" class="form-control" />
                     </div>
                   </div>
-                  <div class="col-xs-4 col-md-4" ng-class="{'has-error': newSessionSubmitted && newSessionForm.room.$invalid}">
+                  <div class="col-xs-4 col-md-4" ng-class="{'has-error': newSessionSubmitted && newSessionForm.date-picker.$invalid}">
                     <div class="form-group">
                       <label>Start date:</label>
                       <div class="input-group">
-                        <input required type="text" name="room" class="form-control date-picker" show-weeks="false" show-button-bar="false" datepicker-popup="MM/dd/yyyy" ng-model="$parent.newSessionStartTime" is-open="$parent.opened" min="minDate" max="'2015-06-22'" datepicker-options="dateOptions" ng-required="true" close-text="Close" />
+                        <input required type="text" name="date-picker" class="form-control date-picker" show-weeks="false" show-button-bar="false" datepicker-popup="MM/dd/yyyy" ng-model="$parent.newSessionStartTime" ng-click="$event.stopPropagation()" is-open="$parent.opened" min="minDate" max="'2015-06-22'" datepicker-options="dateOptions" ng-required="true" close-text="Close" />
                         <span class="input-group-btn">
-                          <button class="btn btn-default" ng-click="open($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+                          <button class="btn btn-default" ng-click="$event.preventDefault()"><i class="glyphicon glyphicon-calendar"></i></button>
                         </span>
                       </div>
                     </div>
