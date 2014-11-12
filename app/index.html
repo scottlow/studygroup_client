@@ -14,12 +14,16 @@
     <!-- bower:css -->
     <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" />
     <link rel="stylesheet" href="bower_components/angular-motion/dist/angular-motion.css" />
+    <link rel="stylesheet" href="bower_components/fontawesome/css/font-awesome.css" />
+    <link rel="stylesheet" type="text/css" media="screen" href="bower_components/converse.js/css/converse.min.css">  
+    <link rel="stylesheet" type="text/css" media="screen" href="bower_components/converse.js/css/converse.css">
     <!-- endbower -->
     <!-- endbuild -->
     <!-- build:css({.tmp,app}) styles/main.css -->
     <link rel="stylesheet" href="styles/main.css">
     <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDzDc-fu8eUovAbBcxn-Z_UKvVNkg4iucc&sensor=false">
-    </script>    
+    </script>  
+    
     <!-- endbuild -->
   </head>
   <body ng-app="studygroupClientApp">
@@ -66,6 +70,25 @@
     <script src="bower_components/ics.js/ics.js"></script>
     <script src="bower_components/angular-strap/dist/angular-strap.min.js"></script>
     <script src="bower_components/angular-strap/dist/angular-strap.tpl.min.js"></script>
+    <script src="bower_components/requirejs/require.js"></script>
+    <script src="bower_components/jed/jed.js"></script>
+    <script src="bower_components/underscore/underscore.js"></script>
+    <script src="bower_components/backbone/backbone.js"></script>
+    <script src="bower_components/backbone.browserStorage/backbone.browserStorage.js"></script>
+    <script src="bower_components/backbone.overview/backbone.overview.js"></script>
+    <script src="bower_components/strophe/strophe.js"></script>
+    <script src="bower_components/strophe.roster/index.js"></script>
+    <script src="bower_components/strophe.vcard/index.js"></script>
+    <script src="bower_components/strophe.disco/index.js"></script>
+    <script src="bower_components/strophe.muc/index.js"></script>
+    <script src="bower_components/otr/build/otr.js"></script>
+    <script src="bower_components/almond/almond.js"></script>
+    <script src="bower_components/momentjs/moment.js"></script>
+    <script src="bower_components/jquery.browser/dist/jquery.browser.js"></script>
+    <script src="bower_components/typeahead.js/dist/typeahead.bundle.js"></script>
+    <script src="bower_components/converse.js/converse.js"></script>
+    <script src="bower_components/converse.js/builds/converse.min.js"></script>
+    <script data-main="main" src="bower_components/requirejs/require.js"></script>
     <!-- endbower -->
     <!-- endbuild -->
 
@@ -82,4 +105,24 @@
         <script src="scripts/directives/homeMap.js"></script>
         <!-- endbuild -->
 </body>
+
+<script>
+  require(['converse'], function (converse) {
+      converse.initialize({
+          auto_list_rooms: false,
+          auto_subscribe: false,
+          bosh_service_url: 'http://localhost:5280/http-bind', // Please use this connection manager only for testing purposes
+          hide_muc_server: false,
+          i18n: locales['en'], // Refer to ./locale/locales.js to see which locales are supported
+          keepalive: true,
+          play_sounds: true,
+          prebind: false,
+          show_controlbox_by_default: true,
+          roster_groups: true,
+          allow_otr: false,
+          debug: true
+      });
+  });
+</script>
+
 </html>
