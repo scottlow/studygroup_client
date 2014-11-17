@@ -58,6 +58,7 @@ angular.module('studygroupClientApp')
 
     dataFactory.register = function(user) {
         $http.post(urlbase + 'register', user);
+        $http.get(urlbase + 'xmpp/', user);
     };
 
     return dataFactory;

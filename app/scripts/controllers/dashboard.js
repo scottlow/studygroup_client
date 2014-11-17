@@ -179,5 +179,9 @@ angular.module('dashboardControllers', [])
         });
       }
     };
+    
+    $scope.openChat = function(){
+      $scope.chat_script = StateService.openChat();
+    }
 
   });

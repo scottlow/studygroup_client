@@ -21,6 +21,7 @@ angular.module('clientServices', ['ivpusic.cookie'])
       function(error) {
         return error.status;
       });
+     
       return promise;
     };
 
@@ -28,8 +29,8 @@ angular.module('clientServices', ['ivpusic.cookie'])
     this.isAuthenticated = function() {
       var authToken = ipCookie('studyToken');
       if(authToken !== undefined) {
-        $http.defaults.headers.common.Authorization = 'Token ' + authToken;
-        return true;
+        $http.defaults.headers.common.Authorization = 'Token ' + authToken; 
+        return true;  
       } else {
         return false;
       }
