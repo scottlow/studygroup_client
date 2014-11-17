@@ -181,7 +181,36 @@ angular.module('dashboardControllers', [])
     };
     
     $scope.openChat = function(){
-      $scope.chat_script = StateService.openChat();
+      StateService.openChat()
+      .then(function() {
+        $scope.xmppData = StateService.getXMPPData();
+        //console.log("Chat data: %o", $scope.xmppData);        
+        converse.initialize({
+          prebind: true,
+          bosh_service_url: $scope.xmppData.bosh_service_url,
+          jid: $scope.xmppData.jid,
+          sid: $scope.xmppData.sid,
+          rid: $scope.xmppData.rid,
+          auto_list_rooms: true,
+          auto_subscribe: false,
+          allow_contact_request: true, 
+          allow_muc: true,
+          hide_muc_server: $scope.xmppData.hide_muc_server,
+          roster_groups: false,
+          show_only_online_users: false,
+          show_controlbox_by_default: true,
+          xhr_custom_status: false,
+          xhr_user_search: $scope.xmppData.xhr_user_search,
+          forward_messages: true,
+          allow_otr: false,
+          use_otr_by_default: false,
+          keepalive: true,
+          play_sounds: true,
+          i18n: locales['en'],
+          debug: true,
+        });
+      });
+      
     }
 
   });

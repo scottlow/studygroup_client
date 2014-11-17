@@ -9,6 +9,7 @@ angular.module('studygroupClientApp')
     var universityBuildings = [];
     var availableSessions = [];
     var self = this;
+    var xmppData = {};
 
     var showAllFilter = function() {
       return true;
@@ -467,12 +468,16 @@ angular.module('studygroupClientApp')
     this.openChat = function() {
       return $http.get('http://localhost:8000/' + 'xmppchat/')
       .success(function(data, status) {
-        console.log("Chat success %o", status);
-        //self.chatScript = data;
+        console.log("Chat success %o, %o", status, data);
+        xmppData = data;
       })
       .error(function(data, status, headers, config) {
         console.log("Chat failure: %o", status);
       });
+    };
+    
+    this.getXMPPData = function() {
+      return xmppData;
     };
 
   });
