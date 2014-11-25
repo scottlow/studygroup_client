@@ -12,6 +12,8 @@ angular.module('clientControllers', ['ngAnimate'])
     $scope.long  ='-123.3592758';
     $scope.zoom = 13;
 
+    $scope.showAboutUsFooter = true;
+
     // Populate the universities drop down list
     StateService.getUniversities().then(function() {
       $scope.universities = StateService.getUniversityList();
@@ -30,6 +32,7 @@ angular.module('clientControllers', ['ngAnimate'])
       $scope.attemptedAction = showRegisterPrompt ? 'join ' : 'create ';
       $scope.showRegisterPrompt = true;
       // $scope.displayUI = false;
+      $scope.showAboutUsFooter = false;
     };
 
     // Hide the sign up pane
@@ -42,6 +45,7 @@ angular.module('clientControllers', ['ngAnimate'])
         // $scope.displayUI = false;
         $scope.showWelcome = true;
       }
+      $scope.showAboutUsFooter = true;
     };
 
     $scope.$on('showRegisterPrompt', function(e, attemptedToJoin) {
@@ -84,7 +88,20 @@ angular.module('clientControllers', ['ngAnimate'])
       $scope.emailErrorMessage = '';
       // Attempt to submit registration information to the userver
       if ($scope.registerForm.$valid) {
-        $http.post(constants.serverName + 'register/', {username: $scope.user.username, password: $scope.user.password, name: $scope.user.name, email: $scope.user.email, university: $scope.university.id, courses: StateService.getSelectedCourses(), active_courses: StateService.getActiveCourseIDs()})
+        $http.post(constants.serverName + 'register/',
+          {
+            username: $scope.user.username,
+            password: $scope.user.password,
+            name: $scope.user.name,
+            email: $scope.user.email,
+            university: $scope.university.id,
+            courses: StateService.getSelectedCourses(),
+            active_courses: StateService.getActiveCourseIDs(),
+            program: $scope.user.program,
+            learning_style: $scope.learningStyle,
+            year_of_study: $scope.yearOfStudy,
+            level_of_study: $scope.levelOfStudy
+          })
         .success(function (status) {
           // Once registered, we should be able to log in
           AuthService.login($scope.user.username, $scope.user.password).then(function(status) {

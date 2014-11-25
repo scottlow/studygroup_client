@@ -142,6 +142,8 @@ angular.module('studygroupClientApp')
                 'hovered': false,
                 'joinText': session.joinText,
                 'filterDisplay': StateService.getActiveCourseIDs().indexOf(session.course.id) !== -1 ? true : false,
+                'description' : session.description,
+                'max_participants' : session.max_participants,
             };
             $scope.sessions.push(session);
             $rootScope.$broadcast('sessionsChanged');            
@@ -165,7 +167,8 @@ angular.module('studygroupClientApp')
         }; 
 
         $scope.displayFilter = function(session) {
-            if(session.filterDisplay) {
+            var compLength = session.coordinator != undefined ? session.attendees.length + 1 : session.attendees.length;
+            if(session.filterDisplay && compLength < session.max_participants) {
                 return true;
             } else {
                 return false;

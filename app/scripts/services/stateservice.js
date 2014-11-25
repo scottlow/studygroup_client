@@ -15,7 +15,7 @@ angular.module('studygroupClientApp')
     }
 
     var showHostedFilter = function(session) {
-      if(session.coordinator.id === currentUser.id) {
+      if(session.coordinator != undefined && session.coordinator.id === currentUser.id) {
         return true;
       } else {
         return false;
@@ -74,10 +74,17 @@ angular.module('studygroupClientApp')
       });
     });
 
-    // Parse session to Calendar object
-    this.addToCalendar = function(sessionID) {
-      //return a iCal object
-    }
+    this.addToCalendar = function(session) {
+          return this.addEventToCalendar(session.course.name, "This is an event description from http://studypl.us", session.location.name+" Room: "+session.room_number, session.start_time, session.end_time);
+        }
+
+        // Parse session to Calendar object
+        this.addEventToCalendar = function(eventName, eventDescription,eventLocation, eventStartTime, eventEndTime){
+          this.iCalObj = ics();
+          this.iCalObj.addEvent(eventName,eventDescription,eventLocation,eventStartTime,eventEndTime);
+          return this.iCalObj.download();
+        }
+
 
     this.joinOrLeaveSession = function(sessionID) {
       console.log(sessionID);
@@ -183,6 +190,7 @@ angular.module('studygroupClientApp')
     };
 
     this.getUniversities = function() {
+      universities = [];
       return $http.get('http://localhost:8000/' + 'universities/list/', {cache: $angularCacheFactory.get('defaultCache')}).success(function(data) {
         angular.forEach(data, function(value) {
           universities.push(value);
@@ -419,7 +427,7 @@ angular.module('studygroupClientApp')
       }
     };
 
-    this.createSession = function(courseID, startTime, endTime, location, roomNumber) {
+    this.createSession = function(courseID, startTime, endTime, location, roomNumber, participants, description) {
       if(AuthService.isAuthenticated()) {
         return $http.post('http://localhost:8000/' + 'sessions/create/', {
                 'coordinator' : currentUser.id,
@@ -427,7 +435,25 @@ angular.module('studygroupClientApp')
                 'start_time' : startTime,
                 'end_time' : endTime,
                 'location' : location.id,
-                'room_number' : roomNumber
+                'room_number' : roomNumber,
+                'max_participants' : participants,
+                'description' : description,
+        });
+      }
+    };
+
+    this.createOffCampusSession = function(courseID, startTime, endTime, latitude, longitude, address_string, participants, description) {
+      if(AuthService.isAuthenticated()) {
+        return $http.post('http://localhost:8000/' + 'sessions/create/', {
+                'coordinator' : currentUser.id,
+                'course' : courseID,
+                'start_time' : startTime,
+                'end_time' : endTime,
+                'latitude' : latitude,
+                'longitude' : longitude,
+                'name' : address_string,
+                'max_participants' : participants,
+                'description' : description,
         });
       }
     };

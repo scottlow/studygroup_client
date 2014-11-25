@@ -7,8 +7,7 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="#">Study Group</a>
-
+      <a class="navbar-brand" href="#">Study+</a>
     </div>
     <div class="navbar-collapse collapse">
       <ul class="nav navbar-nav navbar-right">
@@ -41,31 +40,82 @@
         <form name="updateUserForm" class="form-horizontal" role="form" ng-submit="submitRegistration()" novalidate>
           <!-- Username -->
           <div class="form-group">
-              <label class="col-sm-2 control-label">Username</label>
-              <div class="col-sm-10">
+              <label class="col-sm-3 control-label">Username</label>
+              <div class="col-sm-9">
                 <input class="form-control" style="cursor: default" id="disabledInput" type="text" placeholder="{{staticUsername}}" disabled>
               </div>
           </div>
           <!-- Full Name -->
           <div class="form-group">
-              <label class="col-sm-2 control-label">Full Name</label>
-              <div class="col-sm-10">
+              <label class="col-sm-3 control-label">Full Name</label>
+              <div class="col-sm-9">
                 <input type="text" name="name" class="form-control" ng-model="newFirstName" placeholder="Full Name (Optional)">
               </div>
           </div>
           <!-- Email -->
           <div class="form-group" ng-class="{ 'has-error' : updateUserForm.email.$invalid && hasSubmitted || emailPostError }">
-            <label class="col-sm-2 control-label">Email</label>
-            <div class="col-sm-10">
+            <label class="col-sm-3 control-label">Email</label>
+            <div class="col-sm-9">
               <input type="email" name="email" class="form-control" ng-model="newEmail" required placeholder="Email">
               <p ng-show="emailPostError" class="help-block">{{emailErrorMessage}}</p>
               <p ng-show="updateUserForm.email.$invalid && hasSubmitted" class="help-block">Please enter a valid email.</p>
             </div>
           </div>
+          <!-- Personal Information -->
+          <div class="form-group" ng-class="{ 'has-error' : (updateUserForm.yearSelect.$invalid && hasSubmitted)}">
+            <label class="col-sm-3 control-label">Year of Study</label>
+            <div class="col-sm-9">
+              <select name="yearSelect" required ng-model="newYearOfStudy" class="form-control">
+                <option value="1">First Year</option>
+                <option value="2">Second Year</option>
+                <option value="3">Third Year</option>
+                <option value="4">Fourth Year</option>
+                <option value="5">Fifth Year</option>
+                <option value="6">Sixth Year</option>
+                <option value="7">Seventh Year</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group" ng-class="{ 'has-error' : (updateUserForm.levelSelect.$invalid && hasSubmitted)}">
+            <label class="col-sm-3 control-label">Level of Study</label>
+            <div class="col-sm-9">
+              <select name="levelSelect" required ng-model="newLevelOfStudy" class="form-control">
+                <option value="UN">Undergraduate</option>
+                <option value="MA">Masters</option>
+                <option value="PH">PhD</option>
+                <option value="OT">Other</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group" ng-class="{ 'has-error' : (updateUserForm.learningSelect.$invalid && hasSubmitted)}">
+            <label class="col-sm-3 control-label">Learning Style</label>
+            <div class="col-sm-9">
+              <select name="learningSelect" required ng-model="newLearningStyle" class="form-control">
+                <option value="AU">Auditory</option>
+                <option value="VI">Visual</option>
+                <option value="KI">Kinesthetic</option>
+                <option value="OT">Other</option>
+              </select>
+            </div>
+          </div>
+          <!-- Field of Study -->
+          <div class="form-group" ng-class="{ 'has-error' : updateUserForm.fieldOfStudy.$invalid && hasSubmitted }">
+            <label class="col-sm-3 control-label">Field of Study</label>
+            <div class="col-sm-9">
+              <input type="text" name="fieldOfStudy" class="form-control" ng-model="newProgram" required placeholder="Field of Study">
+            </div>
+          </div>
+          <!-- About Me -->
+          <div class="form-group">
+            <label class="col-sm-3 control-label">About Me</label>
+            <div class="col-sm-9">
+              <textarea name="aboutMe" class="form-control" ng-model="newAboutMe" placeholder="About Me (Optional)"></textarea>
+            </div>
+          </div>
           <!-- Password -->
           <div class="form-group">
-            <label class="col-sm-2 control-label">Password</label>
-            <div class="col-sm-10">
+            <label class="col-sm-3 control-label">Password</label>
+            <div class="col-sm-9">
               <button type="button" ng-show="!showChangePassword" ng-click="showChangePassword = true; hasSubmitted = false;" class="btn btn-primary">Change Password</button>
               <div ng-show="showChangePassword" class="well" style="margin-bottom: 0px;">
                 <!-- Current Password -->
@@ -149,6 +199,36 @@
       </div>
       <div class="modal-body">
         Messages go here.
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- User Profile Modal -->
+<div class="modal fade" id="userProfileModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="myModalLabel">
+          {{userForProfileModal.first_name}}'s Profile
+        </h4>
+      </div>
+      <div class="modal-body">
+        <label>First Name:&nbsp;</label>{{userForProfileModal.first_name}}<br>
+        <span ng-show="userForProfileModal.program  !== ''">
+          <label>Student Information:&nbsp;</label>{{userForProfileModal.year_of_study}} {{userForProfileModal.level_of_study}} Student in {{userForProfileModal.program}}<br>
+        </span>
+        <span ng-hide="userForProfileModal.program !== ''">
+          <label>Student Information:&nbsp;</label>{{userForProfileModal.year_of_study}} {{userForProfileModal.level_of_study}} Student<br>
+        </span>
+        <label>Learning Style:&nbsp;</label>{{userForProfileModal.learning_style}}<br>
+        <div ng-show="userForProfileModal.about_me !== ''">
+          <label>About Me:&nbsp;</label><div style="word-wrap:break-word;">{{userForProfileModal.about_me}}</div><br>
+        </div>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>

@@ -6,6 +6,7 @@ angular.module('dashboardControllers', [])
     $scope.showChangePassword = false;
     $scope.newPassword = "";
     $scope.verifyPassword = "";
+    $scope.userForProfileModal = undefined;
 
     // Email functionality
     $scope.notifyByEmail = function() {
@@ -32,12 +33,24 @@ angular.module('dashboardControllers', [])
     // Here we grab the user's first name (or username if they didn't enter a name) for displaying in the top bar.
     $scope.$on('loginProcessed', function(){
       var copiedUser = StateService.getUserObj();
+      $scope.newYearOfStudy = copiedUser.year_of_study;
+      $scope.newLevelOfStudy = copiedUser.level_of_study;
+      $scope.newLearningStyle = copiedUser.learning_style;
+      $scope.newProgram = copiedUser.program;
+      $scope.newAboutMe = copiedUser.about_me;
+
       $scope.staticUsername = copiedUser.username;
       $scope.newFirstName = copiedUser.first_name;
       $scope.newEmail = copiedUser.email;
 
       $scope.full_name = copiedUser.first_name;
       $scope.first_name = $scope.full_name == '' ? copiedUser.username : $scope.full_name.split(' ')[0];
+    });
+
+    $scope.$on('showUserProfileModal', function(event, user){
+      console.log(user);
+      $scope.userForProfileModal = user;
+      angular.element('#userProfileModal').modal('show');      
     });
 
     $scope.checkPasswords = function() {
@@ -126,6 +139,14 @@ angular.module('dashboardControllers', [])
             params.email = $scope.newEmail;
             makeRequest = true;
           }
+
+          // I hate myself for doing this
+          params.year_of_study = $scope.newYearOfStudy;
+          params.level_of_study = $scope.newLevelOfStudy;
+          params.learning_style = $scope.newLearningStyle;
+          params.about_me = $scope.newAboutMe;
+          params.program = $scope.newProgram;
+          makeRequest = true;
 
           // Make the profile change request if necessary
           if(makeRequest) {

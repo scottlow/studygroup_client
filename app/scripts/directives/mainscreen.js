@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('studygroupClientApp')
-  .directive('mainScreen', function (StateService, $rootScope, AuthService, $timeout, $window, $http) {
+  .directive('mainScreen', function (StateService, $rootScope, AuthService, $timeout, $window, $http, $q) {
     return {
       templateUrl: 'scripts/directives/mainScreen.html',
       restrict: 'E',
@@ -23,6 +23,9 @@ angular.module('studygroupClientApp')
         $scope.buildingLong = -123.3592758; // Longitude of selected building in the new session dialog. Default value is assigned here.
         $scope.newSessionStartTime = new Date(); // Start date/time of the new session being created
         $scope.sessions = []; // List of sessions available to the user
+        $scope.offCampusSelected = false;
+
+        var geocoder = new google.maps.Geocoder(); // Google Geocoder for getting lat and long of user entered locations
 
         // Hide the "New Session" button if the user isn't authenticated
         if(AuthService.isAuthenticated()) {
@@ -64,6 +67,33 @@ angular.module('studygroupClientApp')
           });
         });
 
+        // Geocoding/Off Campus Locations
+        $scope.formatAddress = function(address) {
+          return address.replace(' ', '+');
+        }      
+
+        $scope.getLocation = function(value) {
+            var d = $q.defer();
+              if(value !== undefined) {
+                geocoder.geocode( { 'address': $scope.formatAddress(value)}, function(results, status) {
+                  if (status == google.maps.GeocoderStatus.OK) {
+                    $timeout(function() {
+                        d.resolve(results)              
+                    });
+                  }
+                });
+            }
+
+            return d.promise;
+        }
+
+        $scope.makeSelection = function(item) {
+            $scope.buildingLat = item.geometry.location.k;
+            $scope.buildingLong = item.geometry.location.B;  
+        }
+
+        // End Geocoding/Off Campus Locations        
+
         $scope.resizeSidebar = function() {
           var height = angular.element('#sidebarRoot').height() - 152;
           angular.element('.session-panel .tab-content').height(height);          
@@ -104,59 +134,131 @@ angular.module('studygroupClientApp')
           }
         };
 
+        $scope.selectOffCampus = function() {
+          $scope.offCampusSelected = true;
+        }
+
+        $scope.selectOnCampus = function() {
+          $scope.offCampusSelected = false;
+        }
+
         // Called when the user submits the create session dialog
         $scope.newSessionSubmit = function() {
           $scope.newSessionSubmitted = true;
-          if($scope.newSessionForm.$valid) {
-            angular.element('#newSessionModal').modal('hide');
 
-            // Broadcast new session information to SessionPanel so that the new session card can be instantly created in the UI.
-            $rootScope.$broadcast('sessionCreated', {
-              'attendees': [],
-              'coordinator' : StateService.getUserObj(),
-              'course' : {
-                'name' : $scope.newSessionCourse.full_name,
-                'id': $scope.newSessionCourse.id
-              },
-              'start_time' : $scope.newSessionStartTime, 
-              'end_time' : $scope.newSessionEndTime, 
-              'location' : $scope.newSessionBuilding, 
-              'room_number' : $scope.newSessionRoomNumber
-            });          
-            
-            // Then, make the time consuming SQL call to create the session server-side
-            StateService.createSession(
-                    $scope.newSessionCourse.id, 
-                    $scope.newSessionStartTime, 
-                    $scope.newSessionEndTime, 
-                    $scope.newSessionBuilding, 
-                    parseInt($scope.newSessionRoomNumber)
-            )
-            .success(function(data) {
-              console.log('Created session');
-              for(var i = 0; i < $scope.sessions.length; i++) {
-                if($scope.sessions[i].id === -1) {
-                  $scope.sessions[i].id = data.id;
-                  break;
+          if($scope.offCampusSelected) {
+              angular.element('#newSessionModal').modal('hide');            
+              $rootScope.$broadcast('sessionCreated', {
+                'attendees': [],
+                'coordinator' : StateService.getUserObj(),
+                'course' : {
+                  'name' : $scope.newSessionCourse.full_name,
+                  'id': $scope.newSessionCourse.id
+                },
+                'start_time' : $scope.newSessionStartTime, 
+                'end_time' : $scope.newSessionEndTime, 
+                'location' : {
+                                'name' : $scope.addressSearchText,
+                                'latitude' : $scope.buildingLat,
+                                'longitude' : $scope.buildingLong,
+
+                             },
+                'max_participants' : $scope.newSessionParticipantCap,
+                'description' : $scope.newSessionDescription,
+              });
+
+              // Then, make the time consuming SQL call to create the session server-side
+              StateService.createOffCampusSession(
+                      $scope.newSessionCourse.id, 
+                      $scope.newSessionStartTime, 
+                      $scope.newSessionEndTime, 
+                      $scope.buildingLat,
+                      $scope.buildingLong,
+                      $scope.addressSearchText,
+                      $scope.newSessionParticipantCap,
+                      $scope.newSessionDescription
+              )
+              .success(function(data) {
+                console.log('Created session');
+                for(var i = 0; i < $scope.sessions.length; i++) {
+                  if($scope.sessions[i].id === -1) {
+                    $scope.sessions[i].id = data.id;
+                    break;
+                  }
                 }
-              }
 
-              // If the newly created session has since been removed on the client side
-              if(i === $scope.sessions.length) {
-                $http.post('http://localhost:8000/' + 'sessions/leave', {'session_id' : data.id})
-                .success(function() {
-                  console.log("Left a session with ID " + data.id);
-                })
-                .error(function(error) {
-                  console.log("Could not leave session with ID " + data.id);
-                });                
-              }
+                // If the newly created session has since been removed on the client side
+                if(i === $scope.sessions.length) {
+                  $http.post('http://localhost:8000/' + 'sessions/leave', {'session_id' : data.id})
+                  .success(function() {
+                    console.log("Left a session with ID " + data.id);
+                  })
+                  .error(function(error) {
+                    console.log("Could not leave session with ID " + data.id);
+                  });
+                }
 
-              $scope.newSessionSubmitted = false; // Reset any error validation flags
-            })
-            .error(function() {
-              console.log('Error creating session');
-            });
+                $scope.newSessionSubmitted = false; // Reset any error validation flags
+              })
+              .error(function() {
+                console.log('Error creating session');
+              });             
+          } else {
+            if($scope.newSessionForm.$valid) {
+              angular.element('#newSessionModal').modal('hide');
+
+              // Broadcast new session information to SessionPanel so that the new session card can be instantly created in the UI.
+              $rootScope.$broadcast('sessionCreated', {
+                'attendees': [],
+                'coordinator' : StateService.getUserObj(),
+                'course' : {
+                  'name' : $scope.newSessionCourse.full_name,
+                  'id': $scope.newSessionCourse.id
+                },
+                'start_time' : $scope.newSessionStartTime, 
+                'end_time' : $scope.newSessionEndTime, 
+                'location' : $scope.newSessionBuilding, 
+                'room_number' : $scope.newSessionRoomNumber,
+                'max_participants' : $scope.newSessionParticipantCap,
+                'description' : $scope.newSessionDescription,
+              });          
+              
+              // Then, make the time consuming SQL call to create the session server-side
+              StateService.createSession(
+                      $scope.newSessionCourse.id, 
+                      $scope.newSessionStartTime, 
+                      $scope.newSessionEndTime, 
+                      $scope.newSessionBuilding, 
+                      parseInt($scope.newSessionRoomNumber),
+                      $scope.newSessionParticipantCap,
+                      $scope.newSessionDescription
+              )
+              .success(function(data) {
+                console.log('Created session');
+                for(var i = 0; i < $scope.sessions.length; i++) {
+                  if($scope.sessions[i].id === -1) {
+                    $scope.sessions[i].id = data.id;
+                    break;
+                  }
+                }
+
+                // If the newly created session has since been removed on the client side
+                if(i === $scope.sessions.length) {
+                  $http.post('http://localhost:8000/' + 'sessions/leave', {'session_id' : data.id})
+                  .success(function() {
+                    console.log("Left a session with ID " + data.id);
+                  })
+                  .error(function(error) {
+                    console.log("Could not leave session with ID " + data.id);
+                  });                
+                }
+
+                $scope.newSessionSubmitted = false; // Reset any error validation flags
+              })
+              .error(function() {
+                console.log('Error creating session');
+              });
+            }            
           }
         };
 
@@ -205,7 +307,7 @@ angular.module('studygroupClientApp')
             $scope.newSessionBuilding = $scope.buildingList[0];
             $scope.initTimes();            
           });
-        };
+        };      
 
         // Remove a course from the course bar
         $scope.removeCourse = function(course) {

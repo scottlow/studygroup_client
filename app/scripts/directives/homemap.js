@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('studygroupClientApp')
-.directive('homeMap', function (StateService, $rootScope, $timeout, $location, $anchorScroll, $compile) {
+.directive('homeMap', function (StateService, $rootScope, $timeout, $location, $anchorScroll, $compile, $filter) {
     // This directive is called only once when the initial app is loaded. It's what resets our map to good ol' #YYJ.
     return {
       scope: {
@@ -11,6 +11,16 @@ angular.module('studygroupClientApp')
         selectedSessions: '=', // list of sessions to be fed into the map for displaying
       },
       link: function ($scope, elem, attrs) {
+
+        $scope.displayFilter = function(session) {
+            console.log('wat');
+            var compLength = session.coordinator != undefined ? session.attendees.length + 1 : session.attendees.length;
+            if(session.filterDisplay && compLength < session.max_participants) {
+                return true;
+            } else {
+                return false;
+            }
+        };
 
         var mapOptions,
           latitude = $scope.lat,
@@ -51,21 +61,23 @@ angular.module('studygroupClientApp')
            enter this $on with old data. As a result, we'll update to make sure we're on the latest. */
         $scope.$on('refreshPins', function() { 
           if($scope.selectedSessions !== undefined && $scope.selectedSessions.length === 0) {
-            $scope.selectedSessions = $scope.$parent.sessions;          
+          $scope.selectedSessions = $filter('filter')($scope.$parent.sessions, $scope.displayFilter);     
           }
           if($scope.selectedSessions !== undefined) {
             $scope.refreshPins();  
           }
-        });
+        });       
 
         $scope.getInfoTemplate = function(session) {
           var infoTemplate = '<div class="search_root session-infowindow media-body session-description-container">' + 
           '<h5 class="media-heading session-heading">' + session.course.name + '</h5><span class="badge duration bubble-duration">' + Math.floor(((session.end_time - session.start_time) % 86400000) / 3600000) + 'h ' + (((session.end_time - session.start_time)  % 86400000) % 3600000) / 60000 + ' m</span>' + 
           '<div class="session-description">' + 
           '<button type="button" ng-class="{\'btn-success\' : ' + (session.joinText=='Join').toString() + ', \'btn-danger\' : ' + (session.joinText=='Leave').toString() + '}" ng-click="joinOrLeaveSession(' + session.id + ')" class="btn btn-sm btn-join">' + session.joinText + '</button>' +
-          '<h6 style="pointer-events:none;" class="glyphicon glyphicon-session glyphicon-map-marker"><span class="h5 session-detail"><small>' + session.location.name + '<span class="divider">&#183;</span>Room: ' + session.room_number + '</small></span></h6>' + 
+          '<h6 style="pointer-events:none;" class="glyphicon glyphicon-session glyphicon-map-marker"><span class="h5 session-detail"><small>' + session.location.name + '<span ng-show="' + (session.room_number != undefined) + '"><span class="divider">&#183;</span>Room: ' + session.room_number + '</span></small></span></h6>' + 
           '<h6 style="pointer-events:none;" class="glyphicon glyphicon-session glyphicon-time"><span class="h5 session-detail"><small>' + session.start_time.toLocaleDateString() + '<span class="divider">&#183;</span>' + session.start_time.toLocaleTimeString() + '</small></span></h6>' + 
           '</div>' +
+          '<h6 class="glyphicon glyphicon-session glyphicon-session-fade glyphicon-user"><span class="h5 session-detail"><small>' + (session.attendees.length + (session.coordinator != null ? 1 : 0)) +  ' of ' + session.max_participants + ' students registered</small></span></h6>' + 
+          '<h6 class="glyphicon glyphicon-session glyphicon-session-fade glyphicon glyphicon-info-sign"><span class="h5 session-detail"><small>' + session.description + '</small></span></h6>' +
           '</div>';
 
           return infoTemplate;
@@ -73,7 +85,7 @@ angular.module('studygroupClientApp')
 
         $scope.$on('refreshBubbles', function() {
           if($scope.selectedSessions !== undefined && $scope.selectedSessions.length === 0) {
-            $scope.selectedSessions = $scope.$parent.sessions;          
+            $scope.selectedSessions = $filter('filter')($scope.$parent.sessions, $scope.displayFilter);           
           }      
 
           if($scope.selectedSessions !== undefined) {
